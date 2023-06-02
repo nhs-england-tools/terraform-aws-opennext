@@ -1,0 +1,45 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+  get-metadata:
+    runs-on: ubuntu-latest
+    outputs:
+      build_datetime: ${{ steps.metadata.outputs.build_datetime }}
+      build_timestamp: ${{ steps.metadata.outputs.build_timestamp }}
+      build_epoch: ${{ steps.metadata.outputs.build_epoch }}
+    steps:
+      - id: metadata
+        run: |
+          datetime=$(date -u +'%Y-%m-%dT%H:%M:%S%z')
+          echo "build_datetime=$datetime" >> $GITHUB_OUTPUT
+          echo "build_timestamp=$(date --date=$datetime -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
+          echo "build_epoch=$(date --date=$datetime -u +'%s')" >> $GITHUB_OUTPUT
+  scan-secrets:
+    uses: ./.github/workflows/scan-secrets.yaml
+  check-file-format:
+    uses: ./.github/workflows/check-file-format.yaml
+  check-markdown-format:
+    uses: ./.github/workflows/check-markdown-format.yaml
+  cicd-pipeline-test:
+    runs-on: ubuntu-latest
+    needs:
+      [get-metadata, scan-secrets, check-file-format, check-markdown-format]
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v3
+      - name: List Variables
+        run: |
+          export BUILD_DATETIME="${{ needs.get-metadata.outputs.build_datetime }}"
+          export BUILD_TIMESTAMP="${{ needs.get-metadata.outputs.build_timestamp }}"
+          export BUILD_EPOCH="${{ needs.get-metadata.outputs.build_epoch }}"
+          make list-variables
+      # - name: Run Tests ...
+      #   run: |
+      #     ?

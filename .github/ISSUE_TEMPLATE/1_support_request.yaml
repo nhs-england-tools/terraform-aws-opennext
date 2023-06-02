@@ -1,0 +1,52 @@
+# See:
+# - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+# - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
+# - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/common-validation-errors-when-creating-issue-forms
+
+name: 🔧 Support Request
+description: Get help
+labels: ["support"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a support request. Please fill out this form as completely as possible.
+  - type: textarea
+    attributes:
+      label: What exactly are you trying to do?
+      description: Describe in as much detail as possible.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What have you tried so far?
+      description: Describe what you have tried so far.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: Output of any commands you have tried
+      description: Please copy and paste any relevant output. This will be automatically formatted into codeblock.
+      render: Shell
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here.
+    validations:
+      required: false
+  - type: checkboxes
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue you agree to follow our [Code of Conduct](../../docs/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Sensitive Information Declaration
+      description: To ensure the utmost confidentiality and protect your privacy, we kindly ask you to NOT including [PII (Personal Identifiable Information) / PID (Personal Identifiable Data)](https://digital.nhs.uk/data-and-information/keeping-data-safe-and-benefitting-the-public) or any other sensitive data in this form. We appreciate your cooperation in maintaining the security of your information.
+      options:
+        - label: I confirm that neither PII/PID nor sensitive data are included in this form
+          required: true

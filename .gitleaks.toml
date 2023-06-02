@@ -1,0 +1,9 @@
+# SEE: https://github.com/gitleaks/gitleaks/#configuration
+
+[extend]
+useDefault = true # SEE: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+
+[[rules]]
+description = "IPv4"
+id = "ipv4"
+regex = '''[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}'''

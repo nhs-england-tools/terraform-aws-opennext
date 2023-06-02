@@ -1,0 +1,42 @@
+# See:
+# - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/configuring-issue-templates-for-your-repository
+# - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-issue-forms
+# - https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/common-validation-errors-when-creating-issue-forms
+
+name: 🚀 Feature Request
+description: Suggest an idea for this project
+labels: ["feature request"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file a feature request. Please fill out this form as completely as possible.
+  - type: textarea
+    attributes:
+      label: What is the problem this feature will solve?
+      description: Tell us why this change is needed or helpful and what problems it may help solve.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What is the feature that you are proposing to solve the problem?
+      description: Provide detailed information for what we should add.
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: What alternatives have you considered?
+  - type: checkboxes
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue you agree to follow our [Code of Conduct](../../docs/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
+  - type: checkboxes
+    attributes:
+      label: Sensitive Information Declaration
+      description: To ensure the utmost confidentiality and protect your privacy, we kindly ask you to NOT including [PII (Personal Identifiable Information) / PID (Personal Identifiable Data)](https://digital.nhs.uk/data-and-information/keeping-data-safe-and-benefitting-the-public) or any other sensitive data in this form. We appreciate your cooperation in maintaining the security of your information.
+      options:
+        - label: I confirm that neither PII/PID nor sensitive data are included in this form
+          required: true

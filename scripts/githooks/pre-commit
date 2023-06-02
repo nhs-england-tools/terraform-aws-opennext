@@ -1,0 +1,15 @@
+#!/bin/bash -e
+
+# Pre-commit git hook runner
+
+# ==============================================================================
+
+project_dir=$(git rev-parse --show-toplevel)
+cd $project_dir
+
+pre_commit_scripts=$(ls -1 $project_dir/scripts/githooks/*-pre-commit.sh 2> /dev/null)
+for script in $pre_commit_scripts; do
+  printf "Running githook: $(echo $script | sed "s;$project_dir/;;g")\n"
+  $script "$@"
+done
+printf "Successfully run all githooks\n"

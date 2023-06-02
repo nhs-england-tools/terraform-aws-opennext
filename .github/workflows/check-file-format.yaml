@@ -1,0 +1,15 @@
+name: Check File Format
+
+on:
+  workflow_call:
+
+jobs:
+  check-file-format:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - run: |
+          export BRANCH_NAME=origin/${{ github.event.repository.default_branch }}
+          ./scripts/githooks/editorconfig-pre-commit.sh
