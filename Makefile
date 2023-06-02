@@ -1,37 +1,36 @@
-config: githooks-install # Configure development environment
+include scripts/makefile/Makefile.init
 
-githooks-install: # Install git hooks configured in this repository
-	echo "./scripts/githooks/pre-commit" > .git/hooks/pre-commit
-	chmod +x .git/hooks/pre-commit
+###############
+## Constants ##
+###############
+BUILD_FOLDER = build
+REQUIRED_BUILD_DEPENDENCIES = yarn
+REQUIRED_RUNTIME_DEPENDENCIES = node
 
-# ==============================================================================
+##############################
+## Dependency Check Targets ##
+##############################
+check: check-runtime-deps check-build-deps # Checks if runtime and build requirements are available
 
-help: # List Makefile targets
-	@awk 'BEGIN {FS = ":.*?# "} /^[ a-zA-Z0-9_-]+:.*? # / {printf "\033[36m%-41s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST) | sort
+check-runtime-deps:
+	$(foreach exec,${REQUIRED_RUNTIME_DEPENDENCIES},\
+	$(if $(shell which ${exec}),@echo -e "${exec} is installed",$(error "No ${exec} in PATH")))
 
-list-variables: # List all the variables available to make
-	@$(foreach v, $(sort $(.VARIABLES)),
-		$(if $(filter-out default automatic, $(origin $v)),
-			$(if $(and $(patsubst %_PASSWORD,,$v), $(patsubst %_PASS,,$v), $(patsubst %_KEY,,$v), $(patsubst %_SECRET,,$v)),
-				$(info $v=$($v) ($(value $v)) [$(flavor $v),$(origin $v)]),
-				$(info $v=****** (******) [$(flavor $v),$(origin $v)])
-			)
-		)
-	)
+check-build-deps:
+	$(foreach exec,${REQUIRED_BUILD_DEPENDENCIES},\
+	$(if $(shell which ${exec}),@echo -e "${exec} is installed",$(error "No ${exec} in PATH")))
 
-.DEFAULT_GOAL := help
-.EXPORT_ALL_VARIABLES:
-.NOTPARALLEL:
-.ONESHELL:
-.PHONY: *
-MAKEFLAGS := --no-print-director
-SHELL := /bin/bash
-ifeq (true, $(shell [[ "$(VERBOSE)" =~ ^(true|yes|y|on|1|TRUE|YES|Y|ON)$$ ]] && echo true))
-	.SHELLFLAGS := -cex
-else
-	.SHELLFLAGS := -ce
-endif
+###########################
+## Example Build Targets ##
+###########################
+example-clean: # Cleans the example Next.js application build outputs
+	rm -rf ${BUILD_FOLDER} || exit 0
+	mkdir -p ${BUILD_FOLDER}
 
-.SILENT: \
-	config \
-	githooks-install
+example-install: check # Installs the dependencies for the example project
+	yarn --cwd example install
+
+example-build: example-clean # Builds the example Next.js application
+	yarn --cwd example package
+	cp -r example/.open-next/* ${BUILD_FOLDER}
+	for f in ${BUILD_FOLDER}/*; do cd $$f; zip -rq ../../$$f.zip . && cd -; rm -rf $$f; done
