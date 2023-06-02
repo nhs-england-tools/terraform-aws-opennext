@@ -35,13 +35,14 @@ module "warmer_function" {
     memory_size = 128
 
     environment_variables = {
-        FUNCTION_NAME = "server_lambda_func_name",
+        FUNCTION_NAME = module.server_function.lambda_function_name,
         CONCURRENCY = 1
     }
 
     iam_policy_statements = [{
       effect = "Allow"
       actions = ["lambda:InvokeFunction"]
-      resources = ["server_lambda_func_arn"]
+      resources = [module.server_function.lambda_function_arn]
     }]
 }
+
