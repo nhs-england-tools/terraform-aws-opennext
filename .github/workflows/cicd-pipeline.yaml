@@ -68,7 +68,6 @@ jobs:
           iac_version: 'v14'
           policy_type: 'aws'
           sarif_upload: true
-          non_recursive: true
 
       - name: Upload SARIF File
         uses: github/codeql-action/upload-sarif@v1
