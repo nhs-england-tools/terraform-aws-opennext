@@ -70,7 +70,7 @@ jobs:
           sarif_upload: true
 
       - name: Upload SARIF File
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@v2
         if: always()
         with:
           sarif_file: terrascan.sarif
