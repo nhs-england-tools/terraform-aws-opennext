@@ -8,6 +8,21 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  terrascan:
+    runs-on: ubuntu-latest
+    name: Terrascan
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Run Terrascan
+        id: terrascan
+        uses: tenable/terrascan-action@main
+        with:
+          iac_type: 'terraform'
+          iac_version: 'v14'
+          policy_type: 'aws'
+
+
   get-metadata:
     runs-on: ubuntu-latest
     outputs:
