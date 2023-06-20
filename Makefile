@@ -20,6 +20,17 @@ check-build-deps:
 	$(foreach exec,${REQUIRED_BUILD_DEPENDENCIES},\
 	$(if $(shell which ${exec}),@echo -e "${exec} is installed",$(error "No ${exec} in PATH")))
 
+################################
+# CloudFront Logs Lambda Build #
+################################
+install-cloudfront-logs-lambda: # Installs CloudFront Logs Lambda Dependencies
+	yarn --cwd modules/cloudfront-logs/lambda install
+
+build-cloudfront-logs-lambda:
+	yarn --cwd modules/cloudfront-logs/lambda build
+	yarn --cwd modules/cloudfront-logs/lambda package
+
+
 ###########################
 ## Example Build Targets ##
 ###########################
