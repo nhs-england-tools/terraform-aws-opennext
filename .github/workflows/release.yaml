@@ -39,13 +39,13 @@ jobs:
               run: make build-cloudfront-logs-lambda
             
             - name: Copy Lambda Asset
-              run: cp modules/cloudfront-logs/lambda/dist/lambda.zip cloudfront-logs-package-${{ inputs.release_version }}-nodejs${{ matrix.nodejs_version }}.zip
+              run: cp modules/cloudfront-logs/lambda/dist/lambda.zip cloudfront-logs-package-nodejs${{ matrix.nodejs_version }}.zip
             
             - name: Store Output Artifact
               uses: actions/upload-artifact@v3
               with:
                 name: cloudfront-logs-packages
-                path: cloudfront-logs-package-${{ inputs.release_version }}-nodejs${{ matrix.nodejs_version }}.zip
+                path: cloudfront-logs-package-nodejs${{ matrix.nodejs_version }}.zip
                 if-no-files-found: error
 
     publish_release:
