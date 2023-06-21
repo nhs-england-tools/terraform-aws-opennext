@@ -4,7 +4,16 @@ resource "aws_s3_bucket" "logs" {
   bucket = var.log_bucket_name
 }
 
+resource "aws_s3_bucket_ownership_controls" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+  
+  rule {
+    object_ownership = "ObjectWriter"
+  }
+}
+
 resource "aws_s3_bucket_acl" "logs" {
+  depends_on = [ aws_s3_bucket_ownership_controls.logs ]
 bucket = aws_s3_bucket.logs.bucket
 
 access_control_policy {
@@ -60,6 +69,13 @@ resource "aws_s3_bucket_public_access_block" "logs" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_versioning" "logs" {
+  bucket = aws_s3_bucket.logs.bucket
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 data "aws_iam_policy_document" "logs_readonly_policy" {
   statement {
     actions = [
@@ -72,4 +88,15 @@ data "aws_iam_policy_document" "logs_readonly_policy" {
       "${aws_s3_bucket.logs.arn}/*",
     ]
   }
+}
+
+resource "aws_s3_bucket_notification" "logs_notification" {
+  bucket = aws_s3_bucket.logs.bucket
+
+  lambda_function {
+    lambda_function_arn = aws_lambda_function.cloudfront_logs_function.arn
+    events              = ["s3:ObjectCreated:*"]
+  }
+
+  depends_on = [aws_lambda_permission.s3_bucket_invoke_function]
 }

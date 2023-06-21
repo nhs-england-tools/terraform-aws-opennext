@@ -1,6 +1,7 @@
 locals {
     server_origin_id = "${var.prefix}-server"
     static_assets_origin_id = "${var.prefix}-static-assets"
+    failover_origin_id = "${var.prefix}-failover"
     image_optimization_origin_id = "${var.prefix}-image-optimization"
 }
 
@@ -10,6 +11,13 @@ resource "aws_cloudfront_distribution" "next_distribution" {
   is_ipv6_enabled = true
   comment         = "${var.prefix} - CloudFront Distribution for Next.js Application"
   aliases         = [var.domain_name]
+  web_acl_id = aws_wafv2_web_acl.cloudfront_waf.id
+
+  logging_config {
+    include_cookies = false
+    bucket = module.cloudfront_logs.logs_s3_bucket.bucket
+    prefix = var.domain_name
+  }
 
   origin {
     domain_name = aws_s3_bucket.static_assets.bucket_regional_domain_name
@@ -64,10 +72,9 @@ resource "aws_cloudfront_distribution" "next_distribution" {
     target_origin_id       = local.server_origin_id
     viewer_protocol_policy = "redirect-to-https"
 
-    lambda_function_association {
+    function_association {
       event_type = "viewer-request"
-      lambda_arn = aws_cloudfront_function.host_header_function.arn
-      include_body = true
+      function_arn = aws_cloudfront_function.host_header_function.arn
     }
 
     forwarded_values {
@@ -249,7 +256,7 @@ resource "aws_cloudfront_cache_policy" "static_assets_origin_cache_policy" {
 }
 
 resource "aws_cloudfront_function" "host_header_function" {
-  name    = var.prefix
+  name    = "${var.prefix}-preserve-host"
   runtime = "cloudfront-js-1.0"
   comment = "Next.js Function for Preserving Original Host"
   publish = true

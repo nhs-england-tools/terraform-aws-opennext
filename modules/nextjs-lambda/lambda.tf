@@ -7,9 +7,16 @@ resource "aws_lambda_function" "function" {
   runtime       = var.runtime
   architectures = var.architectures
   role          = aws_iam_role.lambda_role.arn
+  kms_key_arn = var.kms_key_arn
+  
 
   memory_size = var.memory_size
   timeout     = var.timeout
+  publish = var.publish
+
+  tracing_config {
+    mode = "Active"
+  }
 
   environment {
     variables = var.environment_variables
@@ -28,16 +35,16 @@ resource "aws_lambda_function" "function" {
 resource "aws_lambda_function_url" "function_url" {
   function_name = aws_lambda_function.function.function_name
   authorization_type = "NONE"
-
-  cors {
-    allow_credentials = true
-    allow_origins = ["*"]
-    allow_methods = ["*"]
-    allow_headers = ["date", "keep-alive"]
-    expose_headers = ["date", "keep-alive"]
-    max_age = 86400
-  }
+  invoke_mode = "BUFFERED"
 }
+
+resource "aws_lambda_permission" "function_url_permission" {
+  action = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.function.function_name
+  principal = "*"
+  function_url_auth_type = "NONE"
+}
+
 
 resource "aws_security_group" "function_sg" {
   count = var.vpc_id == null ? 0 : 1

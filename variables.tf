@@ -18,3 +18,14 @@ variable "hosted_zone_id" {
     type = string
     description = "The Route 53 hosted zone ID of the domain name"
 }
+
+variable "opennext_build_path" {
+    type = string
+    description = "The path to the folder containing the .open-next build output"
+}
+
+variable "kms_key_arn" {
+    type = string
+    default = null
+    description = "The KMS key to use for encrypting the Lambda functions"
+}

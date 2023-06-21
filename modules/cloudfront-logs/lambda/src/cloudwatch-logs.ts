@@ -1,7 +1,7 @@
 import { CloudWatchLogsClient, DescribeLogStreamsCommand, CreateLogStreamCommand, LogStream, PutLogEventsCommand, InputLogEvent, PutLogEventsCommandOutput } from "@aws-sdk/client-cloudwatch-logs"
 
 const client = new CloudWatchLogsClient({
-    region: process.env.AWS_REGION,
+    region: process.env.LOG_GROUP_REGION,
 });
 
 

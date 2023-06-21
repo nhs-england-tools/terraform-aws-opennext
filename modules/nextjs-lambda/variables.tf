@@ -52,10 +52,22 @@ variable "handler" {
   default     = "index.handler"
 }
 
+variable "publish" {
+  type = bool
+  description = "Publish the lambda function to lambda@edge"
+  default = false
+}
+
 variable "environment_variables" {
   type        = map(string)
   description = "The environment variables to be used for the lambda function"
   default     = {}
+}
+
+variable "kms_key_arn" {
+    type = string
+    default = null
+    description = "The KMS key to use for encrypting the Lambda function"
 }
 
 variable "vpc_id" {
