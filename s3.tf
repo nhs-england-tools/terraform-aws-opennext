@@ -101,7 +101,7 @@ data "aws_iam_policy_document" "read_static_bucket" {
   }
 }
 
-# Unhashed Files
+# Static Assets
 resource "aws_s3_object" "static_files" {
   for_each = fileset("${abspath(var.opennext_build_path)}/assets", "**")
 
@@ -114,18 +114,6 @@ resource "aws_s3_object" "static_files" {
 
   content_type = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
 }
-
-# Hashed Files
-# resource "aws_s3_object" "hashed_static_files" {
-#   for_each = fileset("${abspath(var.opennext_build_path)}/assets/_next/", "**")
-
-#   bucket        = aws_s3_bucket.static_assets.bucket
-#   key           = "assets/_next/${each.value}"
-#   source        = "${abspath(var.opennext_build_path)}/assets/_next/${each.value}"
-#   etag          = filemd5("${abspath(var.opennext_build_path)}/assets/_next/${each.value}")
-#   cache_control = length(regexall( )) 
-#   content_type  = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
-# }
 
 # Cached Files
 resource "aws_s3_object" "cached_files" {

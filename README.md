@@ -1,12 +1,10 @@
-# Repository Template
+# OpenNext Terraform Module for AWS
 
-Start with an overview or a brief description of what the project is about and what it does.
-
-There is an expectation that each file of this repository template is concise and self-documented.
+This is a Terraform module for deploying a Next.js application built with [OpenNext](https://open-next.js.org/).
 
 ## Table of Contents
 
-- [Repository Template](#repository-template)
+- [OpenNext Terraform Module for AWS](#opennext-terraform-module-for-aws)
   - [Table of Contents](#table-of-contents)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
@@ -20,20 +18,30 @@ There is an expectation that each file of this repository template is concise an
 
 ## Installation
 
-By including preferably a one-liner or if necessary a set of clear CLI instructions we improve user experience. This should be a frictionless installation process that works on various operating systems (macOS, Linux, Windows WSL) and handles all the dependencies.
+Copy and paste the following into your Terraform configuration, edit the variables, and then `terraform init`.
 
-```shell
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/org/repo/branch/install.sh)"
+```tf
+module "opennext" {
+  source  = "nhs-england-tools/opennext/aws"
+  version = "0.0.1-alpha.5"
+
+  prefix              = "opennext"
+  domain_name         = "your-domain-name.com" 
+  acm_certificate_arn = "arn:aws:acm:region:account:certificate/certificate_ID"
+  hosted_zone_id      = "12345"
+  opennext_build_path = ".open-next" 
+}
 ```
 
 ### Prerequisites
 
 The following software packages or their equivalents are expected to be installed
 
-- [GNU make](https://www.gnu.org/software/make/)
-- [Docker](https://www.docker.com/)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) (>=1.3)
 
 ## Usage
+
+<!-- TODO: Add docs for Lambda@Edge -->
 
 After a successful installation, provide an informative example of how this project can be used. Additional code snippets, screenshots and demos work well in this space. You may also link to the other documentation resources, e.g. the [User Guide](./docs/user-guide.md) to demonstrate more use cases and to show more features.
 
@@ -59,11 +67,10 @@ Describe or link templates on how to raise an issue, feature request or make a c
 
 ## Contacts
 
-Provide a way to contact the owners of this project. It can be a team, an individual or information on the means of getting in touch via active communication channels, e.g. opening a GitHub discussion, raising an issue, etc.
+- Thomas Judd-Cooper - [Email](mailto:thomas.judd-cooper1@nhs.net) - [GitHub](https://github.com/Tomdango)
+
 
 ## Licence
-
-> The [LICENCE.md](./LICENCE.md) file will need to be updated with the correct year and owner
 
 Unless stated otherwise, the codebase is released under the MIT License. This covers both the codebase and any sample code in the documentation.
 
