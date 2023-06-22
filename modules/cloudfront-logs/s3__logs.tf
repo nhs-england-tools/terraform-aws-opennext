@@ -6,41 +6,41 @@ resource "aws_s3_bucket" "logs" {
 
 resource "aws_s3_bucket_ownership_controls" "logs" {
   bucket = aws_s3_bucket.logs.bucket
-  
+
   rule {
     object_ownership = "ObjectWriter"
   }
 }
 
 resource "aws_s3_bucket_acl" "logs" {
-  depends_on = [ aws_s3_bucket_ownership_controls.logs ]
-bucket = aws_s3_bucket.logs.bucket
+  depends_on = [aws_s3_bucket_ownership_controls.logs]
+  bucket     = aws_s3_bucket.logs.bucket
 
-access_control_policy {
-  owner {
-    id = data.aws_canonical_user_id.current.id
-  }
-
-  grant {
-    permission = "FULL_CONTROL"
-
-    grantee {
+  access_control_policy {
+    owner {
       id = data.aws_canonical_user_id.current.id
-      type = "CanonicalUser"
     }
-  }
 
-  # Grant CloudFront access to the S3 bucket
-  # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html#AccessLogsBucketAndFileOwnership
-  grant {
-    permission = "FULL_CONTROL"
+    grant {
+      permission = "FULL_CONTROL"
 
-    grantee {
-        id = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
+      grantee {
+        id   = data.aws_canonical_user_id.current.id
         type = "CanonicalUser"
+      }
+    }
+
+    # Grant CloudFront access to the S3 bucket
+    # See: https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/AccessLogs.html#AccessLogsBucketAndFileOwnership
+    grant {
+      permission = "FULL_CONTROL"
+
+      grantee {
+        id   = "c4c1ede66af53448b93c283ce9448c4ba468c9432aa01d700d3878632f77d2d0"
+        type = "CanonicalUser"
+      }
     }
   }
-}
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "logs" {

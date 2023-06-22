@@ -7,12 +7,12 @@ resource "aws_lambda_function" "function" {
   runtime       = var.runtime
   architectures = var.architectures
   role          = aws_iam_role.lambda_role.arn
-  kms_key_arn = var.kms_key_arn
-  
+  kms_key_arn   = var.kms_key_arn
+
 
   memory_size = var.memory_size
   timeout     = var.timeout
-  publish = var.publish
+  publish     = var.publish
 
   tracing_config {
     mode = "Active"
@@ -27,29 +27,29 @@ resource "aws_lambda_function" "function" {
 
     content {
       security_group_ids = [aws_security_group.function_sg.id]
-      subnet_ids = var.subnet_ids
+      subnet_ids         = var.subnet_ids
     }
   }
 }
 
 resource "aws_lambda_function_url" "function_url" {
-  function_name = aws_lambda_function.function.function_name
+  function_name      = aws_lambda_function.function.function_name
   authorization_type = "NONE"
-  invoke_mode = "BUFFERED"
+  invoke_mode        = "BUFFERED"
 }
 
 resource "aws_lambda_permission" "function_url_permission" {
-  action = "lambda:InvokeFunctionUrl"
-  function_name = aws_lambda_function.function.function_name
-  principal = "*"
+  action                 = "lambda:InvokeFunctionUrl"
+  function_name          = aws_lambda_function.function.function_name
+  principal              = "*"
   function_url_auth_type = "NONE"
 }
 
 
 resource "aws_security_group" "function_sg" {
   count = var.vpc_id == null ? 0 : 1
-  
-  name = "${var.prefix}-sg"
+
+  name   = "${var.prefix}-sg"
   vpc_id = var.vpc_id
 
   egress {
@@ -63,14 +63,14 @@ resource "aws_security_group" "function_sg" {
     for_each = var.security_group_ingress_rules
 
     content {
-      from_port = ingress.value["from_port"]
-      to_port = ingress.value["to_port"]
-      cidr_blocks = ingress.value["cidr_blocks"]
+      from_port        = ingress.value["from_port"]
+      to_port          = ingress.value["to_port"]
+      cidr_blocks      = ingress.value["cidr_blocks"]
       ipv6_cidr_blocks = ingress.value["ipv6_cidr_blocks"]
-      prefix_list_ids = ingress.value["prefix_list_ids"]
-      protocol = ingress.value["protocol"]
-      security_groups = ingress.value["security_groups"]
-      self = ingress.value["self"]
+      prefix_list_ids  = ingress.value["prefix_list_ids"]
+      protocol         = ingress.value["protocol"]
+      security_groups  = ingress.value["security_groups"]
+      self             = ingress.value["self"]
     }
   }
 
@@ -78,22 +78,22 @@ resource "aws_security_group" "function_sg" {
     for_each = var.security_group_egress_rules
 
     content {
-      from_port = ingress.value["from_port"]
-      to_port = ingress.value["to_port"]
-      cidr_blocks = ingress.value["cidr_blocks"]
+      from_port        = ingress.value["from_port"]
+      to_port          = ingress.value["to_port"]
+      cidr_blocks      = ingress.value["cidr_blocks"]
       ipv6_cidr_blocks = ingress.value["ipv6_cidr_blocks"]
-      prefix_list_ids = ingress.value["prefix_list_ids"]
-      protocol = ingress.value["protocol"]
-      security_groups = ingress.value["security_groups"]
-      self = ingress.value["self"]
+      prefix_list_ids  = ingress.value["prefix_list_ids"]
+      protocol         = ingress.value["protocol"]
+      security_groups  = ingress.value["security_groups"]
+      self             = ingress.value["self"]
     }
   }
 }
 
 resource "aws_lambda_permission" "allow_execution_from_eventbridge" {
-  count = var.create_eventbridge_scheduled_rule ? 1 : 0
-  statement_id = "AllowExecutionFromEventbridge"
-  action = "lambda:InvokeFunction"
+  count         = var.create_eventbridge_scheduled_rule ? 1 : 0
+  statement_id  = "AllowExecutionFromEventbridge"
+  action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.function.function_name
-  principal = "events.amazonaws.com"
+  principal     = "events.amazonaws.com"
 }

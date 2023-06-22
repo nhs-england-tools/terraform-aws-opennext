@@ -4,9 +4,9 @@ variable "prefix" {
 }
 
 variable "create_eventbridge_scheduled_rule" {
-  type = bool
+  type        = bool
   description = "Toggle to create an scheduled rule in eventbridge to invoke the lambda function"
-  default = false
+  default     = false
 }
 
 /**
@@ -53,9 +53,9 @@ variable "handler" {
 }
 
 variable "publish" {
-  type = bool
+  type        = bool
   description = "Publish the lambda function to lambda@edge"
-  default = false
+  default     = false
 }
 
 variable "environment_variables" {
@@ -65,9 +65,9 @@ variable "environment_variables" {
 }
 
 variable "kms_key_arn" {
-    type = string
-    default = null
-    description = "The KMS key to use for encrypting the Lambda function"
+  type        = string
+  default     = null
+  description = "The KMS key to use for encrypting the Lambda function"
 }
 
 variable "vpc_id" {
@@ -94,36 +94,36 @@ variable "iam_policy_statements" {
 
 variable "security_group_ingress_rules" {
   type = set(object({
-    from_port = number
-    to_port = number
-    cidr_blocks = optional(list(string))
+    from_port        = number
+    to_port          = number
+    cidr_blocks      = optional(list(string))
     ipv6_cidr_blocks = optional(list(string))
-    prefix_list_ids = optional(list(string))
-    protocol = optional(string)
-    security_groups = optional(list(string))
-    self = optional(bool)
+    prefix_list_ids  = optional(list(string))
+    protocol         = optional(string)
+    security_groups  = optional(list(string))
+    self             = optional(bool)
   }))
   description = "Ingress rules to add to the lambda security group (if in VPC)"
-  default = []
-} 
+  default     = []
+}
 
 variable "security_group_egress_rules" {
   type = set(object({
-    from_port = number
-    to_port = number
-    cidr_blocks = optional(list(string))
+    from_port        = number
+    to_port          = number
+    cidr_blocks      = optional(list(string))
     ipv6_cidr_blocks = optional(list(string))
-    prefix_list_ids = optional(list(string))
-    protocol = optional(string)
-    security_groups = optional(list(string))
-    self = optional(bool)
+    prefix_list_ids  = optional(list(string))
+    protocol         = optional(string)
+    security_groups  = optional(list(string))
+    self             = optional(bool)
   }))
   description = "Egress rules to add to the lambda security group (if in VPC)"
-  default = []
+  default     = []
 }
 
 variable "schedule_expression" {
-  type = string
+  type        = string
   description = "The schedule expression of the eventbridge lambda trigger rule (if enabled)"
-  default = "rate(5 minutes)"
+  default     = "rate(5 minutes)"
 }

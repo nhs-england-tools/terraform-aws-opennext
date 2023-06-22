@@ -1,10 +1,6 @@
 import Head from 'next/head'
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
-import styles from '@/styles/Home.module.css'
-
-const inter = Inter({ subsets: ['latin'] })
-
+import Link from 'next/link'
+import { Container, ListPanel } from 'nhsuk-react-components'
 export default function Home() {
   return (
     <>
@@ -14,100 +10,35 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-        <div className={styles.description}>
-          <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>src/pages/index.tsx</code>
-          </p>
-          <div>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              By{' '}
-              <Image
-                src="/vercel.svg"
-                alt="Vercel Logo"
-                className={styles.vercelLogo}
-                width={100}
-                height={24}
-                priority
-              />
-            </a>
-          </div>
-        </div>
+      <main>
+        <header>
+          <h1>Next.js Feature Test App</h1>
+          <p>This app contains a handful of pages. Each page implements a specific Next.js feature. Deploy this app. Then select a test below to check if the feature works.</p>
+          <p>Based upon the excellent <a href="https://github.com/serverless-stack/open-next/blob/main/example/">OpenNext example Next.js app</a>.</p>
+        </header>
 
-        <div className={styles.center}>
-          <Image
-            className={styles.logo}
-            src="/next.svg"
-            alt="Next.js Logo"
-            width={180}
-            height={37}
-            priority
-          />
-        </div>
-
-        <div className={styles.grid}>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Docs <span>-&gt;</span>
-            </h2>
-            <p>
-              Find in-depth information about Next.js features and&nbsp;API.
-            </p>
-          </a>
-
-          <a
-            href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Learn <span>-&gt;</span>
-            </h2>
-            <p>
-              Learn about Next.js in an interactive course with&nbsp;quizzes!
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Templates <span>-&gt;</span>
-            </h2>
-            <p>
-              Discover and deploy boilerplate example Next.js&nbsp;projects.
-            </p>
-          </a>
-
-          <a
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-            className={styles.card}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <h2>
-              Deploy <span>-&gt;</span>
-            </h2>
-            <p>
-              Instantly deploy your Next.js site to a shareable URL
-              with&nbsp;Vercel.
-            </p>
-          </a>
-        </div>
+        <section>
+          <ul>
+            <li><Link href="/ssg">Static Site Generation (SSG)</Link></li>
+            <li><Link href="/ssg-dynamic/1">Static Site Generation — with dynamic routes</Link></li>
+            <li><Link href="/ssg-dynamic-fallback/1">Static Site Generation — with dynamic route fallback</Link></li>
+            <li><Link href="/isr">Incremental Static Regeneration (ISR)</Link></li>
+            <li><Link href="/ssr">Server Side Rendering (SSR)</Link></li>
+            <li><Link href="/ssr-redirect">Server Side Rendering — redirect</Link></li>
+            <li><Link href="/ssr-not-found">Server Side Rendering — page not found</Link></li>
+            <li><Link href="/api-route">API Route</Link></li>
+            <li><Link href="/middleware-rewrite">Middleware — rewrite</Link></li>
+            <li><Link href="/middleware-redirect">Middleware — redirect</Link></li>
+            <li><Link href="/middleware-set-header">Middleware — set header</Link></li>
+            <li><Link href="/middleware-geolocation">Middleware — geolocation</Link></li>
+            <li><Link href="/next-auth">NextAuth</Link></li>
+            <li><Link href="/image-optimization-imported">Image Optimization — imported image</Link></li>
+            <li><Link href="/image-optimization-remote">Image Optimization — remote image</Link></li>
+            <li><Link href="/image-html-tag">Image using html image tag</Link></li>
+            <li><Link href="/font-next-font">Font — @next/font</Link></li>
+            <li><Link href="/page-does-not-exist">404 Page not found</Link></li>
+          </ul>
+        </section>
       </main>
     </>
   )

@@ -1,6 +1,7 @@
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
-  name        = "${var.prefix}-nextjs-waf"
-  scope       = "GLOBAL"
+  provider = aws.global
+  name     = "${var.prefix}-nextjs-waf"
+  scope    = "CLOUDFRONT"
 
   default_action {
     allow {}
@@ -28,8 +29,6 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
         }
       }
     }
-
-    token_domains = [var.domain_name]
 
     visibility_config {
       cloudwatch_metrics_enabled = false

@@ -1,6 +1,9 @@
 import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3"
-import AdmZip from "adm-zip"
+import zlib from "zlib"
 import qs from "querystring"
+import { promisify } from "util"
+
+const unzip = promisify(zlib.gunzip);
 
 type ParseVersionFunction = (line?: string) => string;
 
@@ -20,7 +23,7 @@ export const parseVersion: ParseVersionFunction = (line) => {
 type ParseFieldsFunction = (line?: string) => string[];
 
 export const parseFields: ParseFieldsFunction = (line) => {
-    if (!line || line.startsWith("#Fields:")) {
+    if (!line || !line.startsWith("#Fields:")) {
         throw new Error(`Invalid fields line '${line}'`);
     }
 
@@ -77,8 +80,7 @@ export const getLogFile: GetLogFileFunction = async (options) => {
         throw new Error(`Log file zip has no body - bucket=${options.bucket} key=${options.key}`)
     }
 
-    const zipFile = new AdmZip(await response.Body.transformToString())
-    const buffer = await zipFile.toBufferPromise();
+    const buffer = await unzip(await response.Body.transformToByteArray())
 
     return buffer.toString().trim();
 }
