@@ -87,9 +87,13 @@ jobs:
         with:
           python-version: '3.11'
       
+      - name: Install Latest Checkov
+        id: install-checkov
+        run: pip install --user checkov
+
       - name: Run Checkov
-        id: checkov
-        uses: bridgecrewio/checkov-action@v12.1347.0
+        id: run-checkov
+        run: checkov --directory . -o sarif
       
       - name: Upload SARIF File
         uses: github/codeql-action/upload-sarif@v2
