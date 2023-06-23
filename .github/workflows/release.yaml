@@ -7,6 +7,22 @@ on:
         - "v*"
 
 jobs:
+    get_metadata:
+      name: Get Metadata
+      runs-on: ubuntu-latest
+      outputs:
+        prerelease: ${{ steps.determine_prerelease.outputs == 'true' }}
+
+      steps:
+        - name: Determine if prerelease
+          id: determine_prerelease
+          run: |
+              if [[ "${{ github.ref_name }}" =~ ^v[0-9]*\.[0-9]*\.[0-9]*-.*?\.[0-9]*? ]]; then
+                echo "prerelease=true" >> "$GITHUB_OUTPUT"
+              else
+                echo "prerelease=false" >> "$GITHUB_OUTPUT"
+              fi
+              
     build_cloudfront_logs_lambda:
         name: Build CloudFront Logs Lambda for Node.js v${{ matrix.nodejs_version }}
         runs-on: ubuntu-latest
@@ -42,7 +58,7 @@ jobs:
 
     publish_release:
         name: Publish Release ${{ github.ref_name }}
-        needs: [build_cloudfront_logs_lambda]
+        needs: [get_metadata, build_cloudfront_logs_lambda]
         runs-on: ubuntu-latest
         steps:
             - uses: actions/download-artifact@v3
@@ -55,4 +71,5 @@ jobs:
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 automatic_release_tag: ${{ github.ref_name }}
+                prerelease: ${{ needs.get_metadata.outputs.prerelease }}
                 files: cloudfront-logs-packages/*.zip
