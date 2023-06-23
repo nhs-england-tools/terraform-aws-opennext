@@ -1,18 +1,10 @@
 name: Release
-run-name: Publish Release Version ${{ inputs.release_version }} by ${{ github.actor }}
+run-name: Publish Release Version ${{ github.ref_name }}
 
 on:
-    workflow_dispatch:
-        inputs:
-            release_version:
-                type: string
-                description: The version to release
-                required: true
-            
-            prerelease:
-                type: boolean
-                description: Mark release as pre-release
-                default: false
+    push:
+      tags:
+        - "v*"
 
 jobs:
     build_cloudfront_logs_lambda:
@@ -21,7 +13,7 @@ jobs:
 
         strategy:
             matrix:
-                nodejs_version: ["14.x", "16.x", "18.x"]
+                nodejs_version: ["18.x"]
 
         steps:
             - uses: actions/checkout@v3
@@ -49,7 +41,7 @@ jobs:
                 if-no-files-found: error
 
     publish_release:
-        name: Publish Release ${{ inputs.release_version }}
+        name: Publish Release ${{ github.ref_name }}
         needs: [build_cloudfront_logs_lambda]
         runs-on: ubuntu-latest
         steps:
@@ -62,6 +54,5 @@ jobs:
               uses: "marvinpinto/action-automatic-releases@v1.2.1"
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
-                automatic_release_tag: ${{ inputs.release_version }}
-                prerelease: ${{ inputs.prerelease }}
+                automatic_release_tag: ${{ github.ref_name }}
                 files: cloudfront-logs-packages/*.zip
