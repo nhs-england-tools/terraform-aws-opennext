@@ -23,53 +23,14 @@ jobs:
                 echo "prerelease=false" >> "$GITHUB_OUTPUT"
               fi
               
-    build_cloudfront_logs_lambda:
-        name: Build CloudFront Logs Lambda for Node.js v${{ matrix.nodejs_version }}
-        runs-on: ubuntu-latest
-
-        strategy:
-            matrix:
-                nodejs_version: ["18.x"]
-
-        steps:
-            - uses: actions/checkout@v3
-            
-            - uses: actions/setup-node@v3
-              with:
-                node-version: ${{ matrix.nodejs_version }}
-                cache: yarn
-                cache-dependency-path: modules/cloudfront-logs/lambda/yarn.lock
-
-            - name: Install Dependencies
-              run: make install-cloudfront-logs-lambda
-            
-            - name: Build Lambda
-              run: make build-cloudfront-logs-lambda
-            
-            - name: Copy Lambda Asset
-              run: cp modules/cloudfront-logs/lambda/dist/lambda.zip cloudfront-logs-package-nodejs${{ matrix.nodejs_version }}.zip
-            
-            - name: Store Output Artifact
-              uses: actions/upload-artifact@v3
-              with:
-                name: cloudfront-logs-packages
-                path: cloudfront-logs-package-nodejs${{ matrix.nodejs_version }}.zip
-                if-no-files-found: error
-
     publish_release:
         name: Publish Release ${{ github.ref_name }}
-        needs: [get_metadata, build_cloudfront_logs_lambda]
+        needs: [get_metadata]
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/download-artifact@v3
-            
-            - name: Display structure of downloaded files
-              run: ls -R
-            
             - name: Publish Release
               uses: "marvinpinto/action-automatic-releases@v1.2.1"
               with:
                 repo_token: ${{ secrets.GITHUB_TOKEN }}
                 automatic_release_tag: ${{ github.ref_name }}
                 prerelease: ${{ needs.get_metadata.outputs.prerelease }}
-                files: cloudfront-logs-packages/*.zip
