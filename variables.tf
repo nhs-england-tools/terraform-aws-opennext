@@ -33,19 +33,47 @@ variable "assets_paths" {
 
 # Route53 (DNS) Variables
 variable "create_route53_records" {
-  type = bool
-  default = true
+  type        = bool
+  default     = true
   description = "Create Route53 DNS Records for CloudFront distribution"
 }
 
 variable "evaluate_target_health" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Allow Route53 to determine whether to respond to DNS queries by checking the health of the record set"
 }
 
 # CloudFront Variables
 variable "aliases" {
-  type = list(string)
+  type        = list(string)
   description = "The aliases (domain names) to be used for the Next.js application"
+}
+
+variable "custom_headers" {
+  type = list(object({
+    header   = string
+    override = bool
+    value    = string
+  }))
+  description = "Add custom headers to the CloudFront response headers policy"
+  default     = []
+}
+
+variable "cors" {
+  description = "CORS (Cross-Origin Resource Sharing) configuration for the CloudFront distribution"
+  type = object({
+    allow_credentials = bool,
+    allow_headers     = list(string),
+    allow_methods     = list(string),
+    allow_origins     = list(string)
+    origin_override   = bool
+  })
+  default = {
+    allow_credentials = false,
+    allow_headers     = ["*"],
+    allow_methods     = ["ALL"],
+    allow_origins     = ["*"],
+    origin_override   = true
+  }
 }
