@@ -11,7 +11,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   # Core Rule Set (CRS)
   # https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-baseline.html#aws-managed-rule-groups-baseline-crs
   rule {
-    name = "AWS-AWSManagedRulesCommonRuleSet"
+    name     = "AWS-AWSManagedRulesCommonRuleSet"
     priority = 1
 
     override_action {
@@ -20,14 +20,14 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
     statement {
       managed_rule_group_statement {
-        name = "AWSManagedRulesCommonRuleSet"
+        name        = "AWSManagedRulesCommonRuleSet"
         vendor_name = "AWS"
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name = "${var.prefix}-WAF-AWSManagedRulesCommonRuleSet"
+      metric_name                = "${var.prefix}-WAF-AWSManagedRulesCommonRuleSet"
       sampled_requests_enabled   = false
     }
   }
@@ -35,7 +35,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   # Bad Inputs Rule Set
   # https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-baseline.html#aws-managed-rule-groups-baseline-known-bad-inputs
   rule {
-    name = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
+    name     = "AWS-AWSManagedRulesKnownBadInputsRuleSet"
     priority = 2
 
     override_action {
@@ -44,14 +44,14 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
     statement {
       managed_rule_group_statement {
-        name = "AWSManagedRulesKnownBadInputsRuleSet"
+        name        = "AWSManagedRulesKnownBadInputsRuleSet"
         vendor_name = "AWS"
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name = "${var.prefix}-WAF-AWSManagedRulesKnownBadInputsRuleSet"
+      metric_name                = "${var.prefix}-WAF-AWSManagedRulesKnownBadInputsRuleSet"
       sampled_requests_enabled   = false
     }
   }
@@ -59,7 +59,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   # Linux Operating System Rule Group
   # https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-use-case.html#aws-managed-rule-groups-use-case-linux-os
   rule {
-    name = "AWS-AWSManagedRulesLinuxRuleSet"
+    name     = "AWS-AWSManagedRulesLinuxRuleSet"
     priority = 3
 
     override_action {
@@ -69,14 +69,14 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
     statement {
       managed_rule_group_statement {
-        name = "AWSManagedRulesLinuxRuleSet"
+        name        = "AWSManagedRulesLinuxRuleSet"
         vendor_name = "AWS"
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name = "${var.prefix}-WAF-AWSManagedRulesLinuxRuleSet"
+      metric_name                = "${var.prefix}-WAF-AWSManagedRulesLinuxRuleSet"
       sampled_requests_enabled   = false
     }
   }
@@ -84,7 +84,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
   # POSIX Operating System Rule Group
   # https://docs.aws.amazon.com/waf/latest/developerguide/aws-managed-rule-groups-use-case.html#aws-managed-rule-groups-use-case-posix-os
   rule {
-    name = "AWS-AWSManagedRulesUnixRuleSet"
+    name     = "AWS-AWSManagedRulesUnixRuleSet"
     priority = 4
 
     override_action {
@@ -93,14 +93,14 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 
     statement {
       managed_rule_group_statement {
-        name = "AWSManagedRulesUnixRuleSet"
+        name        = "AWSManagedRulesUnixRuleSet"
         vendor_name = "AWS"
       }
     }
 
     visibility_config {
       cloudwatch_metrics_enabled = true
-      metric_name = "${var.prefix}-WAF-AWSManagedRulesUnixRuleSet"
+      metric_name                = "${var.prefix}-WAF-AWSManagedRulesUnixRuleSet"
       sampled_requests_enabled   = false
     }
   }
@@ -115,9 +115,9 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   count = var.waf_logging_configuration == null ? 0 : 1
 
-  resource_arn = aws_wafv2_web_acl.cloudfront_waf.arn
+  resource_arn            = aws_wafv2_web_acl.cloudfront_waf.arn
   log_destination_configs = var.waf_logging_configuration.log_destination_configs
-  
+
   dynamic "logging_filter" {
     for_each = var.waf_logging_configuration.logging_filter != null ? [true] : []
 
@@ -128,7 +128,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
         for_each = var.waf_logging_configuration.logging_filter.filter
 
         content {
-          behavior = filter.behavior
+          behavior    = filter.behavior
           requirement = filter.requirement
 
           dynamic "condition" {
@@ -167,7 +167,7 @@ resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
 
       dynamic "query_string" {
         for_each = redacted_fields.query_string == true ? [true] : []
-      
+
         content {}
       }
 

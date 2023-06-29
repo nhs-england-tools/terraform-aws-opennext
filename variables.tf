@@ -82,15 +82,15 @@ variable "hsts" {
   description = "HSTS (HTTP Strict Transport Security) configuration for the CloudFront distribution"
   type = object({
     access_control_max_age_sec = number
-    include_subdomains = bool
-    override = bool
-    preload = true
+    include_subdomains         = bool
+    override                   = bool
+    preload                    = true
   })
   default = {
     access_control_max_age_sec = 31536000
-    include_subdomains = true
-    override = true
-    preload = true
+    include_subdomains         = true
+    override                   = true
+    preload                    = true
   }
 }
 
@@ -109,17 +109,17 @@ variable "revalidation_queue_kms_key_arn" {
 
 variable "static_assets_replication_configuration" {
   description = "Replication Configuration for the S3 bucket"
-  default = null
+  default     = null
   type = object({
     role = string
     rules = list(object({
-      id = string
+      id     = string
       status = string
       filters = list(object({
         prefix = string
       }))
       destination = object({
-        bucket = string
+        bucket        = string
         storage_class = string
       })
     }))
@@ -141,7 +141,7 @@ variable "waf_logging_configuration" {
     logging_filter = optional(object({
       default_behavior = string
       filter = list(object({
-        behavior = string
+        behavior    = string
         requirement = string
         action_condition = optional(list(object({
           action = string
@@ -152,7 +152,7 @@ variable "waf_logging_configuration" {
       }))
     }))
     redacted_fields = optional(list(object({
-      method = optional(bool)
+      method       = optional(bool)
       query_string = optional(bool)
       single_header = optional(object({
         name = string

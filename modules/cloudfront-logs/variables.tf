@@ -12,7 +12,7 @@ variable "log_bucket_name" {
 }
 
 variable "log_bucket_kms_key_arn" {
-  type = string
+  type    = string
   default = "aws/s3"
 }
 
@@ -26,17 +26,17 @@ variable "log_bucket_logging_config" {
 
 variable "log_bucket_replication_configuration" {
   description = "Replication Configuration for the S3 bucket"
-  default = null
+  default     = null
   type = object({
     role = string
     rules = list(object({
-      id = string
+      id     = string
       status = string
       filters = list(object({
         prefix = string
       }))
       destination = object({
-        bucket = string
+        bucket        = string
         storage_class = string
       })
     }))
@@ -50,7 +50,7 @@ variable "lambda_runtime" {
 }
 
 variable "lambda_log_retention_period" {
-  type = number
+  type    = number
   default = 365
 }
 

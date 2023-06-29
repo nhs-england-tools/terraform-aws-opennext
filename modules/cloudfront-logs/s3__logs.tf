@@ -50,7 +50,7 @@ resource "aws_s3_bucket_lifecycle_configuration" "logs" {
   bucket = aws_s3_bucket.logs.bucket
 
   rule {
-    id = "abort-failed-uploads"
+    id     = "abort-failed-uploads"
     status = "Enabled"
 
     abort_incomplete_multipart_upload {
@@ -90,22 +90,22 @@ resource "aws_s3_bucket_versioning" "logs" {
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "logs" {
   bucket = aws_s3_bucket.logs.bucket
-  
+
   rule {
     apply_server_side_encryption_by_default {
       kms_master_key_id = var.log_bucket_kms_key_arn
-      sse_algorithm = "aws:kms"
+      sse_algorithm     = "aws:kms"
     }
   }
 }
 
 resource "aws_s3_bucket_logging" "logs" {
   count = var.log_bucket_logging_config != null ? 1 : 0
-  
+
   bucket = aws_s3_bucket.logs.bucket
-  
+
   target_bucket = var.log_bucket_logging_config.target_bucket
-  target_prefix = var.log_bucket_logging_config.target_prefix  
+  target_prefix = var.log_bucket_logging_config.target_prefix
 }
 
 
@@ -113,25 +113,25 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
   count = var.log_bucket_replication_configuration == null ? 0 : 1
 
   depends_on = [aws_s3_bucket_versioning.logs]
-  bucket = aws_s3_bucket.logs.bucket
+  bucket     = aws_s3_bucket.logs.bucket
 
   dynamic "rule" {
     for_each = var.log_bucket_replication_configuration.rules
 
     content {
-      id = rule.id
+      id     = rule.id
       status = rule.status
 
       dynamic "filter" {
         for_each = rule.filters
-        
+
         content {
           prefix = filter.prefix
         }
       }
 
       destination {
-        bucket = rule.destination.bucket
+        bucket        = rule.destination.bucket
         storage_class = rule.destination.storage_class
       }
     }
