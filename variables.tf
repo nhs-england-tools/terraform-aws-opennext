@@ -77,3 +77,10 @@ variable "cors" {
     origin_override   = true
   }
 }
+
+# S3 Configuration
+variable "static_assets_kms_key_arn" {
+  description = "The KMS Key ARN for the encryption of the static assets S3 bucket"
+  type        = string
+  default     = "aws/s3"
+}

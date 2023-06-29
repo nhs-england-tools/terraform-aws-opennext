@@ -19,7 +19,6 @@ locals {
 
 # TODO: CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
 # TODO: CKV_AWS_144: "Ensure that S3 bucket has cross-region replication enabled"
-# TODO: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
 resource "aws_s3_bucket" "static_assets" {
   bucket = "${var.prefix}-static-assets"
 }
@@ -27,7 +26,7 @@ resource "aws_s3_bucket" "static_assets" {
 resource "aws_s3_bucket_public_access_block" "static_assets" {
   bucket = aws_s3_bucket.static_assets.bucket
 
-  block_public_acls = true
+  block_public_acls   = true
   block_public_policy = true
 }
 
@@ -41,6 +40,17 @@ resource "aws_s3_bucket_versioning" "static_assets" {
 
   versioning_configuration {
     status = "Enabled"
+  }
+}
+
+resource "aws_s3_bucket_server_side_encryption_configuration" "static_assets" {
+  bucket = aws_s3_bucket.static_assets.bucket
+
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = var.static_assets_kms_key_arn
+      sse_algorithm     = "aws:kms"
+    }
   }
 }
 
