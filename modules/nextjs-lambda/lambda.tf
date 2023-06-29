@@ -1,17 +1,33 @@
-# TODO: CKV_AWS_272: "Ensure AWS Lambda function is configured to validate code-signing"
-# TODO: CKV_AWS_116: "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
 # TODO: CKV_AWS_115: "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
-# TODO: CKV_AWS_272: "Ensure AWS Lambda function is configured to validate code-signing"
+resource "aws_lambda_code_signing_config" "signing_config" {
+  count = var.code_signing_config == null ? 0 : 1
+
+  description = var.code_signing_config.description
+
+  allowed_publishers {
+    signing_profile_version_arns = var.code_signing_config.signing_profile_version_arns
+  }
+
+  dynamic "policies" {
+    for_each = var.code_signing_config.untrusted_artfact_on_deployment == null ? [1] : [0]
+
+    content {
+      untrusted_artifact_on_deployment = var.code_signing_config.untrusted_artfact_on_deployment
+    }
+  }
+}
+
 resource "aws_lambda_function" "function" {
   filename         = var.filename
   source_code_hash = filebase64sha256(var.filename)
 
-  function_name = var.prefix
-  handler       = "index.handler"
-  runtime       = var.runtime
-  architectures = var.architectures
-  role          = aws_iam_role.lambda_role.arn
-  kms_key_arn   = var.kms_key_arn
+  function_name           = var.prefix
+  handler                 = "index.handler"
+  runtime                 = var.runtime
+  architectures           = var.architectures
+  role                    = aws_iam_role.lambda_role.arn
+  kms_key_arn             = var.kms_key_arn
+  code_signing_config_arn = try(aws_lambda_code_signing_config.signing_config[0].arn, null)
 
 
   memory_size = var.memory_size
@@ -32,6 +48,14 @@ resource "aws_lambda_function" "function" {
     content {
       security_group_ids = [aws_security_group.function_sg.id]
       subnet_ids         = var.subnet_ids
+    }
+  }
+
+  dynamic "dead_letter_config" {
+    for_each = var.dead_letter_config != null ? [true] : []
+
+    content {
+      target_arn = var.dead_letter_config.target_arn
     }
   }
 }

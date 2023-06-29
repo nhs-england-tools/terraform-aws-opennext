@@ -127,3 +127,21 @@ variable "schedule_expression" {
   description = "The schedule expression of the eventbridge lambda trigger rule (if enabled)"
   default     = "rate(5 minutes)"
 }
+
+variable "code_signing_config" {
+  description = "Code Signing Config for the Lambda Function"
+  type = object({
+    description                     = optional(string)
+    signing_profile_version_arns    = list(string)
+    untrusted_artfact_on_deployment = optional(string)
+  })
+  default = null
+}
+
+variable "dead_letter_config" {
+  description = "Lambda Dead Letter Queue (DLQ) Configuration"
+  default     = null
+  type = object({
+    target_arn = string
+  })
+}
