@@ -29,59 +29,17 @@ jobs:
   scan-secrets:
     needs: [get-metadata]
     name: "Secrets Scan"
-    uses: ./.github/workflows/scan-secrets.yaml
+    uses: ./.github/actions/scan-secrets/action.yml
   
-  check-file-format:
+  check-format:
     needs: [get-metadata]
-    name: "Check File Format"
-    uses: ./.github/workflows/check-file-format.yaml
-  
-  check-markdown-format:
-    needs: [get-metadata]
-    name: "Check Markdown Format"
-    uses: ./.github/workflows/check-markdown-format.yaml
-  
-  cicd-pipeline-test:
-    runs-on: ubuntu-latest
-    needs: [scan-secrets, check-file-format, check-markdown-format]
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v3
-      - name: List Variables
-        run: |
-          export BUILD_DATETIME="${{ needs.get-metadata.outputs.build_datetime }}"
-          export BUILD_TIMESTAMP="${{ needs.get-metadata.outputs.build_timestamp }}"
-          export BUILD_EPOCH="${{ needs.get-metadata.outputs.build_epoch }}"
-          make list-variables
-  
-  # terrascan:
-  #   name: Terrascan
-  #   runs-on: ubuntu-latest
-  #   needs: [cicd-pipeline-test]
-  #   if: success()
-    
-  #   steps:
-  #     - uses: actions/checkout@v3
-          
-  #     - name: Run Terrascan
-  #       id: terrascan
-  #       uses: tenable/terrascan-action@main
-  #       with:
-  #         iac_type: 'terraform'
-  #         iac_version: 'v14'
-  #         policy_type: 'aws'
-  #         sarif_upload: true
-  #         warn_only: true
-
-      # - name: Upload SARIF File
-      #   uses: github/codeql-action/upload-sarif@v2
-      #   if: always()
-      #   with:
-      #     sarif_file: terrascan.sarif
+    name: Check File & Markdown Format
+    uses: ./.github/actions/check-format/action.yml
 
   checkov:
     name: Checkov
     runs-on: ubuntu-latest
+    needs: [scan-secrets, check-format]
 
     steps:
       - uses: actions/checkout@v3
@@ -100,6 +58,33 @@ jobs:
       
       - name: Upload SARIF File
         uses: github/codeql-action/upload-sarif@v2
-        if: always()
+        if: always() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch) 
         with:
           sarif_file: results.sarif
+    
+  tflint:
+    name: TFLint
+    runs-on: ubuntu-latest
+    needs: [scan-secrets, check-format]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup TFLint Cache
+        uses: actions/cache@v3
+        with:
+          path: ~/.tflint.d/plugins
+          key: tflint-${{ hashFiles('.tflint.hcl') }}
+      
+      - name: Setup TFLint
+        uses: terraform-linters/setup-tflint@v3
+        with:
+          tflint_version: v0.47.0
+        
+      - name: Init TFLint
+        run: tflint --init
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        
+      - name: Run TFLint
+        run: tflint -f compact

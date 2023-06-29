@@ -1,7 +1,6 @@
 locals {
   server_origin_id             = "${var.prefix}-server"
   static_assets_origin_id      = "${var.prefix}-static-assets"
-  failover_origin_id           = "${var.prefix}-failover"
   image_optimization_origin_id = "${var.prefix}-image-optimization"
 }
 

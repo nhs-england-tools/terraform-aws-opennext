@@ -7,6 +7,12 @@ BUILD_FOLDER = build
 REQUIRED_BUILD_DEPENDENCIES = yarn
 REQUIRED_RUNTIME_DEPENDENCIES = node
 
+#####################
+## Install Targets ##
+#####################
+install-tflint:
+	curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
 ##############################
 ## Dependency Check Targets ##
 ##############################

@@ -19,11 +19,11 @@ variable "opennext_build_path" {
   description = "The path to the folder containing the .open-next build output"
 }
 
-variable "kms_key_arn" {
-  type        = string
-  default     = null
-  description = "The KMS key to use for encrypting the Lambda functions"
-}
+# variable "kms_key_arn" {
+#   type        = string
+#   default     = null
+#   description = "The KMS key to use for encrypting the Lambda functions"
+# }
 
 variable "assets_paths" {
   type        = list(string)
@@ -84,7 +84,7 @@ variable "hsts" {
     access_control_max_age_sec = number
     include_subdomains         = bool
     override                   = bool
-    preload                    = true
+    preload                    = bool
   })
   default = {
     access_control_max_age_sec = 31536000
