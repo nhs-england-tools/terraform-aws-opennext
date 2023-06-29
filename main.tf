@@ -126,7 +126,7 @@ module "cloudfront_logs" {
   source = "./modules/cloudfront-logs"
 
   log_group_name  = "${var.prefix}-cloudfront-logs"
-  retention       = 30
+  retention       = 365
   log_bucket_name = "${var.prefix}-cloudfront-logs"
   release_version = "v0.0.1-alpha.5"
 }

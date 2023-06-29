@@ -3,7 +3,8 @@ variable "log_group_name" {
 }
 
 variable "retention" {
-  type = number
+  type    = number
+  default = 365
 }
 
 variable "log_bucket_name" {
@@ -31,4 +32,10 @@ variable "vpc_config" {
     security_group_ids = list(string)
   })
   default = null
+}
+
+variable "cloudwatch_log_group_kms_key_arn" {
+  description = "The KMS key to use for encrypting the CloudWatch log group"
+  type        = string
+  default     = null
 }
