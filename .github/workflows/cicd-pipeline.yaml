@@ -77,7 +77,7 @@ jobs:
       #     sarif_file: terrascan.sarif
 
   checkov:
-    name: Checkov (Terraform Scan)
+    name: Checkov
     runs-on: ubuntu-latest
 
     steps:

@@ -56,7 +56,7 @@ resource "aws_security_group" "function_sg" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] #gitleaks:allow
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   dynamic "ingress" {
