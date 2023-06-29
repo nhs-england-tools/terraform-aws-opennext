@@ -28,13 +28,17 @@ jobs:
   
   scan-secrets:
     needs: [get-metadata]
+    runs-on: ubuntu-latest
     name: "Secrets Scan"
-    uses: ./.github/actions/scan-secrets/action.yml
+    steps:
+      - uses: ./.github/actions/scan-secrets/
   
   check-format:
     needs: [get-metadata]
+    runs-on: ubuntu-latest
     name: Check File & Markdown Format
-    uses: ./.github/actions/check-format/action.yml
+    steps:
+      - uses: ./.github/actions/check-format/
 
   checkov:
     name: Checkov
