@@ -1,5 +1,6 @@
 name: Check File Format
-permissions: read-all
+permissions:
+  contents: read
 
 on:
   workflow_call:
