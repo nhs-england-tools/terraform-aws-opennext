@@ -1,8 +1,9 @@
-# TODO: CKV_AWS_27: "Ensure all data stored in the SQS queue is encrypted"
 resource "aws_sqs_queue" "revalidation_queue" {
-  name                        = "${var.prefix}-isr-revalidation.fifo"
-  fifo_queue                  = true
-  content_based_deduplication = true
+  name                              = "${var.prefix}-isr-revalidation.fifo"
+  fifo_queue                        = true
+  content_based_deduplication       = true
+  kms_master_key_id                 = var.revalidation_queue_kms_key_arn
+  kms_data_key_reuse_period_seconds = 300
 }
 
 resource "aws_lambda_event_source_mapping" "revalidation_queue_source" {

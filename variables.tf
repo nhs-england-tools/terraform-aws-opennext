@@ -84,3 +84,9 @@ variable "static_assets_kms_key_arn" {
   type        = string
   default     = "aws/s3"
 }
+
+variable "revalidation_queue_kms_key_arn" {
+  description = "The KMS Key ARN for the encryption of the invalidation SQS queue"
+  type        = string
+  default     = "aws/sqs"
+}
