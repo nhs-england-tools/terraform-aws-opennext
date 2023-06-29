@@ -1,3 +1,7 @@
+# TODO: CKV_AWS_272: "Ensure AWS Lambda function is configured to validate code-signing"
+# TODO: CKV_AWS_116: "Ensure that AWS Lambda function is configured for a Dead Letter Queue(DLQ)"
+# TODO: CKV_AWS_115: "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
+# TODO: CKV_AWS_272: "Ensure AWS Lambda function is configured to validate code-signing"
 resource "aws_lambda_function" "function" {
   filename         = var.filename
   source_code_hash = filebase64sha256(var.filename)
@@ -32,12 +36,14 @@ resource "aws_lambda_function" "function" {
   }
 }
 
+# TODO: CKV_AWS_258: "Ensure that Lambda function URLs AuthType is not None"
 resource "aws_lambda_function_url" "function_url" {
   function_name      = aws_lambda_function.function.function_name
   authorization_type = "NONE"
   invoke_mode        = "BUFFERED"
 }
 
+# TODO: CKV_AWS_301: "Ensure that AWS Lambda function is not publicly accessible"
 resource "aws_lambda_permission" "function_url_permission" {
   action                 = "lambda:InvokeFunctionUrl"
   function_name          = aws_lambda_function.function.function_name
@@ -45,7 +51,8 @@ resource "aws_lambda_permission" "function_url_permission" {
   function_url_auth_type = "NONE"
 }
 
-
+# TODO: CKV_AWS_23: "Ensure every security groups rule has a description"
+# TODO: CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
 resource "aws_security_group" "function_sg" {
   count = var.vpc_id == null ? 0 : 1
 

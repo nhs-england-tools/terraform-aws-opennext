@@ -1,3 +1,5 @@
+# TODO: CKV_AWS_192: "Ensure WAF prevents message lookup in Log4j2. See CVE-2021-44228 aka log4jshell"
+# TODO: CKV2_AWS_31: "Ensure WAF2 has a Logging Configuration"
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
   provider = aws.global
   name     = "${var.prefix}-nextjs-waf"

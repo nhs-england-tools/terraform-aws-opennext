@@ -48,6 +48,8 @@ data "aws_cloudfront_origin_request_policy" "origin_request_policy" {
   name = "Managed-AllViewerExceptHostHeader"
 }
 
+# TODO: CKV2_AWS_32: "Ensure CloudFront distribution has a response headers policy attached"
+# TODO: CKV2_AWS_47: "Ensure AWS CloudFront attached WAFv2 WebACL is configured with AMR for Log4j Vulnerability"
 resource "aws_cloudfront_distribution" "next_distribution" {
   provider        = aws.global
   price_class     = "PriceClass_100"

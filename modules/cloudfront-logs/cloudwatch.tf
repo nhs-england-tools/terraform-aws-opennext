@@ -2,6 +2,8 @@ data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
 
+# TODO: CKV_AWS_158: "Ensure that Cloudwatch Log Group is encrypted by KMS"
+# TODO: CKV_AWS_338: "Ensure CloudWatch log groups retains logs for at least 1 year"
 resource "aws_cloudwatch_log_group" "target_log_group" {
   name              = var.log_group_name
   retention_in_days = var.retention

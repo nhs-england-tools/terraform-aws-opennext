@@ -1,5 +1,8 @@
 data "aws_canonical_user_id" "current" {}
 
+# TODO: CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
+# TODO: CKV_AWS_144: "Ensure that S3 bucket has cross-region replication enabled"
+# TODO: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
 resource "aws_s3_bucket" "logs" {
   bucket = var.log_bucket_name
 }
@@ -43,6 +46,7 @@ resource "aws_s3_bucket_acl" "logs" {
   }
 }
 
+# TODO: CKV_AWS_300: "Ensure S3 lifecycle configuration sets period for aborting failed uploads"
 resource "aws_s3_bucket_lifecycle_configuration" "logs" {
   bucket = aws_s3_bucket.logs.bucket
 

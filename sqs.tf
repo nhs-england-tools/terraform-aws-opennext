@@ -1,3 +1,4 @@
+# TODO: CKV_AWS_27: "Ensure all data stored in the SQS queue is encrypted"
 resource "aws_sqs_queue" "revalidation_queue" {
   name                        = "${var.prefix}-isr-revalidation.fifo"
   fifo_queue                  = true

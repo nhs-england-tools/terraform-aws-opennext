@@ -4,7 +4,8 @@ data "archive_file" "cloudfront_logs_zip" {
   output_path = "${path.module}/lambda-function.zip"
 }
 
-
+# TODO: CKV_AWS_272: "Ensure AWS Lambda function is configured to validate code-signing" 
+# TODO: CKV_AWS_116: "Ensure that AWS Lambda function is configured for a Dead Letter Queue (DLQ)"
 resource "aws_lambda_function" "cloudfront_logs_function" {
   function_name = var.log_group_name
 
@@ -85,6 +86,8 @@ resource "aws_iam_role_policy" "cloudfront_logs_role_policy" {
   policy = data.aws_iam_policy_document.cloudfront_logs_policy.json
 }
 
+# TODO: CKV_AWS_158: "Ensure that CloudWatch Log Group is encrypted by KMS"
+# TODO: CKV_AWS_338: "Ensure CloudWatch log groups retains logs for at least 1 year"
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${var.log_group_name}"
   retention_in_days = 3
