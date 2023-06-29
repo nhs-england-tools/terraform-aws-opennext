@@ -2,8 +2,6 @@ name: "Check Formats"
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v3
-
     - name: Check File Format
       run: |
           export BRANCH_NAME=origin/${{ github.event.repository.default_branch }}

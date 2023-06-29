@@ -26,24 +26,22 @@ jobs:
           echo "build_timestamp=$(date --date=$datetime -u +'%Y%m%d%H%M%S')" >> $GITHUB_OUTPUT
           echo "build_epoch=$(date --date=$datetime -u +'%s')" >> $GITHUB_OUTPUT
   
-  scan-secrets:
+  precommit-checks:
     needs: [get-metadata]
     runs-on: ubuntu-latest
-    name: "Secrets Scan"
+    name: Pre-Commit Checks
     steps:
-      - uses: ./.github/actions/scan-secrets/
-  
-  check-format:
-    needs: [get-metadata]
-    runs-on: ubuntu-latest
-    name: Check File & Markdown Format
-    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
       - uses: ./.github/actions/check-format/
+      - uses: ./.github/actions/scan-secrets/
 
   checkov:
     name: Checkov
     runs-on: ubuntu-latest
-    needs: [scan-secrets, check-format]
+    needs: [precommit-checks]
 
     steps:
       - uses: actions/checkout@v3
@@ -69,7 +67,7 @@ jobs:
   tflint:
     name: TFLint
     runs-on: ubuntu-latest
-    needs: [scan-secrets, check-format]
+    needs: [precommit-checks]
 
     steps:
       - uses: actions/checkout@v3
