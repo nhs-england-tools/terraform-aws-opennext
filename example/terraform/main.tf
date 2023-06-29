@@ -25,7 +25,7 @@ module "opennext" {
   source = "../../"
 
   prefix              = "opennext-example"
-  domain_name         = local.domain_name
+  aliases             = [local.domain_name]
   acm_certificate_arn = aws_acm_certificate_validation.ssl_certificate.certificate_arn
   hosted_zone_id      = data.aws_route53_zone.zone.zone_id
   opennext_build_path = "../.open-next"

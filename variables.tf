@@ -4,11 +4,6 @@ variable "prefix" {
   default     = "opennext"
 }
 
-variable "domain_name" {
-  type        = string
-  description = "The domain name for the Next.js application"
-}
-
 variable "acm_certificate_arn" {
   type        = string
   description = "The ACM (SSL) certificate ARN for the domain name"
@@ -34,4 +29,23 @@ variable "assets_paths" {
   type        = list(string)
   default     = []
   description = "Paths to expose as static assets (i.e. /images/*)"
+}
+
+# Route53 (DNS) Variables
+variable "create_route53_records" {
+  type = bool
+  default = true
+  description = "Create Route53 DNS Records for CloudFront distribution"
+}
+
+variable "evaluate_target_health" {
+  type = bool
+  default = false
+  description = "Allow Route53 to determine whether to respond to DNS queries by checking the health of the record set"
+}
+
+# CloudFront Variables
+variable "aliases" {
+  type = list(string)
+  description = "The aliases (domain names) to be used for the Next.js application"
 }

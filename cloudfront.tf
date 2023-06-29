@@ -56,13 +56,13 @@ resource "aws_cloudfront_distribution" "next_distribution" {
   enabled         = true
   is_ipv6_enabled = true
   comment         = "${var.prefix} - CloudFront Distribution for Next.js Application"
-  aliases         = [var.domain_name]
+  aliases         = var.aliases
   web_acl_id      = aws_wafv2_web_acl.cloudfront_waf.arn
 
   logging_config {
     include_cookies = false
     bucket          = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
-    prefix          = var.domain_name
+    prefix          = one(var.aliases)
   }
 
   viewer_certificate {
