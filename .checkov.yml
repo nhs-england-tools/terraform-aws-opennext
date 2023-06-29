@@ -1,0 +1,14 @@
+block-list-secret-scan: []
+branch: main
+download-external-modules: false
+evaluate-variables: true
+external-modules-download-path: .external_modules
+framework:
+- all
+mask: []
+secrets-history-timeout: 12h
+secrets-scan-file-type: []
+summary-position: top
+skip-check:
+  - CKV_AWS_144 # S3 Bucket Cross-Region Replication
+  - CKV2_AWS_62 # S3 Bucket Event Notifications

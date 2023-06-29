@@ -59,8 +59,10 @@ resource "aws_lambda_function" "function" {
   }
 }
 
-# TODO: CKV_AWS_258: "Ensure that Lambda function URLs AuthType is not None"
 resource "aws_lambda_function_url" "function_url" {
+  # TODO: Find a way to authenticate lambda function with CloudFront
+  # checkov:skip=CKV_AWS_258:Lambda Function URL is public for CloudFront origin
+
   function_name      = aws_lambda_function.function.function_name
   authorization_type = "NONE"
   invoke_mode        = "BUFFERED"
@@ -73,8 +75,10 @@ resource "aws_lambda_permission" "function_url_permission" {
   function_url_auth_type = "NONE"
 }
 
-# checkov:skip=CKV2_AWS_5:Security Group is attached in dynamic vpc_config block
 resource "aws_security_group" "function_sg" {
+  # checkov:skip=CKV2_AWS_5:Security Group is attached in dynamic vpc_config block
+  # checkov:skip=CKV_AWS_23:Rule descriptions are dynamic and not picked up by Checkov
+
   count = var.vpc_id == null ? 0 : 1
 
   name   = "${var.prefix}-sg"

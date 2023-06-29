@@ -11,9 +11,47 @@ variable "log_bucket_name" {
   type = string
 }
 
+variable "log_bucket_kms_key_arn" {
+  type = string
+  default = "aws/s3"
+}
+
+variable "log_bucket_logging_config" {
+  type = object({
+    target_bucket = string
+    target_prefix = string
+  })
+  default = null
+}
+
+variable "log_bucket_replication_configuration" {
+  description = "Replication Configuration for the S3 bucket"
+  default = null
+  type = object({
+    role = string
+    rules = list(object({
+      id = string
+      status = string
+      filters = list(object({
+        prefix = string
+      }))
+      destination = object({
+        bucket = string
+        storage_class = string
+      })
+    }))
+  })
+}
+
+
 variable "lambda_runtime" {
   type    = string
   default = "nodejs18.x"
+}
+
+variable "lambda_log_retention_period" {
+  type = number
+  default = 365
 }
 
 variable "release_version" {

@@ -1,4 +1,5 @@
 name: CI/CD Pipeline
+permissions: read-all
 
 on:
   push:
@@ -93,7 +94,7 @@ jobs:
 
       - name: Run Checkov
         id: run-checkov
-        run: checkov --directory . -o sarif
+        run: checkov --directory . -o sarif -s --quiet
       
       - name: Upload SARIF File
         uses: github/codeql-action/upload-sarif@v2

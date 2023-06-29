@@ -65,6 +65,15 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
     }
   }
 
+  security_headers_config {
+    strict_transport_security {
+      access_control_max_age_sec = var.hsts.access_control_max_age_sec
+      include_subdomains = var.hsts.include_subdomains
+      override = var.hsts.override
+      preload = var.hsts.preload
+    }
+  }
+
   custom_headers_config {
     dynamic "items" {
       for_each = var.custom_headers
@@ -84,6 +93,9 @@ data "aws_cloudfront_origin_request_policy" "origin_request_policy" {
 }
 
 resource "aws_cloudfront_distribution" "next_distribution" {
+  # checkov:skip=CKV_AWS_310:Failover origin not required for Open-Next
+  # checkov:skip=CKV2_AWS_47:Log4j Vulnerability handled in WAF ACL
+
   provider        = aws.global
   price_class     = "PriceClass_100"
   enabled         = true
@@ -91,6 +103,7 @@ resource "aws_cloudfront_distribution" "next_distribution" {
   comment         = "${var.prefix} - CloudFront Distribution for Next.js Application"
   aliases         = var.aliases
   web_acl_id      = aws_wafv2_web_acl.cloudfront_waf.arn
+  default_root_object = "index.html"
 
   logging_config {
     include_cookies = false

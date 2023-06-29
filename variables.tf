@@ -64,8 +64,8 @@ variable "cors" {
   description = "CORS (Cross-Origin Resource Sharing) configuration for the CloudFront distribution"
   type = object({
     allow_credentials = bool,
-    allow_headers     = list(string),
-    allow_methods     = list(string),
+    allow_headers     = list(string)
+    allow_methods     = list(string)
     allow_origins     = list(string)
     origin_override   = bool
   })
@@ -75,6 +75,22 @@ variable "cors" {
     allow_methods     = ["ALL"],
     allow_origins     = ["*"],
     origin_override   = true
+  }
+}
+
+variable "hsts" {
+  description = "HSTS (HTTP Strict Transport Security) configuration for the CloudFront distribution"
+  type = object({
+    access_control_max_age_sec = number
+    include_subdomains = bool
+    override = bool
+    preload = true
+  })
+  default = {
+    access_control_max_age_sec = 31536000
+    include_subdomains = true
+    override = true
+    preload = true
   }
 }
 
@@ -89,4 +105,61 @@ variable "revalidation_queue_kms_key_arn" {
   description = "The KMS Key ARN for the encryption of the invalidation SQS queue"
   type        = string
   default     = "aws/sqs"
+}
+
+variable "static_assets_replication_configuration" {
+  description = "Replication Configuration for the S3 bucket"
+  default = null
+  type = object({
+    role = string
+    rules = list(object({
+      id = string
+      status = string
+      filters = list(object({
+        prefix = string
+      }))
+      destination = object({
+        bucket = string
+        storage_class = string
+      })
+    }))
+  })
+}
+
+variable "static_assets_logging_config" {
+  type = object({
+    target_bucket = string
+    target_prefix = string
+  })
+  default = null
+}
+
+variable "waf_logging_configuration" {
+  description = "Logging Configuration for the WAF attached to CloudFront"
+  type = object({
+    log_destination_configs = list(string)
+    logging_filter = optional(object({
+      default_behavior = string
+      filter = list(object({
+        behavior = string
+        requirement = string
+        action_condition = optional(list(object({
+          action = string
+        })))
+        label_name_condition = optional(list(object({
+          label_name = string
+        })))
+      }))
+    }))
+    redacted_fields = optional(list(object({
+      method = optional(bool)
+      query_string = optional(bool)
+      single_header = optional(object({
+        name = string
+      }))
+      uri_path = optional(bool)
+    })))
+  })
+
+  default = null
 }

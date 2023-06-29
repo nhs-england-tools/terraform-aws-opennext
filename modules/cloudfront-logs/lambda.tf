@@ -115,7 +115,8 @@ resource "aws_iam_role_policy" "cloudfront_logs_role_policy" {
 # TODO: CKV_AWS_338: "Ensure CloudWatch log groups retains logs for at least 1 year"
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${var.log_group_name}"
-  retention_in_days = 3
+  retention_in_days = var.lambda_log_retention_period
+  kms_key_id        = try(aws_kms_key.cloudwatch_logs_key[0].arn, var.cloudwatch_log_group_kms_key_arn)
 }
 
 resource "aws_lambda_permission" "s3_bucket_invoke_function" {

@@ -2,6 +2,10 @@ resource "aws_acm_certificate" "ssl_certificate" {
   provider          = aws.global
   domain_name       = local.domain_name
   validation_method = "DNS"
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_route53_record" "ssl_certificate_validation" {

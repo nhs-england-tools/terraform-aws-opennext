@@ -28,6 +28,8 @@ resource "aws_s3_bucket_public_access_block" "static_assets" {
 
   block_public_acls   = true
   block_public_policy = true
+  restrict_public_buckets = true
+  ignore_public_acls = true
 }
 
 resource "aws_s3_bucket_policy" "static_assets" {
@@ -54,11 +56,58 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "static_assets" {
   }
 }
 
+resource "aws_s3_bucket_replication_configuration" "logs" {
+  count = var.static_assets_replication_configuration == null ? 0 : 1
+
+  depends_on = [aws_s3_bucket_versioning.static_assets]
+  bucket = aws_s3_bucket.static_assets.bucket
+
+  dynamic "rule" {
+    for_each = var.static_assets_replication_configuration.rules
+
+    content {
+      id = rule.id
+      status = rule.status
+
+      dynamic "filter" {
+        for_each = rule.filters
+        
+        content {
+          prefix = filter.prefix
+        }
+      }
+
+      destination {
+        bucket = rule.destination.bucket
+        storage_class = rule.destination.storage_class
+      }
+    }
+  }
+}
+
+resource "aws_s3_bucket_logging" "static_assets" {
+  count = var.static_assets_logging_config != null ? 1 : 0
+  
+  bucket = aws_s3_bucket.static_assets.bucket
+  
+  target_bucket = var.static_assets_logging_config.target_bucket
+  target_prefix = var.static_assets_logging_config.target_prefix  
+}
+
 # TODO: CKV_AWS_300: "Ensure S3 lifecycle configuration sets period for aborting failed uploads"
 # TODO: CKV2_AWS_62: "Ensure S3 buckets should have event notifications enabled"
 resource "aws_s3_bucket_lifecycle_configuration" "static_assets" {
   depends_on = [aws_s3_bucket_versioning.static_assets]
   bucket     = aws_s3_bucket.static_assets.bucket
+
+  rule {
+    id = "abort-failed-uploads"
+    status = "Enabled"
+
+    abort_incomplete_multipart_upload {
+      days_after_initiation = 1
+    }
+  }
 
   rule {
     id     = "clear-versioned-assets"
@@ -81,7 +130,6 @@ resource "aws_s3_bucket_lifecycle_configuration" "static_assets" {
     }
   }
 }
-
 
 resource "aws_cloudfront_origin_access_identity" "static_assets" {
   comment = "CloudFront OAI for Static Assets S3 Bucket"
