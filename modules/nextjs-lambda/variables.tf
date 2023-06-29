@@ -94,6 +94,7 @@ variable "iam_policy_statements" {
 
 variable "security_group_ingress_rules" {
   type = set(object({
+    description      = string
     from_port        = number
     to_port          = number
     cidr_blocks      = optional(list(string))
@@ -109,6 +110,7 @@ variable "security_group_ingress_rules" {
 
 variable "security_group_egress_rules" {
   type = set(object({
+    description      = string
     from_port        = number
     to_port          = number
     cidr_blocks      = optional(list(string))

@@ -74,7 +74,6 @@ resource "aws_lambda_permission" "function_url_permission" {
   function_url_auth_type = "NONE"
 }
 
-# TODO: CKV_AWS_23: "Ensure every security groups rule has a description"
 # TODO: CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
 resource "aws_security_group" "function_sg" {
   count = var.vpc_id == null ? 0 : 1
@@ -83,6 +82,7 @@ resource "aws_security_group" "function_sg" {
   vpc_id = var.vpc_id
 
   egress {
+    description = "Allow HTTPS egress from Lambda function"
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
@@ -93,6 +93,7 @@ resource "aws_security_group" "function_sg" {
     for_each = var.security_group_ingress_rules
 
     content {
+      description      = ingress.value["description"]
       from_port        = ingress.value["from_port"]
       to_port          = ingress.value["to_port"]
       cidr_blocks      = ingress.value["cidr_blocks"]
@@ -108,14 +109,15 @@ resource "aws_security_group" "function_sg" {
     for_each = var.security_group_egress_rules
 
     content {
-      from_port        = ingress.value["from_port"]
-      to_port          = ingress.value["to_port"]
-      cidr_blocks      = ingress.value["cidr_blocks"]
-      ipv6_cidr_blocks = ingress.value["ipv6_cidr_blocks"]
-      prefix_list_ids  = ingress.value["prefix_list_ids"]
-      protocol         = ingress.value["protocol"]
-      security_groups  = ingress.value["security_groups"]
-      self             = ingress.value["self"]
+      description      = egress.value["description"]
+      from_port        = egress.value["from_port"]
+      to_port          = egress.value["to_port"]
+      cidr_blocks      = egress.value["cidr_blocks"]
+      ipv6_cidr_blocks = egress.value["ipv6_cidr_blocks"]
+      prefix_list_ids  = egress.value["prefix_list_ids"]
+      protocol         = egress.value["protocol"]
+      security_groups  = egress.value["security_groups"]
+      self             = egress.value["self"]
     }
   }
 }
