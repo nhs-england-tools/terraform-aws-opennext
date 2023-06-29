@@ -1,0 +1,12 @@
+name: "Check Formats"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Scan Secrets
+      run: |
+          export ALL_FILES=true
+          ./scripts/githooks/secret-scan-pre-commit.sh
