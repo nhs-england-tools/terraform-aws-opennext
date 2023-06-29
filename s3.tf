@@ -19,10 +19,16 @@ locals {
 
 # TODO: CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
 # TODO: CKV_AWS_144: "Ensure that S3 bucket has cross-region replication enabled"
-# TODO: CKV2_AWS_6: "Ensure that S3 bucket has a Public Access block"
 # TODO: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
 resource "aws_s3_bucket" "static_assets" {
   bucket = "${var.prefix}-static-assets"
+}
+
+resource "aws_s3_bucket_public_access_block" "static_assets" {
+  bucket = aws_s3_bucket.static_assets.bucket
+
+  block_public_acls = true
+  block_public_policy = true
 }
 
 resource "aws_s3_bucket_policy" "static_assets" {
