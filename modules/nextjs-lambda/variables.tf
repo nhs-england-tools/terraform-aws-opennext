@@ -147,3 +147,9 @@ variable "dead_letter_config" {
     target_arn = string
   })
 }
+
+variable "reserved_concurrent_executions" {
+  description = "Concurrency limit for the lambda function"
+  type        = number
+  default     = 10
+}

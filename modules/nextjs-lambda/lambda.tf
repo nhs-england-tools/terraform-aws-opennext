@@ -1,4 +1,3 @@
-# TODO: CKV_AWS_115: "Ensure that AWS Lambda function is configured for function-level concurrent execution limit"
 resource "aws_lambda_code_signing_config" "signing_config" {
   count = var.code_signing_config == null ? 0 : 1
 
@@ -21,14 +20,14 @@ resource "aws_lambda_function" "function" {
   filename         = var.filename
   source_code_hash = filebase64sha256(var.filename)
 
-  function_name           = var.prefix
-  handler                 = "index.handler"
-  runtime                 = var.runtime
-  architectures           = var.architectures
-  role                    = aws_iam_role.lambda_role.arn
-  kms_key_arn             = var.kms_key_arn
-  code_signing_config_arn = try(aws_lambda_code_signing_config.signing_config[0].arn, null)
-
+  function_name                  = var.prefix
+  handler                        = "index.handler"
+  runtime                        = var.runtime
+  architectures                  = var.architectures
+  role                           = aws_iam_role.lambda_role.arn
+  kms_key_arn                    = var.kms_key_arn
+  code_signing_config_arn        = try(aws_lambda_code_signing_config.signing_config[0].arn, null)
+  reserved_concurrent_executions = var.reserved_concurrent_executions
 
   memory_size = var.memory_size
   timeout     = var.timeout
