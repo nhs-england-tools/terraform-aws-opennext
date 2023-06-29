@@ -73,7 +73,7 @@ resource "aws_lambda_permission" "function_url_permission" {
   function_url_auth_type = "NONE"
 }
 
-# TODO: CKV2_AWS_5: "Ensure that Security Groups are attached to another resource"
+# checkov:skip=CKV2_AWS_5:Security Group is attached in dynamic vpc_config block
 resource "aws_security_group" "function_sg" {
   count = var.vpc_id == null ? 0 : 1
 
