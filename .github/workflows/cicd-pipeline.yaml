@@ -29,12 +29,12 @@ jobs:
   scan-secrets:
     needs: [get-metadata]
     name: "Secrets Scan"
-    uses: ./.github/actions/scan-secrets/
+    uses: ./.github/actions/scan-secrets/action.yml
   
   check-format:
     needs: [get-metadata]
     name: Check File & Markdown Format
-    uses: ./.github/actions/check-format/
+    uses: ./.github/actions/check-format/action.yml
 
   checkov:
     name: Checkov
