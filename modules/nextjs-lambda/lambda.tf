@@ -67,11 +67,10 @@ resource "aws_lambda_function_url" "function_url" {
   invoke_mode        = "BUFFERED"
 }
 
-# TODO: CKV_AWS_301: "Ensure that AWS Lambda function is not publicly accessible"
 resource "aws_lambda_permission" "function_url_permission" {
   action                 = "lambda:InvokeFunctionUrl"
   function_name          = aws_lambda_function.function.function_name
-  principal              = "*"
+  principal              = "cloudfront.amazonaws.com"
   function_url_auth_type = "NONE"
 }
 
