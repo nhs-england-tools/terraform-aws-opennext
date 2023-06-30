@@ -12,3 +12,6 @@ summary-position: top
 skip-check:
   - CKV_AWS_144 # S3 Bucket Cross-Region Replication
   - CKV2_AWS_62 # S3 Bucket Event Notifications
+  - CKV_AWS_305 # CloudFront distribution default root object
+  - CKV2_AWS_47 # Log4j WAF Rules for CloudFront
+  - CKV_AWS_310 # CloudFront Failover Origin

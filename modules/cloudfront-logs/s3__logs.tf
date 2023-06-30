@@ -1,8 +1,5 @@
 data "aws_canonical_user_id" "current" {}
 
-# TODO: CKV_AWS_18: "Ensure the S3 bucket has access logging enabled"
-# TODO: CKV_AWS_144: "Ensure that S3 bucket has cross-region replication enabled"
-# TODO: CKV_AWS_145: "Ensure that S3 buckets are encrypted with KMS by default"
 resource "aws_s3_bucket" "logs" {
   bucket = var.log_bucket_name
 }
@@ -114,41 +111,28 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
 
   depends_on = [aws_s3_bucket_versioning.logs]
   bucket     = aws_s3_bucket.logs.bucket
+  role = var.log_bucket_replication_configuration.role
 
   dynamic "rule" {
-    for_each = var.log_bucket_replication_configuration.rules
+    for_each = toset(var.log_bucket_replication_configuration.rules)
 
     content {
-      id     = rule.id
-      status = rule.status
+      id     = rule.value.id
+      status = rule.value.status
 
       dynamic "filter" {
-        for_each = rule.filters
+        for_each = toset(rule.value.filters)
 
         content {
-          prefix = filter.prefix
+          prefix = filter.value.prefix
         }
       }
 
       destination {
-        bucket        = rule.destination.bucket
-        storage_class = rule.destination.storage_class
+        bucket        = rule.value.destination.bucket
+        storage_class = rule.value.destination.storage_class
       }
     }
-  }
-}
-
-data "aws_iam_policy_document" "logs_readonly_policy" {
-  statement {
-    actions = [
-      "s3:Get*",
-      "s3:List*",
-    ]
-
-    resources = [
-      aws_s3_bucket.logs.arn,
-      "${aws_s3_bucket.logs.arn}/*",
-    ]
   }
 }
 

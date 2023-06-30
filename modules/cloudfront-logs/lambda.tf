@@ -1,9 +1,3 @@
-data "archive_file" "cloudfront_logs_zip" {
-  type        = "zip"
-  source_file = "${path.module}/lambda/index.js"
-  output_path = "${path.module}/lambda-function.zip"
-}
-
 resource "aws_lambda_code_signing_config" "signing_config" {
   count = var.code_signing_config == null ? 0 : 1
 
@@ -111,8 +105,6 @@ resource "aws_iam_role_policy" "cloudfront_logs_role_policy" {
   policy = data.aws_iam_policy_document.cloudfront_logs_policy.json
 }
 
-# TODO: CKV_AWS_158: "Ensure that CloudWatch Log Group is encrypted by KMS"
-# TODO: CKV_AWS_338: "Ensure CloudWatch log groups retains logs for at least 1 year"
 resource "aws_cloudwatch_log_group" "lambda_log_group" {
   name              = "/aws/lambda/${var.log_group_name}"
   retention_in_days = var.lambda_log_retention_period
