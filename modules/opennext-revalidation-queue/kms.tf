@@ -1,15 +1,15 @@
 data "aws_kms_key" "revalidation_queue_key" {
-    count = var.kms_key_arn != null ? 1 : 0
-    key_id = var.kms_key_arn
+  count  = var.kms_key_arn != null ? 1 : 0
+  key_id = var.kms_key_arn
 }
 
 resource "aws_kms_key" "revalidation_queue_key" {
-    count = var.kms_key_arn == null ? 1 : 0
+  count = var.kms_key_arn == null ? 1 : 0
 
-    description = "${var.prefix} Revalidation SQS Queue KMS Key"
-    deletion_window_in_days = 10
+  description             = "${var.prefix} Revalidation SQS Queue KMS Key"
+  deletion_window_in_days = 10
 
-    policy = data.aws_iam_policy_document.revalidation_queue_key_policy[0].json
+  policy = data.aws_iam_policy_document.revalidation_queue_key_policy[0].json
 }
 
 data "aws_iam_policy_document" "revalidation_queue_key_policy" {

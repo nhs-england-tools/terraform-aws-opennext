@@ -3,10 +3,14 @@ variable "prefix" {
   description = "Prefix for created resource IDs"
 }
 
+variable "acm_certificate_arn" {
+  type = string
+}
+
 variable "origins" {
   type = object({
-    assets_bucket = string
-    server_function = string
+    assets_bucket               = string
+    server_function             = string
     image_optimization_function = string
   })
 }
@@ -102,8 +106,4 @@ variable "waf_logging_configuration" {
   })
 
   default = null
-}
-
-variable "acm_certificate_arn" {
-  type = string
 }

@@ -4,18 +4,18 @@ variable "prefix" {
 }
 
 variable "assets_path" {
-    type = string
-    description = "The path of the open-next static assets"
+  type        = string
+  description = "The path of the open-next static assets"
 }
 
 variable "cache_path" {
-    type = string
-    description = "The path of the open-next cache"
+  type        = string
+  description = "The path of the open-next cache"
 }
 
 variable "server_function_role_arn" {
-    type = string
-    description = "The IAM role ARN of the Next.js server lambda function"
+  type        = string
+  description = "The IAM role ARN of the Next.js server lambda function"
 }
 
 variable "logging_config" {

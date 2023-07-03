@@ -59,7 +59,7 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
 
   depends_on = [aws_s3_bucket_versioning.assets]
   bucket     = aws_s3_bucket.assets.bucket
-  role = var.replication_configuration.role
+  role       = var.replication_configuration.role
 
   dynamic "rule" {
     for_each = toset(var.replication_configuration.rules)
@@ -171,12 +171,12 @@ data "aws_iam_policy_document" "read_assets_bucket" {
 resource "aws_s3_object" "assets" {
   for_each = fileset(var.assets_path, "**")
 
-  bucket = aws_s3_bucket.assets.bucket
-  key    = "assets/${each.value}"
-  source = "${var.assets_path}/${each.value}"
-  etag   = filemd5("${var.assets_path}/${each.value}")
+  bucket        = aws_s3_bucket.assets.bucket
+  key           = "assets/${each.value}"
+  source        = "${var.assets_path}/${each.value}"
+  source_hash          = filemd5("${var.assets_path}/${each.value}")
   cache_control = length(regexall(".*(_next).*$", each.value)) > 0 ? "public,max-age=31536000,immutable" : "public,max-age=0,s-maxage=31536000,must-revalidate"
-  content_type = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
+  content_type  = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
 }
 
 # Cached Files
@@ -186,6 +186,6 @@ resource "aws_s3_object" "cache" {
   bucket       = aws_s3_bucket.assets.bucket
   key          = "cache/${each.value}"
   source       = "${var.cache_path}/${each.value}"
-  etag         = filemd5("${var.cache_path}/${each.value}")
+  source_hash         = filemd5("${var.cache_path}/${each.value}")
   content_type = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
 }

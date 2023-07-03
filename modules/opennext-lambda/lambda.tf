@@ -20,12 +20,14 @@ resource "aws_lambda_function" "function" {
   filename         = data.archive_file.lambda_zip.output_path
   source_code_hash = filebase64sha256(data.archive_file.lambda_zip.output_path)
 
-  description = var.description
-  function_name                  = var.prefix
-  handler                        = var.handler
-  runtime                        = var.runtime
-  architectures                  = var.architectures
-  role                           = aws_iam_role.lambda_role.arn
+  function_name = var.function_name != null ? var.function_name : var.prefix
+  description   = var.description
+
+  handler       = var.handler
+  runtime       = var.runtime
+  architectures = var.architectures
+  role          = aws_iam_role.lambda_role.arn
+
   kms_key_arn                    = var.kms_key_arn
   code_signing_config_arn        = try(aws_lambda_code_signing_config.signing_config[0].arn, null)
   reserved_concurrent_executions = var.reserved_concurrent_executions

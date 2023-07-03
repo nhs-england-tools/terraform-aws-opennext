@@ -111,7 +111,7 @@ resource "aws_s3_bucket_replication_configuration" "logs" {
 
   depends_on = [aws_s3_bucket_versioning.logs]
   bucket     = aws_s3_bucket.logs.bucket
-  role = var.log_bucket_replication_configuration.role
+  role       = var.log_bucket_replication_configuration.role
 
   dynamic "rule" {
     for_each = toset(var.log_bucket_replication_configuration.rules)

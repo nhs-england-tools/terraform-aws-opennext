@@ -1,6 +1,6 @@
 locals {
-  server_origin_id = "${var.prefix}-server-origin"
-  assets_origin_id = "${var.prefix}-assets-origin"
+  server_origin_id             = "${var.prefix}-server-origin"
+  assets_origin_id             = "${var.prefix}-assets-origin"
   image_optimization_origin_id = "${var.prefix}-image-optimization-origin"
 }
 
@@ -73,38 +73,42 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
     }
   }
 
-  custom_headers_config {
-    dynamic "items" {
-      for_each = toset(var.custom_headers)
+  dynamic "custom_headers_config" {
+    for_each = length(var.custom_headers) > 0 ? [true] : []
 
-      content {
-        header   = items.header
-        override = items.override
-        value    = items.value
+    content {
+      dynamic "items" {
+        for_each = toset(var.custom_headers)
+
+        content {
+          header   = items.header
+          override = items.override
+          value    = items.value
+        }
       }
     }
   }
 }
 
 provider "aws" {
-  alias = "global"
+  alias  = "global"
   region = "us-east-1"
 }
 
 resource "aws_cloudfront_distribution" "distribution" {
-  provider            = aws.global
-  price_class         = "PriceClass_100"
-  enabled             = true
-  is_ipv6_enabled     = true
-  comment             = "${var.prefix} - CloudFront Distribution for Next.js Application"
-  aliases             = var.aliases
-  web_acl_id          = aws_wafv2_web_acl.cloudfront_waf.arn
+  provider        = aws.global
+  price_class     = "PriceClass_100"
+  enabled         = true
+  is_ipv6_enabled = true
+  comment         = "${var.prefix} - CloudFront Distribution for Next.js Application"
+  aliases         = var.aliases
+  web_acl_id      = aws_wafv2_web_acl.cloudfront_waf.arn
 
   logging_config {
     include_cookies = false
     # bucket          = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
     bucket = var.logging_bucket_domain_name
-    prefix          = one(var.aliases)
+    prefix = one(var.aliases)
   }
 
   viewer_certificate {
@@ -136,7 +140,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   origin {
     domain_name = var.origins.server_function
     # domain_name = "${module.server_function.lambda_function_url_id}.lambda-url.eu-west-2.on.aws"
-    origin_id   = local.server_origin_id
+    origin_id = local.server_origin_id
 
     custom_origin_config {
       http_port              = 80
@@ -248,7 +252,7 @@ resource "aws_cloudfront_distribution" "distribution" {
       path_pattern     = ordered_cache_behavior.value
       allowed_methods  = ["GET", "HEAD", "OPTIONS"]
       cached_methods   = ["GET", "HEAD", "OPTIONS"]
-      target_origin_id = local.static_assets_origin_id
+      target_origin_id = local.assets_origin_id
 
       response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
       cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id

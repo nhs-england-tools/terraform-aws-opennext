@@ -1,4 +1,5 @@
 terraform {
+  required_version = "~> 1.5"
   required_providers {
     aws = {
       source  = "hashicorp/aws"
@@ -25,9 +26,16 @@ module "opennext" {
   source = "../../"
 
   prefix              = "opennext-example"
-  aliases             = [local.domain_name]
-  acm_certificate_arn = aws_acm_certificate_validation.ssl_certificate.certificate_arn
-  hosted_zone_id      = data.aws_route53_zone.zone.zone_id
   opennext_build_path = "../.open-next"
-  assets_paths        = ["/images/*"]
+  hosted_zone_id      = data.aws_route53_zone.zone.zone_id
+
+  cloudfront = {
+    aliases = [local.domain_name]
+    acm_certificate_arn = aws_acm_certificate_validation.ssl_certificate.certificate_arn
+    assets_paths        = ["/images/*"]
+  }
+}
+
+output "cloudfront_distribution_id" {
+  value = module.opennext.cloudfront.cloudfront_distribution.id
 }

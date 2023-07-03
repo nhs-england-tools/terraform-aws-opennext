@@ -5,7 +5,7 @@ include scripts/makefile/Makefile.init
 ###############
 BUILD_FOLDER = build
 REQUIRED_BUILD_DEPENDENCIES = yarn
-REQUIRED_RUNTIME_DEPENDENCIES = node
+REQUIRED_RUNTIME_DEPENDENCIES = node terraform
 
 #####################
 ## Install Targets ##
@@ -23,7 +23,7 @@ check: check-runtime-deps check-build-deps # Checks if runtime and build require
 
 check-runtime-deps:
 	$(foreach exec,${REQUIRED_RUNTIME_DEPENDENCIES},\
-	$(if $(shell which ${exec}),@echo -e "${exec} is installed",$(error "No ${exec} in PATH")))
+	$(if $(shell which ${exec}),@echo -e "${exec} is installed\n",$(error "No ${exec} in PATH")))
 
 check-build-deps:
 	$(foreach exec,${REQUIRED_BUILD_DEPENDENCIES},\
