@@ -19,6 +19,7 @@ locals {
 }
 
 data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
 
 /**
  * Assets & Cache S3 Bucket
@@ -40,38 +41,38 @@ module "assets" {
 locals {
   server_options = {
     package = {
-      source_dir = try(var.server_options.package.source_dir, "${local.opennext_abs_path}/server-function/")
-      output_dir = try(var.server_options.package.output_dir, "/tmp/")
+      source_dir = coalesce(try(var.server_options.package.source_dir, null), "${local.opennext_abs_path}/server-function/")
+      output_dir = coalesce(try(var.server_options.package.output_dir, null), "/tmp/")
     }
 
     lambda = {
       function_name                  = try(var.server_options.lambda.function_name, null)
-      description                    = try(var.server_options.lambda.description, "Next.js Server")
-      handler                        = try(var.server_options.lambda.handler, "index.handler")
-      runtime                        = try(var.server_options.lambda.runtime, "nodejs18.x")
-      architectures                  = try(var.server_options.lambda.architectures, ["arm64"])
-      memory_size                    = try(var.server_options.lambda.memory_size, 1024)
-      timeout                        = try(var.server_options.lambda.timeout, 30)
-      publish                        = try(var.server_options.lambda.publish, true)
+      description                    = coalesce(try(var.server_options.lambda.description, null), "Next.js Server")
+      handler                        = coalesce(try(var.server_options.lambda.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.server_options.lambda.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.server_options.lambda.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.server_options.lambda.memory_size, null), 1024)
+      timeout                        = coalesce(try(var.server_options.lambda.timeout, null), 30)
+      publish                        = coalesce(try(var.server_options.lambda.publish, null), true)
       dead_letter_config             = try(var.server_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = try(var.server_options.lambda.reserved_concurrent_executions, 10)
+      reserved_concurrent_executions = coalesce(try(var.server_options.lambda.reserved_concurrent_executions, null), 10)
       code_signing_config            = try(var.server_options.lambda.code_signing_config, null)
     }
 
     networking = {
       vpc_id                       = try(var.server_options.networking.vpc_id, null)
-      subnet_ids                   = try(var.server_options.networking.subnet_ids, [])
-      security_group_ingress_rules = try(var.server_options.networking.sg_ingress_rules, [])
-      security_group_egress_rules  = coalesce(try(var.server_options.networking.sg_egress_rules, []))
+      subnet_ids                   = coalesce(try(var.server_options.networking.subnet_ids, null), [])
+      security_group_ingress_rules = coalesce(try(var.server_options.networking.sg_ingress_rules, null), [])
+      security_group_egress_rules  = coalesce(try(var.server_options.networking.sg_egress_rules, null), [])
     }
 
     environment_variables = merge({
       CACHE_BUCKET_NAME         = module.assets.assets_bucket.bucket
       CACHE_BUCKET_KEY_PREFIX   = "cache"
-      CACHE_BUCKET_REGION       = "eu-west-2"
+      CACHE_BUCKET_REGION       = data.aws_region.current.name
       REVALIDATION_QUEUE_URL    = module.revalidation_queue.queue.url
-      REVALIDATION_QUEUE_REGION = "eu-west-2"
-    }, try(var.server_options.environment_variables, {}))
+      REVALIDATION_QUEUE_REGION = data.aws_region.current.name
+    }, coalesce(try(var.server_options.environment_variables, null), {}))
 
     iam_policy_statements = concat([
       {
@@ -84,7 +85,7 @@ locals {
         actions   = ["sqs:SendMessage"]
         resources = [module.revalidation_queue.queue.arn]
       }
-    ], var.server_options.iam_policy != null ? var.server_options.iam_policy : [])
+    ], coalesce(try(var.server_options.iam_policy, null), []))
   }
 }
 
@@ -124,36 +125,35 @@ module "server_function" {
 locals {
   image_optimization_options = {
     package = {
-      source_dir = try(var.image_optimization_options.source_dir, "${local.opennext_abs_path}/image-optimization-function/")
-      output_dir = try(var.image_optimization_options.output_dir, "/tmp/")
+      source_dir = coalesce(try(var.image_optimization_options.source_dir, null), "${local.opennext_abs_path}/image-optimization-function/")
+      output_dir = coalesce(try(var.image_optimization_options.output_dir, null), "/tmp/")
     }
 
     lambda = {
       function_name                  = try(var.image_optimization_options.lambda.function_name, null)
-      description                    = try(var.image_optimization_options.lambda.description, "Next.js Image Optimization")
-      handler                        = try(var.image_optimization_options.lambda.handler, "index.handler")
-      runtime                        = try(var.image_optimization_options.lambda.runtime, "nodejs18.x")
-      architectures                  = try(var.image_optimization_options.lambda.architectures, ["arm64"])
-      memory_size                    = try(var.image_optimization_options.lambda.memory_size, 512)
-      timeout                        = try(var.image_optimization_options.lambda.timeout, 30)
-      publish                        = try(var.image_optimization_options.lambda.publish, false)
+      description                    = coalesce(try(var.image_optimization_options.lambda.description, null), "Next.js Image Optimization")
+      handler                        = coalesce(try(var.image_optimization_options.lambda.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.image_optimization_options.lambda.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.image_optimization_options.lambda.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.image_optimization_options.lambda.memory_size, null), 512)
+      timeout                        = coalesce(try(var.image_optimization_options.lambda.timeout, null), 30)
+      publish                        = coalesce(try(var.image_optimization_options.lambda.publish, null), false)
       dead_letter_config             = try(var.image_optimization_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = try(var.image_optimization_options.lambda.reserved_concurrent_executions, 3)
+      reserved_concurrent_executions = coalesce(try(var.image_optimization_options.lambda.reserved_concurrent_executions, null), 3)
       code_signing_config            = try(var.image_optimization_options.lambda.code_signing_config, null)
-
     }
 
     networking = {
       vpc_id                       = try(var.image_optimization_options.networking.vpc_id, null)
-      subnet_ids                   = try(var.image_optimization_options.networking.subnet_ids, [])
-      security_group_ingress_rules = try(var.image_optimization_options.networking.sg_ingress_rules, [])
-      security_group_egress_rules  = try(var.image_optimization_options.networking.sg_egress_rules, [])
+      subnet_ids                   = coalesce(try(var.image_optimization_options.networking.subnet_ids, null), [])
+      security_group_ingress_rules = coalesce(try(var.image_optimization_options.networking.sg_ingress_rules, null), [])
+      security_group_egress_rules  = coalesce(try(var.image_optimization_options.networking.sg_egress_rules, null), [])
     }
 
     environment_variables = merge({
       BUCKET_NAME       = module.assets.assets_bucket.bucket,
       BUCKET_KEY_PREFIX = "assets"
-    }, try(var.image_optimization_options.environment_variables, {}))
+    }, coalesce(try(var.image_optimization_options.environment_variables, null), {}))
 
     iam_policy_statements = concat([
       {
@@ -161,7 +161,7 @@ locals {
         actions   = ["s3:GetObject"]
         resources = [module.assets.assets_bucket.arn, "${module.assets.assets_bucket.arn}/*"]
       }
-    ], var.image_optimization_options.iam_policy != null ? var.image_optimization_options.iam_policy : [])
+    ], coalesce(try(var.image_optimization_options.iam_policy, null), []))
   }
 }
 
@@ -200,33 +200,32 @@ module "image_optimization_function" {
 locals {
   revalidation_options = {
     package = {
-      source_dir = try(var.revalidation_options.source_dir, "${local.opennext_abs_path}/revalidation-function/")
-      output_dir = try(var.revalidation_options.output_dir, "/tmp/")
+      source_dir = coalesce(try(var.revalidation_options.source_dir, null), "${local.opennext_abs_path}/revalidation-function/")
+      output_dir = coalesce(try(var.revalidation_options.output_dir, null), "/tmp/")
     }
 
     lambda = {
       function_name                  = try(var.revalidation_options.lambda.function_name, null)
-      description                    = try(var.revalidation_options.lambda.description, "Next.js ISR Revalidation Function")
-      handler                        = try(var.revalidation_options.lambda.handler, "index.handler")
-      runtime                        = try(var.revalidation_options.lambda.runtime, "nodejs18.x")
-      architectures                  = try(var.revalidation_options.lambda.architectures, ["arm64"])
-      memory_size                    = try(var.revalidation_options.lambda.memory_size, 128)
-      timeout                        = try(var.revalidation_options.lambda.timeout, 30)
-      publish                        = try(var.revalidation_options.lambda.publish, false)
+      description                    = coalesce(try(var.revalidation_options.lambda.description, null), "Next.js ISR Revalidation Function")
+      handler                        = coalesce(try(var.revalidation_options.lambda.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.revalidation_options.lambda.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.revalidation_options.lambda.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.revalidation_options.lambda.memory_size, null), 128)
+      timeout                        = coalesce(try(var.revalidation_options.lambda.timeout, null), 30)
+      publish                        = coalesce(try(var.revalidation_options.lambda.publish, null), false)
       dead_letter_config             = try(var.revalidation_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = try(var.revalidation_options.lambda.reserved_concurrent_executions, 3)
+      reserved_concurrent_executions = coalesce(try(var.revalidation_options.lambda.reserved_concurrent_executions, null), 3)
       code_signing_config            = try(var.revalidation_options.lambda.code_signing_config, null)
-
     }
 
     networking = {
       vpc_id                       = try(var.revalidation_options.networking.vpc_id, null)
-      subnet_ids                   = try(var.revalidation_options.networking.subnet_ids, [])
-      security_group_ingress_rules = try(var.revalidation_options.networking.sg_ingress_rules, [])
-      security_group_egress_rules  = try(var.revalidation_options.networking.sg_egress_rules, [])
+      subnet_ids                   = coalesce(try(var.revalidation_options.networking.subnet_ids, null), [])
+      security_group_ingress_rules = coalesce(try(var.revalidation_options.networking.sg_ingress_rules, null), [])
+      security_group_egress_rules  = coalesce(try(var.revalidation_options.networking.sg_egress_rules, null), [])
     }
 
-    environment_variables = try(var.revalidation_options.environment_variables, {})
+    environment_variables = coalesce(try(var.revalidation_options.environment_variables, null), {})
 
     iam_policy_statements = concat([
       {
@@ -234,7 +233,7 @@ locals {
         actions   = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
         resources = [module.revalidation_queue.queue.arn]
       }
-    ], var.revalidation_options.iam_policy != null ? var.revalidation_options.iam_policy : [])
+    ], coalesce(try(var.revalidation_options.iam_policy, null), []))
   }
 }
 
@@ -284,36 +283,36 @@ module "revalidation_queue" {
 locals {
   warmer_options = {
     package = {
-      source_dir = try(var.warmer_options.source_dir, "${local.opennext_abs_path}/warmer-function/")
-      output_dir = try(var.warmer_options.output_dir, "/tmp/")
+      source_dir = coalesce(try(var.warmer_options.source_dir, null), "${local.opennext_abs_path}/warmer-function/")
+      output_dir = coalesce(try(var.warmer_options.output_dir, null), "/tmp/")
     }
 
     lambda = {
       function_name                  = try(var.warmer_options.lambda.function_name, null)
-      description                    = try(var.warmer_options.lambda.description, "Next.js Warmer Function")
-      handler                        = try(var.warmer_options.lambda.handler, "index.handler")
-      runtime                        = try(var.warmer_options.lambda.runtime, "nodejs18.x")
-      architectures                  = try(var.warmer_options.lambda.architectures, ["arm64"])
-      memory_size                    = try(var.warmer_options.lambda.memory_size, 128)
-      timeout                        = try(var.warmer_options.lambda.timeout, 30)
-      publish                        = try(var.warmer_options.lambda.publish, false)
+      description                    = coalesce(try(var.warmer_options.lambda.description, null), "Next.js Warmer Function")
+      handler                        = coalesce(try(var.warmer_options.lambda.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.warmer_options.lambda.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.warmer_options.lambda.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.warmer_options.lambda.memory_size, null), 128)
+      timeout                        = coalesce(try(var.warmer_options.lambda.timeout, null), 30)
+      publish                        = coalesce(try(var.warmer_options.lambda.publish, null), false)
       dead_letter_config             = try(var.warmer_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = try(var.warmer_options.lambda.reserved_concurrent_executions, 3)
+      reserved_concurrent_executions = coalesce(try(var.warmer_options.lambda.reserved_concurrent_executions, null), 3)
       code_signing_config            = try(var.warmer_options.lambda.code_signing_config, null)
 
     }
 
     networking = {
       vpc_id                       = try(var.warmer_options.networking.vpc_id, null)
-      subnet_ids                   = try(var.warmer_options.networking.subnet_ids, [])
-      security_group_ingress_rules = try(var.warmer_options.networking.sg_ingress_rules, [])
-      security_group_egress_rules  = try(var.warmer_options.networking.sg_egress_rules, [])
+      subnet_ids                   = coalesce(try(var.warmer_options.networking.subnet_ids, null), [])
+      security_group_ingress_rules = coalesce(try(var.warmer_options.networking.sg_ingress_rules, null), [])
+      security_group_egress_rules  = coalesce(try(var.warmer_options.networking.sg_egress_rules, null), [])
     }
 
     environment_variables = merge({
       FUNCTION_NAME = module.server_function.lambda_function.function_name,
       CONCURRENCY   = 1
-    }, try(var.warmer_options.environment_variables, {}))
+    }, coalesce(try(var.warmer_options.environment_variables, null), {}))
 
     iam_policy_statements = concat([
       {
@@ -321,7 +320,7 @@ locals {
         actions   = ["lambda:InvokeFunction"]
         resources = [module.server_function.lambda_function.arn]
       }
-    ], var.warmer_options.iam_policy != null ? var.warmer_options.iam_policy : [])
+    ], coalesce(try(var.warmer_options.iam_policy, null), []))
   }
 }
 module "warmer_function" {
@@ -375,19 +374,19 @@ locals {
     acm_certificate_arn = var.cloudfront.acm_certificate_arn
     assets_paths        = coalesce(var.cloudfront.assets_paths, [])
     custom_headers      = coalesce(var.cloudfront.custom_headers, [])
-    cors = coalesce(var.cloudfront.cors, {
+    cors = merge({
       allow_credentials = false,
       allow_headers     = ["*"],
       allow_methods     = ["ALL"],
       allow_origins     = ["*"],
       origin_override   = true
-    })
-    hsts = coalesce(var.cloudfront.hsts, {
+    }, var.cloudfront.cors)
+    hsts = merge({
       access_control_max_age_sec = 31536000
       include_subdomains         = true
       override                   = true
       preload                    = true
-    })
+    }, var.cloudfront.hsts)
     waf_logging_configuration = var.cloudfront.waf_logging_configuration
   }
 }

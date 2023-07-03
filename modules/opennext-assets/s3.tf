@@ -174,7 +174,7 @@ resource "aws_s3_object" "assets" {
   bucket        = aws_s3_bucket.assets.bucket
   key           = "assets/${each.value}"
   source        = "${var.assets_path}/${each.value}"
-  source_hash          = filemd5("${var.assets_path}/${each.value}")
+  source_hash   = filemd5("${var.assets_path}/${each.value}")
   cache_control = length(regexall(".*(_next).*$", each.value)) > 0 ? "public,max-age=31536000,immutable" : "public,max-age=0,s-maxage=31536000,must-revalidate"
   content_type  = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
 }
@@ -186,6 +186,6 @@ resource "aws_s3_object" "cache" {
   bucket       = aws_s3_bucket.assets.bucket
   key          = "cache/${each.value}"
   source       = "${var.cache_path}/${each.value}"
-  source_hash         = filemd5("${var.cache_path}/${each.value}")
+  source_hash  = filemd5("${var.cache_path}/${each.value}")
   content_type = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
 }
