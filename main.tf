@@ -388,8 +388,24 @@ locals {
       preload                    = true
     }, var.cloudfront.hsts)
     waf_logging_configuration = var.cloudfront.waf_logging_configuration
+    cache_policy = {
+      default_ttl = coalesce(try(var.cloudfront.cache_policy.default_ttl, null), 0)
+      min_ttl     = coalesce(try(var.cloudfront.cache_policy.min_ttl, null), 0)
+      max_ttl     = coalesce(try(var.cloudfront.cache_policy.max_ttl, null), 31536000)
+      cookies_config = merge({
+        cookie_behavior = "all"
+      }, try(var.cloudfront.cache_policy.cookies_config, {}))
+      headers_config = merge({
+        header_behavior = "whitelist",
+        items           = []
+      }, try(var.cloudfront.cache_policy.headers_config, {}))
+      query_strings_config = merge({
+        query_string_behavior = "all",
+      }, try(var.cloudfront.cache_policy.query_strings_config, {}))
+    }
   }
 }
+
 
 module "cloudfront" {
   source = "./modules/opennext-cloudfront"
@@ -410,4 +426,5 @@ module "cloudfront" {
   cors                      = local.cloudfront.cors
   hsts                      = local.cloudfront.hsts
   waf_logging_configuration = local.cloudfront.waf_logging_configuration
+  cache_policy              = local.cloudfront.cache_policy
 }

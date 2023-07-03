@@ -21,24 +21,29 @@ EOF
 resource "aws_cloudfront_cache_policy" "cache_policy" {
   name = "${var.prefix}-cache-policy"
 
-  default_ttl = 0
-  max_ttl     = 31536000
-  min_ttl     = 0
+  default_ttl = var.cache_policy.default_ttl
+  min_ttl     = var.cache_policy.min_ttl
+  max_ttl     = var.cache_policy.max_ttl
+
 
   parameters_in_cache_key_and_forwarded_to_origin {
     cookies_config {
-      cookie_behavior = "all"
+      cookie_behavior = var.cache_policy.cookies_config.cookie_behavior
     }
 
     headers_config {
-      header_behavior = "whitelist"
+      header_behavior = var.cache_policy.headers_config.header_behavior
+
       headers {
-        items = ["accept", "rsc", "next-router-prefetch", "next-router-state-tree"]
+        items = concat(
+          ["accept", "rsc", "next-router-prefetch", "next-router-state-tree"],
+          coalesce(var.cache_policy.headers_config.items, [])
+        )
       }
     }
 
     query_strings_config {
-      query_string_behavior = "all"
+      query_string_behavior = var.cache_policy.query_strings_config.query_string_behavior
     }
   }
 }

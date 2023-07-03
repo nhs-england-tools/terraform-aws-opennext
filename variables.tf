@@ -63,7 +63,7 @@ variable "server_options" {
         untrusted_artfact_on_deployment = optional(string)
       }))
     }))
-    environment_variables          = optional(map(string))
+    environment_variables = optional(map(string))
     iam_policy = optional(list(object({
       effect    = string
       actions   = list(string)
@@ -332,6 +332,20 @@ variable "cloudfront" {
         uri_path = optional(bool)
       })))
     }))
-
+    cache_policy = optional(object({
+      default_ttl = optional(number)
+      min_ttl     = optional(number)
+      max_ttl     = optional(number)
+      cookies_config = optional(object({
+        cookie_behavior = string
+      }))
+      headers_config = optional(object({
+        header_behavior = string
+        items           = optional(list(string))
+      }))
+      query_strings_config = optional(object({
+        query_string_behavior = string
+      }))
+    }))
   })
 }
