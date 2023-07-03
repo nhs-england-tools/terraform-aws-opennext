@@ -53,7 +53,6 @@ variable "server_options" {
       memory_size                    = optional(number)
       timeout                        = optional(number)
       publish                        = optional(bool)
-      environment_variables          = optional(map(string))
       reserved_concurrent_executions = optional(number)
       dead_letter_config = optional(object({
         target_arn = string
@@ -64,13 +63,12 @@ variable "server_options" {
         untrusted_artfact_on_deployment = optional(string)
       }))
     }))
-
+    environment_variables          = optional(map(string))
     iam_policy = optional(list(object({
       effect    = string
       actions   = list(string)
       resources = list(string)
     })))
-
     networking = optional(object({
       vpc_id     = optional(string)
       subnet_ids = optional(list(string))
@@ -108,7 +106,6 @@ variable "image_optimization_options" {
       source_dir = optional(string)
       output_dir = optional(string)
     }))
-
     function = optional(object({
       function_name                  = optional(string)
       description                    = optional(string)
@@ -128,16 +125,12 @@ variable "image_optimization_options" {
         untrusted_artfact_on_deployment = optional(string)
       }))
     }))
-
     environment_variables = optional(map(string))
-
-
     iam_policy = optional(list(object({
       effect    = string
       actions   = list(string)
       resources = list(string)
     })))
-
     networking = optional(object({
       vpc_id     = optional(string)
       subnet_ids = optional(list(string))
@@ -175,7 +168,6 @@ variable "revalidation_options" {
       source_dir = optional(string)
       output_dir = optional(string)
     }))
-
     function = optional(object({
       function_name                  = optional(string)
       description                    = optional(string)
@@ -195,16 +187,12 @@ variable "revalidation_options" {
         untrusted_artfact_on_deployment = optional(string)
       }))
     }))
-
     environment_variables = optional(map(string))
-
-
     iam_policy = optional(list(object({
       effect    = string
       actions   = list(string)
       resources = list(string)
     })))
-
     networking = optional(object({
       vpc_id     = optional(string)
       subnet_ids = optional(list(string))
@@ -242,7 +230,6 @@ variable "warmer_options" {
       source_dir = optional(string)
       output_dir = optional(string)
     }))
-
     function = optional(object({
       function_name                  = optional(string)
       description                    = optional(string)
@@ -262,16 +249,12 @@ variable "warmer_options" {
         untrusted_artfact_on_deployment = optional(string)
       }))
     }))
-
     environment_variables = optional(map(string))
-
-
     iam_policy = optional(list(object({
       effect    = string
       actions   = list(string)
       resources = list(string)
     })))
-
     networking = optional(object({
       vpc_id     = optional(string)
       subnet_ids = optional(list(string))

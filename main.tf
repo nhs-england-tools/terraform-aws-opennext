@@ -45,18 +45,18 @@ locals {
       output_dir = coalesce(try(var.server_options.package.output_dir, null), "/tmp/")
     }
 
-    lambda = {
-      function_name                  = try(var.server_options.lambda.function_name, null)
-      description                    = coalesce(try(var.server_options.lambda.description, null), "Next.js Server")
-      handler                        = coalesce(try(var.server_options.lambda.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.server_options.lambda.runtime, null), "nodejs18.x")
-      architectures                  = coalesce(try(var.server_options.lambda.architectures, null), ["arm64"])
-      memory_size                    = coalesce(try(var.server_options.lambda.memory_size, null), 1024)
-      timeout                        = coalesce(try(var.server_options.lambda.timeout, null), 30)
-      publish                        = coalesce(try(var.server_options.lambda.publish, null), true)
-      dead_letter_config             = try(var.server_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = coalesce(try(var.server_options.lambda.reserved_concurrent_executions, null), 10)
-      code_signing_config            = try(var.server_options.lambda.code_signing_config, null)
+    function = {
+      function_name                  = try(var.server_options.function.function_name, null)
+      description                    = coalesce(try(var.server_options.function.description, null), "Next.js Server")
+      handler                        = coalesce(try(var.server_options.function.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.server_options.function.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.server_options.function.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.server_options.function.memory_size, null), 1024)
+      timeout                        = coalesce(try(var.server_options.function.timeout, null), 30)
+      publish                        = coalesce(try(var.server_options.function.publish, null), true)
+      dead_letter_config             = try(var.server_options.function.dead_letter_config, null)
+      reserved_concurrent_executions = coalesce(try(var.server_options.function.reserved_concurrent_executions, null), 10)
+      code_signing_config            = try(var.server_options.function.code_signing_config, null)
     }
 
     networking = {
@@ -94,17 +94,17 @@ module "server_function" {
 
   prefix = "${var.prefix}-nextjs-server"
 
-  function_name                  = local.server_options.lambda.function_name
-  description                    = local.server_options.lambda.description
-  handler                        = local.server_options.lambda.handler
-  runtime                        = local.server_options.lambda.runtime
-  architectures                  = local.server_options.lambda.architectures
-  memory_size                    = local.server_options.lambda.memory_size
-  timeout                        = local.server_options.lambda.timeout
-  publish                        = local.server_options.lambda.publish
-  dead_letter_config             = local.server_options.lambda.dead_letter_config
-  reserved_concurrent_executions = local.server_options.lambda.reserved_concurrent_executions
-  code_signing_config            = local.server_options.lambda.code_signing_config
+  function_name                  = local.server_options.function.function_name
+  description                    = local.server_options.function.description
+  handler                        = local.server_options.function.handler
+  runtime                        = local.server_options.function.runtime
+  architectures                  = local.server_options.function.architectures
+  memory_size                    = local.server_options.function.memory_size
+  timeout                        = local.server_options.function.timeout
+  publish                        = local.server_options.function.publish
+  dead_letter_config             = local.server_options.function.dead_letter_config
+  reserved_concurrent_executions = local.server_options.function.reserved_concurrent_executions
+  code_signing_config            = local.server_options.function.code_signing_config
 
   source_dir = local.server_options.package.source_dir
   output_dir = local.server_options.package.output_dir
@@ -125,22 +125,22 @@ module "server_function" {
 locals {
   image_optimization_options = {
     package = {
-      source_dir = coalesce(try(var.image_optimization_options.source_dir, null), "${local.opennext_abs_path}/image-optimization-function/")
-      output_dir = coalesce(try(var.image_optimization_options.output_dir, null), "/tmp/")
+      source_dir = coalesce(try(var.image_optimization_options.package.source_dir, null), "${local.opennext_abs_path}/image-optimization-function/")
+      output_dir = coalesce(try(var.image_optimization_options.package.output_dir, null), "/tmp/")
     }
 
-    lambda = {
-      function_name                  = try(var.image_optimization_options.lambda.function_name, null)
-      description                    = coalesce(try(var.image_optimization_options.lambda.description, null), "Next.js Image Optimization")
-      handler                        = coalesce(try(var.image_optimization_options.lambda.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.image_optimization_options.lambda.runtime, null), "nodejs18.x")
-      architectures                  = coalesce(try(var.image_optimization_options.lambda.architectures, null), ["arm64"])
-      memory_size                    = coalesce(try(var.image_optimization_options.lambda.memory_size, null), 512)
-      timeout                        = coalesce(try(var.image_optimization_options.lambda.timeout, null), 30)
-      publish                        = coalesce(try(var.image_optimization_options.lambda.publish, null), false)
-      dead_letter_config             = try(var.image_optimization_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = coalesce(try(var.image_optimization_options.lambda.reserved_concurrent_executions, null), 3)
-      code_signing_config            = try(var.image_optimization_options.lambda.code_signing_config, null)
+    function = {
+      function_name                  = try(var.image_optimization_options.function.function_name, null)
+      description                    = coalesce(try(var.image_optimization_options.function.description, null), "Next.js Image Optimization")
+      handler                        = coalesce(try(var.image_optimization_options.function.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.image_optimization_options.function.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.image_optimization_options.function.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.image_optimization_options.function.memory_size, null), 512)
+      timeout                        = coalesce(try(var.image_optimization_options.function.timeout, null), 30)
+      publish                        = coalesce(try(var.image_optimization_options.function.publish, null), false)
+      dead_letter_config             = try(var.image_optimization_options.function.dead_letter_config, null)
+      reserved_concurrent_executions = coalesce(try(var.image_optimization_options.function.reserved_concurrent_executions, null), 3)
+      code_signing_config            = try(var.image_optimization_options.function.code_signing_config, null)
     }
 
     networking = {
@@ -170,17 +170,17 @@ module "image_optimization_function" {
 
   prefix = "${var.prefix}-nextjs-image-optimization"
 
-  function_name                  = local.image_optimization_options.lambda.function_name
-  description                    = local.image_optimization_options.lambda.description
-  handler                        = local.image_optimization_options.lambda.handler
-  runtime                        = local.image_optimization_options.lambda.runtime
-  architectures                  = local.image_optimization_options.lambda.architectures
-  memory_size                    = local.image_optimization_options.lambda.memory_size
-  timeout                        = local.image_optimization_options.lambda.timeout
-  publish                        = local.image_optimization_options.lambda.publish
-  dead_letter_config             = local.image_optimization_options.lambda.dead_letter_config
-  reserved_concurrent_executions = local.image_optimization_options.lambda.reserved_concurrent_executions
-  code_signing_config            = local.image_optimization_options.lambda.code_signing_config
+  function_name                  = local.image_optimization_options.function.function_name
+  description                    = local.image_optimization_options.function.description
+  handler                        = local.image_optimization_options.function.handler
+  runtime                        = local.image_optimization_options.function.runtime
+  architectures                  = local.image_optimization_options.function.architectures
+  memory_size                    = local.image_optimization_options.function.memory_size
+  timeout                        = local.image_optimization_options.function.timeout
+  publish                        = local.image_optimization_options.function.publish
+  dead_letter_config             = local.image_optimization_options.function.dead_letter_config
+  reserved_concurrent_executions = local.image_optimization_options.function.reserved_concurrent_executions
+  code_signing_config            = local.image_optimization_options.function.code_signing_config
 
   source_dir = local.image_optimization_options.package.source_dir
   output_dir = local.image_optimization_options.package.output_dir
@@ -200,22 +200,22 @@ module "image_optimization_function" {
 locals {
   revalidation_options = {
     package = {
-      source_dir = coalesce(try(var.revalidation_options.source_dir, null), "${local.opennext_abs_path}/revalidation-function/")
-      output_dir = coalesce(try(var.revalidation_options.output_dir, null), "/tmp/")
+      source_dir = coalesce(try(var.revalidation_options.package.source_dir, null), "${local.opennext_abs_path}/revalidation-function/")
+      output_dir = coalesce(try(var.revalidation_options.package.output_dir, null), "/tmp/")
     }
 
-    lambda = {
-      function_name                  = try(var.revalidation_options.lambda.function_name, null)
-      description                    = coalesce(try(var.revalidation_options.lambda.description, null), "Next.js ISR Revalidation Function")
-      handler                        = coalesce(try(var.revalidation_options.lambda.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.revalidation_options.lambda.runtime, null), "nodejs18.x")
-      architectures                  = coalesce(try(var.revalidation_options.lambda.architectures, null), ["arm64"])
-      memory_size                    = coalesce(try(var.revalidation_options.lambda.memory_size, null), 128)
-      timeout                        = coalesce(try(var.revalidation_options.lambda.timeout, null), 30)
-      publish                        = coalesce(try(var.revalidation_options.lambda.publish, null), false)
-      dead_letter_config             = try(var.revalidation_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = coalesce(try(var.revalidation_options.lambda.reserved_concurrent_executions, null), 3)
-      code_signing_config            = try(var.revalidation_options.lambda.code_signing_config, null)
+    function = {
+      function_name                  = try(var.revalidation_options.function.function_name, null)
+      description                    = coalesce(try(var.revalidation_options.function.description, null), "Next.js ISR Revalidation Function")
+      handler                        = coalesce(try(var.revalidation_options.function.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.revalidation_options.function.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.revalidation_options.function.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.revalidation_options.function.memory_size, null), 128)
+      timeout                        = coalesce(try(var.revalidation_options.function.timeout, null), 30)
+      publish                        = coalesce(try(var.revalidation_options.function.publish, null), false)
+      dead_letter_config             = try(var.revalidation_options.function.dead_letter_config, null)
+      reserved_concurrent_executions = coalesce(try(var.revalidation_options.function.reserved_concurrent_executions, null), 3)
+      code_signing_config            = try(var.revalidation_options.function.code_signing_config, null)
     }
 
     networking = {
@@ -242,17 +242,17 @@ module "revalidation_function" {
 
   prefix = "${var.prefix}-nextjs-revalidation"
 
-  function_name                  = local.revalidation_options.lambda.function_name
-  description                    = local.revalidation_options.lambda.description
-  handler                        = local.revalidation_options.lambda.handler
-  runtime                        = local.revalidation_options.lambda.runtime
-  architectures                  = local.revalidation_options.lambda.architectures
-  memory_size                    = local.revalidation_options.lambda.memory_size
-  timeout                        = local.revalidation_options.lambda.timeout
-  publish                        = local.revalidation_options.lambda.publish
-  dead_letter_config             = local.revalidation_options.lambda.dead_letter_config
-  reserved_concurrent_executions = local.revalidation_options.lambda.reserved_concurrent_executions
-  code_signing_config            = local.revalidation_options.lambda.code_signing_config
+  function_name                  = local.revalidation_options.function.function_name
+  description                    = local.revalidation_options.function.description
+  handler                        = local.revalidation_options.function.handler
+  runtime                        = local.revalidation_options.function.runtime
+  architectures                  = local.revalidation_options.function.architectures
+  memory_size                    = local.revalidation_options.function.memory_size
+  timeout                        = local.revalidation_options.function.timeout
+  publish                        = local.revalidation_options.function.publish
+  dead_letter_config             = local.revalidation_options.function.dead_letter_config
+  reserved_concurrent_executions = local.revalidation_options.function.reserved_concurrent_executions
+  code_signing_config            = local.revalidation_options.function.code_signing_config
 
   source_dir = local.revalidation_options.package.source_dir
   output_dir = local.revalidation_options.package.output_dir
@@ -283,22 +283,22 @@ module "revalidation_queue" {
 locals {
   warmer_options = {
     package = {
-      source_dir = coalesce(try(var.warmer_options.source_dir, null), "${local.opennext_abs_path}/warmer-function/")
-      output_dir = coalesce(try(var.warmer_options.output_dir, null), "/tmp/")
+      source_dir = coalesce(try(var.warmer_options.package.source_dir, null), "${local.opennext_abs_path}/warmer-function/")
+      output_dir = coalesce(try(var.warmer_options.package.output_dir, null), "/tmp/")
     }
 
-    lambda = {
-      function_name                  = try(var.warmer_options.lambda.function_name, null)
-      description                    = coalesce(try(var.warmer_options.lambda.description, null), "Next.js Warmer Function")
-      handler                        = coalesce(try(var.warmer_options.lambda.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.warmer_options.lambda.runtime, null), "nodejs18.x")
-      architectures                  = coalesce(try(var.warmer_options.lambda.architectures, null), ["arm64"])
-      memory_size                    = coalesce(try(var.warmer_options.lambda.memory_size, null), 128)
-      timeout                        = coalesce(try(var.warmer_options.lambda.timeout, null), 30)
-      publish                        = coalesce(try(var.warmer_options.lambda.publish, null), false)
-      dead_letter_config             = try(var.warmer_options.lambda.dead_letter_config, null)
-      reserved_concurrent_executions = coalesce(try(var.warmer_options.lambda.reserved_concurrent_executions, null), 3)
-      code_signing_config            = try(var.warmer_options.lambda.code_signing_config, null)
+    function = {
+      function_name                  = try(var.warmer_options.function.function_name, null)
+      description                    = coalesce(try(var.warmer_options.function.description, null), "Next.js Warmer Function")
+      handler                        = coalesce(try(var.warmer_options.function.handler, null), "index.handler")
+      runtime                        = coalesce(try(var.warmer_options.function.runtime, null), "nodejs18.x")
+      architectures                  = coalesce(try(var.warmer_options.function.architectures, null), ["arm64"])
+      memory_size                    = coalesce(try(var.warmer_options.function.memory_size, null), 128)
+      timeout                        = coalesce(try(var.warmer_options.function.timeout, null), 30)
+      publish                        = coalesce(try(var.warmer_options.function.publish, null), false)
+      dead_letter_config             = try(var.warmer_options.function.dead_letter_config, null)
+      reserved_concurrent_executions = coalesce(try(var.warmer_options.function.reserved_concurrent_executions, null), 3)
+      code_signing_config            = try(var.warmer_options.function.code_signing_config, null)
 
     }
 
@@ -330,17 +330,17 @@ module "warmer_function" {
   create_eventbridge_scheduled_rule = true
 
 
-  function_name                  = local.warmer_options.lambda.function_name
-  description                    = local.warmer_options.lambda.description
-  handler                        = local.warmer_options.lambda.handler
-  runtime                        = local.warmer_options.lambda.runtime
-  architectures                  = local.warmer_options.lambda.architectures
-  memory_size                    = local.warmer_options.lambda.memory_size
-  timeout                        = local.warmer_options.lambda.timeout
-  publish                        = local.warmer_options.lambda.publish
-  dead_letter_config             = local.warmer_options.lambda.dead_letter_config
-  reserved_concurrent_executions = local.warmer_options.lambda.reserved_concurrent_executions
-  code_signing_config            = local.warmer_options.lambda.code_signing_config
+  function_name                  = local.warmer_options.function.function_name
+  description                    = local.warmer_options.function.description
+  handler                        = local.warmer_options.function.handler
+  runtime                        = local.warmer_options.function.runtime
+  architectures                  = local.warmer_options.function.architectures
+  memory_size                    = local.warmer_options.function.memory_size
+  timeout                        = local.warmer_options.function.timeout
+  publish                        = local.warmer_options.function.publish
+  dead_letter_config             = local.warmer_options.function.dead_letter_config
+  reserved_concurrent_executions = local.warmer_options.function.reserved_concurrent_executions
+  code_signing_config            = local.warmer_options.function.code_signing_config
 
   source_dir = local.warmer_options.package.source_dir
   output_dir = local.warmer_options.package.output_dir
