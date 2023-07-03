@@ -48,7 +48,7 @@ resource "aws_lambda_function" "function" {
     for_each = var.vpc_id == null ? [] : [1]
 
     content {
-      security_group_ids = [aws_security_group.function_sg.id]
+      security_group_ids = [aws_security_group.function_sg[0].id]
       subnet_ids         = var.subnet_ids
     }
   }

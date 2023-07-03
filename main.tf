@@ -62,7 +62,7 @@ locals {
       vpc_id                       = try(var.server_options.networking.vpc_id, null)
       subnet_ids                   = try(var.server_options.networking.subnet_ids, [])
       security_group_ingress_rules = try(var.server_options.networking.sg_ingress_rules, [])
-      security_group_egress_rules  = try(var.server_options.networking.sg_egress_rules, [])
+      security_group_egress_rules  = coalesce(try(var.server_options.networking.sg_egress_rules, []))
     }
 
     environment_variables = merge({
