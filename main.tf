@@ -401,8 +401,10 @@ locals {
       }, try(var.cloudfront.cache_policy.headers_config, {}))
       query_strings_config = merge({
         query_string_behavior = "all",
+        items                 = []
       }, try(var.cloudfront.cache_policy.query_strings_config, {}))
     }
+    origin_request_policy = try(var.cloudfront.origin_request_policy, null)
   }
 }
 

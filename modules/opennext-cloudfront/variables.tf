@@ -108,13 +108,11 @@ variable "waf_logging_configuration" {
   default = null
 }
 
-variable "cache_policy" {
+variable "origin_request_policy" {
   type = object({
-    default_ttl = number
-    min_ttl     = number
-    max_ttl     = number
     cookies_config = object({
       cookie_behavior = string
+      items           = list(string)
     })
     headers_config = object({
       header_behavior = string
@@ -122,6 +120,28 @@ variable "cache_policy" {
     })
     query_strings_config = object({
       query_string_behavior = string
+      items                 = optional(list(string))
+    })
+  })
+  default = null
+}
+
+variable "cache_policy" {
+  type = object({
+    default_ttl = number
+    min_ttl     = number
+    max_ttl     = number
+    cookies_config = object({
+      cookie_behavior = string
+      items           = optional(list(string))
+    })
+    headers_config = object({
+      header_behavior = string
+      items           = optional(list(string))
+    })
+    query_strings_config = object({
+      query_string_behavior = string
+      items                 = optional(list(string))
     })
   })
 }

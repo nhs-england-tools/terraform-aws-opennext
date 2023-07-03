@@ -347,5 +347,19 @@ variable "cloudfront" {
         query_string_behavior = string
       }))
     }))
+    origin_request_policy = optional(object({
+      cookies_config = object({
+        cookie_behavior = string
+        items           = list(string)
+      })
+      headers_config = object({
+        header_behavior = string
+        items           = optional(list(string))
+      })
+      query_strings_config = object({
+        query_string_behavior = string
+        items                 = optional(list(string))
+      })
+    }))
   })
 }
