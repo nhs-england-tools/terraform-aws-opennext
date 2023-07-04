@@ -20,7 +20,7 @@ EOF
 
 data "aws_cloudfront_origin_request_policy" "origin_request_policy" {
   count = var.origin_request_policy == null ? 1 : 0
-  name  = "Managed-AllViewer"
+  name  = "Managed-AllViewerExceptHostHeader"
 }
 
 resource "aws_cloudfront_origin_request_policy" "origin_request_policy" {
@@ -140,11 +140,6 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
       }
     }
   }
-}
-
-provider "aws" {
-  alias  = "global"
-  region = "us-east-1"
 }
 
 resource "aws_cloudfront_distribution" "distribution" {

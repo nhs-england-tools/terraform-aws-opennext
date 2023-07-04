@@ -27,7 +27,6 @@ data "aws_region" "current" {}
 module "assets" {
   source = "./modules/opennext-assets"
 
-  aws_account_id           = data.aws_caller_identity.current.account_id
   prefix                   = "${var.prefix}-assets"
   assets_path              = "${local.opennext_abs_path}/assets"
   cache_path               = "${local.opennext_abs_path}/cache"
@@ -415,10 +414,11 @@ module "cloudfront" {
 
   logging_bucket_domain_name    = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
   assets_origin_access_identity = module.assets.cloudfront_origin_access_identity.cloudfront_access_identity_path
+
   origins = {
     assets_bucket               = module.assets.assets_bucket.bucket_regional_domain_name
-    server_function             = "${module.server_function.lambda_function_url.url_id}.lambda-url.eu-west-2.on.aws"
-    image_optimization_function = "${module.image_optimization_function.lambda_function_url.url_id}.lambda-url.eu-west-2.on.aws"
+    server_function             = "${module.server_function.lambda_function_url.url_id}.lambda-url.${data.aws_region.current.name}.on.aws"
+    image_optimization_function = "${module.image_optimization_function.lambda_function_url.url_id}.lambda-url.${data.aws_region.current.name}.on.aws"
   }
 
   aliases                   = local.cloudfront.aliases

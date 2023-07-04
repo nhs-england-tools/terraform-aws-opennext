@@ -47,9 +47,9 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "assets" {
   bucket = aws_s3_bucket.assets.bucket
 
   rule {
+
     apply_server_side_encryption_by_default {
-      kms_master_key_id = try(data.aws_kms_key.assets_key[0].arn, aws_kms_key.assets_key[0].arn)
-      sse_algorithm     = "aws:kms"
+      sse_algorithm     = "AES256"
     }
   }
 }

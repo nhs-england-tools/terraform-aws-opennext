@@ -44,13 +44,3 @@ variable "replication_configuration" {
     }))
   })
 }
-
-variable "kms_key_arn" {
-  description = "The KMS Key ARN for the encryption of the static assets S3 bucket"
-  type        = string
-  default     = null
-}
-
-variable "aws_account_id" {
-  type = string
-}
