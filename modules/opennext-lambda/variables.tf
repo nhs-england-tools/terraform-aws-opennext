@@ -27,7 +27,6 @@ variable "source_dir" {
 variable "output_dir" {
   type        = string
   description = "The directory to use to store the lambda deployment packages"
-  default     = "/tmp/"
 }
 
 

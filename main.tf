@@ -42,7 +42,7 @@ locals {
   server_options = {
     package = {
       source_dir = coalesce(try(var.server_options.package.source_dir, null), "${local.opennext_abs_path}/server-function/")
-      output_dir = coalesce(try(var.server_options.package.output_dir, null), "/tmp/")
+      output_dir = coalesce(try(var.server_options.package.output_dir, null), "${local.opennext_abs_path}/.build/")
     }
 
     function = {
@@ -126,7 +126,7 @@ locals {
   image_optimization_options = {
     package = {
       source_dir = coalesce(try(var.image_optimization_options.package.source_dir, null), "${local.opennext_abs_path}/image-optimization-function/")
-      output_dir = coalesce(try(var.image_optimization_options.package.output_dir, null), "/tmp/")
+      output_dir = coalesce(try(var.image_optimization_options.package.output_dir, null), "${local.opennext_abs_path}/.build/")
     }
 
     function = {
@@ -201,7 +201,7 @@ locals {
   revalidation_options = {
     package = {
       source_dir = coalesce(try(var.revalidation_options.package.source_dir, null), "${local.opennext_abs_path}/revalidation-function/")
-      output_dir = coalesce(try(var.revalidation_options.package.output_dir, null), "/tmp/")
+      output_dir = coalesce(try(var.revalidation_options.package.output_dir, null), "${local.opennext_abs_path}/.build/")
     }
 
     function = {
@@ -284,7 +284,7 @@ locals {
   warmer_options = {
     package = {
       source_dir = coalesce(try(var.warmer_options.package.source_dir, null), "${local.opennext_abs_path}/warmer-function/")
-      output_dir = coalesce(try(var.warmer_options.package.output_dir, null), "/tmp/")
+      output_dir = coalesce(try(var.warmer_options.package.output_dir, null), "${local.opennext_abs_path}/.build/")
     }
 
     function = {
