@@ -17,3 +17,7 @@ output "cloudwatch_event_target" {
 output "lambda_role" {
   value = aws_iam_role.lambda_role
 }
+
+output "log_group" {
+  value = aws_cloudwatch_log_group.function_log_group
+}

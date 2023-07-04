@@ -92,6 +92,14 @@ variable "kms_key_arn" {
   default     = null
 }
 
+variable "log_group" {
+  description = "Options passed to the CloudWatch log group for the Lambda function"
+  type = object({
+    retention_in_days = number
+    kms_key_id        = string
+  })
+}
+
 variable "code_signing_config" {
   description = "Code Signing Config for the Lambda Function"
   type = object({
