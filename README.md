@@ -6,6 +6,7 @@ This is a Terraform module for deploying a Next.js application built with [OpenN
 
 - [OpenNext Terraform Module for AWS](#opennext-terraform-module-for-aws)
   - [Table of Contents](#table-of-contents)
+  - [Example](#example)
   - [Installation](#installation)
     - [Prerequisites](#prerequisites)
   - [Usage](#usage)
@@ -15,6 +16,10 @@ This is a Terraform module for deploying a Next.js application built with [OpenN
   - [Contributing](#contributing)
   - [Contacts](#contacts)
   - [Licence](#licence)
+
+## Example
+
+The example app in `example/` is deployed using the latest version of this Terraform module to [terraform-aws-opennext.tools.engineering.england.nhs.uk](https://terraform-aws-opennext.tools.engineering.england.nhs.uk/).
 
 ## Installation
 
@@ -26,10 +31,10 @@ module "opennext" {
   version = "0.0.1-alpha.5"
 
   prefix              = "opennext"
-  domain_name         = "your-domain-name.com" 
+  domain_name         = "your-domain-name.com"
   acm_certificate_arn = "arn:aws:acm:region:account:certificate/certificate_ID"
   hosted_zone_id      = "12345"
-  opennext_build_path = ".open-next" 
+  opennext_build_path = ".open-next"
 }
 ```
 
@@ -68,7 +73,6 @@ Describe or link templates on how to raise an issue, feature request or make a c
 ## Contacts
 
 - Thomas Judd-Cooper - [Email](mailto:thomas.judd-cooper1@nhs.net) - [GitHub](https://github.com/Tomdango)
-
 
 ## Licence
 
