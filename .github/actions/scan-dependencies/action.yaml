@@ -20,4 +20,4 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         name: dependency-scan
-        path: ./sve-scan.json
+        path: ./cve-scan.json
