@@ -149,6 +149,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build-example-app]
     if: success() && github.ref_name == 'main'
+    concurrency: example-deploy
     environment:
       name: Example Application
       url: https://terraform-aws-opennext.tools.engineering.england.nhs.uk/
