@@ -9,11 +9,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  alias  = "global"
-  region = "us-east-1"
-}
-
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
@@ -21,7 +16,8 @@ data "aws_region" "current" {}
  * Assets & Cache S3 Bucket
  **/
 module "assets" {
-  source = "./modules/opennext-assets"
+  source       = "./modules/opennext-assets"
+  default_tags = var.default_tags
 
   prefix                   = "${var.prefix}-assets"
   assets_path              = "${local.opennext_abs_path}/assets"
@@ -34,7 +30,8 @@ module "assets" {
  * Next.js Server Function
  **/
 module "server_function" {
-  source = "./modules/opennext-lambda"
+  source       = "./modules/opennext-lambda"
+  default_tags = var.default_tags
 
   prefix = "${var.prefix}-nextjs-server"
 
@@ -69,7 +66,8 @@ module "server_function" {
  * Image Optimization Function
  **/
 module "image_optimization_function" {
-  source = "./modules/opennext-lambda"
+  source       = "./modules/opennext-lambda"
+  default_tags = var.default_tags
 
   prefix = "${var.prefix}-nextjs-image-optimization"
 
@@ -102,7 +100,8 @@ module "image_optimization_function" {
  * ISR Revalidation Function
  **/
 module "revalidation_function" {
-  source = "./modules/opennext-lambda"
+  source       = "./modules/opennext-lambda"
+  default_tags = var.default_tags
 
   prefix = "${var.prefix}-nextjs-revalidation"
 
@@ -135,8 +134,9 @@ module "revalidation_function" {
  * ISR Revalidation Queue
  **/
 module "revalidation_queue" {
-  source = "./modules/opennext-revalidation-queue"
-  prefix = "${var.prefix}-revalidation-queue"
+  source       = "./modules/opennext-revalidation-queue"
+  prefix       = "${var.prefix}-revalidation-queue"
+  default_tags = var.default_tags
 
   aws_account_id            = data.aws_caller_identity.current.account_id
   revalidation_function_arn = module.revalidation_function.lambda_function.arn
@@ -147,7 +147,8 @@ module "revalidation_queue" {
  **/
 
 module "warmer_function" {
-  source = "./modules/opennext-lambda"
+  source       = "./modules/opennext-lambda"
+  default_tags = var.default_tags
 
   prefix                            = "${var.prefix}-nextjs-warmer"
   create_eventbridge_scheduled_rule = true
@@ -182,7 +183,8 @@ module "warmer_function" {
  * CloudFront -> CloudWatch Logs
  **/
 module "cloudfront_logs" {
-  source = "./modules/cloudfront-logs"
+  source       = "./modules/cloudfront-logs"
+  default_tags = var.default_tags
 
   log_group_name  = "${var.prefix}-cloudfront-logs"
   log_bucket_name = "${var.prefix}-cloudfront-logs"
@@ -193,8 +195,9 @@ module "cloudfront_logs" {
  * Next.js CloudFront Distribution
  **/
 module "cloudfront" {
-  source = "./modules/opennext-cloudfront"
-  prefix = "${var.prefix}-cloudfront"
+  source       = "./modules/opennext-cloudfront"
+  prefix       = "${var.prefix}-cloudfront"
+  default_tags = var.default_tags
 
   logging_bucket_domain_name    = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
   assets_origin_access_identity = module.assets.cloudfront_origin_access_identity.cloudfront_access_identity_path

@@ -3,6 +3,13 @@ variable "prefix" {
   description = "Prefix for created resource IDs"
 }
 
+variable "default_tags" {
+  type        = map(string)
+  description = "Default tags to apply to all created resources"
+  default     = {}
+}
+
+
 variable "acm_certificate_arn" {
   type = string
 }

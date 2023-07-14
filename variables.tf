@@ -8,6 +8,12 @@ variable "prefix" {
   default     = "opennext"
 }
 
+variable "default_tags" {
+  type        = map(string)
+  description = "Default tags to apply to all created resources"
+  default     = {}
+}
+
 /**
  * Route53 (DNS) Variables
  **/

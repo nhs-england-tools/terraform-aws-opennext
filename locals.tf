@@ -59,9 +59,9 @@ locals {
       handler                        = coalesce(try(var.server_options.function.handler, null), "index.handler")
       runtime                        = coalesce(try(var.server_options.function.runtime, null), "nodejs18.x")
       architectures                  = coalesce(try(var.server_options.function.architectures, null), ["arm64"])
-      memory_size                    = coalesce(try(var.server_options.function.memory_size, null), 1024)
+      memory_size                    = coalesce(try(var.server_options.function.memory_size, null), 512)
       timeout                        = coalesce(try(var.server_options.function.timeout, null), 30)
-      publish                        = coalesce(try(var.server_options.function.publish, null), true)
+      publish                        = coalesce(try(var.server_options.function.publish, null), false)
       dead_letter_config             = try(var.server_options.function.dead_letter_config, null)
       reserved_concurrent_executions = coalesce(try(var.server_options.function.reserved_concurrent_executions, null), 10)
       code_signing_config            = try(var.server_options.function.code_signing_config, null)
@@ -69,7 +69,7 @@ locals {
 
     log_group = {
       retention_in_days = coalesce(try(var.server_options.log_group.retention_in_days, null), 365)
-      kms_key_id        = try(var.server_options.log_group.retention_in_days, null)
+      kms_key_id        = try(var.server_options.log_group.kms_key_id, null)
     }
 
     networking = {
@@ -97,6 +97,11 @@ locals {
         effect    = "Allow"
         actions   = ["sqs:SendMessage"]
         resources = [module.revalidation_queue.queue.arn]
+      },
+      {
+        effect    = "Allow"
+        actions   = ["kms:GenerateDataKey", "kms:Decrypt"]
+        resources = [module.revalidation_queue.queue_kms_key.arn]
       }
     ], coalesce(try(var.server_options.iam_policy, null), []))
   }
@@ -126,7 +131,7 @@ locals {
 
     log_group = {
       retention_in_days = coalesce(try(var.image_optimization_options.log_group.retention_in_days, null), 365)
-      kms_key_id        = try(var.image_optimization_options.log_group.retention_in_days, null)
+      kms_key_id        = try(var.image_optimization_options.log_group.kms_key_id, null)
     }
 
     networking = {
@@ -176,7 +181,7 @@ locals {
 
     log_group = {
       retention_in_days = coalesce(try(var.revalidation_options.log_group.retention_in_days, null), 365)
-      kms_key_id        = try(var.revalidation_options.log_group.retention_in_days, null)
+      kms_key_id        = try(var.revalidation_options.log_group.kms_key_id, null)
     }
 
     networking = {
@@ -193,6 +198,11 @@ locals {
         effect    = "Allow"
         actions   = ["sqs:ReceiveMessage", "sqs:DeleteMessage", "sqs:GetQueueAttributes"]
         resources = [module.revalidation_queue.queue.arn]
+      },
+      {
+        effect    = "Allow"
+        actions   = ["kms:Decrypt", "kms:DescribeKey"]
+        resources = [module.revalidation_queue.queue_kms_key.arn]
       }
     ], coalesce(try(var.revalidation_options.iam_policy, null), []))
   }
@@ -222,7 +232,7 @@ locals {
 
     log_group = {
       retention_in_days = coalesce(try(var.warmer_options.log_group.retention_in_days, null), 365)
-      kms_key_id        = try(var.warmer_options.log_group.retention_in_days, null)
+      kms_key_id        = try(var.warmer_options.log_group.kms_key_id, null)
     }
 
     networking = {

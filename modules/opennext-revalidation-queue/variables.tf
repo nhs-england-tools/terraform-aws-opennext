@@ -3,6 +3,12 @@ variable "prefix" {
   description = "Prefix for created resource IDs"
 }
 
+variable "default_tags" {
+  type        = map(string)
+  description = "Default tags to apply to all created resources"
+  default     = {}
+}
+
 variable "aws_account_id" {
   type        = string
   description = "The account ID of the current AWS account"

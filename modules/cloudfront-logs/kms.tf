@@ -33,7 +33,7 @@ data "aws_iam_policy_document" "cloudwatch_logs_key_policy" {
 
     principals {
       type        = "Service"
-      identifiers = ["logs.amazonaws.com"]
+      identifiers = ["logs.amazonaws.com", "delivery.logs.amazonaws.com"]
     }
   }
 }

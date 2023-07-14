@@ -29,17 +29,17 @@ data "aws_iam_policy_document" "revalidation_queue_key_policy" {
   statement {
     effect = "Allow"
     actions = [
-      "kms:Encrypt*",
-      "kms:Decrypt*",
+      "kms:Encrypt",
+      "kms:Decrypt",
       "kms:ReEncrypt*",
       "kms:GenerateDataKey*",
-      "kms:Describe*"
+      "kms:DescribeKey"
     ]
     resources = ["*"]
 
     principals {
       type        = "Service"
-      identifiers = ["lambda.amazonaws.com", "sqs.amazonaws.com"]
+      identifiers = ["lambda.amazonaws.com", "edgelambda.amazonaws.com", "sqs.amazonaws.com"]
     }
   }
 }

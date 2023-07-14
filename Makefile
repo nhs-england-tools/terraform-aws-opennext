@@ -70,3 +70,12 @@ tag-release: check-version build-cloudfront-logs-lambda
 
 	git tag ${version}
 	git push --tags
+
+format-terraform: # Formats all Terraform Files
+	terraform fmt
+	terraform -chdir=modules/cloudfront-logs fmt
+	terraform -chdir=modules/opennext-assets fmt
+	terraform -chdir=modules/opennext-cloudfront fmt
+	terraform -chdir=modules/opennext-lambda fmt
+	terraform -chdir=modules/opennext-revalidation-queue fmt
+	terraform -chdir=example/terraform fmt
