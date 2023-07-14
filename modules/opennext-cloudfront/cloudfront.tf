@@ -169,13 +169,9 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   restrictions {
-    dynamic "geo_restriction" {
-      for_each = var.geo_restriction != null ? [true] : []
-
-      content {
-        restriction_type = var.geo_restriction.restriction_type
-        locations        = var.geo_restriction.whitelist
-      }
+    geo_restriction {
+      restriction_type = var.geo_restriction.restriction_type
+      locations        = var.geo_restriction.whitelist
     }
   }
 

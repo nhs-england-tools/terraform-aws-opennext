@@ -159,5 +159,4 @@ variable "geo_restriction" {
     restriction_type = string
     locations        = list(string)
   })
-  default = null
 }
