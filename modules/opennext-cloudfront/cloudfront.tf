@@ -169,10 +169,13 @@ resource "aws_cloudfront_distribution" "distribution" {
   }
 
   restrictions {
-    geo_restriction {
-      restriction_type = "whitelist"
-      # TODO: Remove US location after implementing GitHub Self-Hosted runners
-      locations = ["GB", "US"]
+    dynamic "geo_restriction" {
+      for_each = var.geo_restriction != null ? [true] : []
+
+      content {
+        restriction_type = var.geo_restriction.restriction_type
+        locations        = var.geo_restriction.whitelist
+      }
     }
   }
 

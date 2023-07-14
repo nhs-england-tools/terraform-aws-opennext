@@ -316,6 +316,10 @@ variable "cloudfront" {
       override = bool
       value    = string
     })))
+    geo_restriction = optional(object({
+      restriction_type = string
+      locations        = list(string)
+    }))
     cors = optional(object({
       allow_credentials = bool,
       allow_headers     = list(string)

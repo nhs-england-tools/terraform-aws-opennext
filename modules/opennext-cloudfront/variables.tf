@@ -152,3 +152,12 @@ variable "cache_policy" {
     })
   })
 }
+
+variable "geo_restriction" {
+  description = "The georestriction configuration for the CloudFront distribution"
+  type = object({
+    restriction_type = string
+    locations        = list(string)
+  })
+  default = null
+}

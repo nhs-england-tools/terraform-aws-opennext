@@ -175,7 +175,7 @@ jobs:
           name: example-app-opennext-build
 
       - name: Unzip Build Artifacts to .open-next folder
-        run: unzip -q -d example/.open-next example-app-opennext-build/open-next.zip
+        run: unzip -q -d example/.open-next open-next.zip
 
       - name: Run Terraform Init
         run: terraform -chdir=example/terraform init

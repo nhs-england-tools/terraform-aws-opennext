@@ -212,6 +212,7 @@ module "cloudfront" {
   acm_certificate_arn       = local.cloudfront.acm_certificate_arn
   assets_paths              = local.cloudfront.assets_paths
   custom_headers            = local.cloudfront.custom_headers
+  geo_restriction           = local.cloudfront.geo_restriction
   cors                      = local.cloudfront.cors
   hsts                      = local.cloudfront.hsts
   waf_logging_configuration = local.cloudfront.waf_logging_configuration

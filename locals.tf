@@ -11,6 +11,7 @@ locals {
     acm_certificate_arn = var.cloudfront.acm_certificate_arn
     assets_paths        = coalesce(var.cloudfront.assets_paths, [])
     custom_headers      = coalesce(var.cloudfront.custom_headers, [])
+    geo_restriction     = try(var.cloudfront.geo_restriction, null)
     cors = merge({
       allow_credentials = false,
       allow_headers     = ["*"],
