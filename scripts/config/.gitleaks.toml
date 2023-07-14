@@ -1,0 +1,7 @@
+# SEE: https://github.com/gitleaks/gitleaks/#configuration
+
+[extend]
+useDefault = true # SEE: https://github.com/gitleaks/gitleaks/blob/master/config/gitleaks.toml
+
+[allowlist]
+files = ['.terraform.lock.hcl', 'poetry.lock', 'yarn.lock']

@@ -1,4 +1,14 @@
-include scripts/makefile/Makefile.init
+include scripts/init.mk
+
+config:
+	make \
+		asdf-install \
+		githooks-install \
+		terraform-install
+
+.SILENT: \
+	config
+
 
 ###############
 ## Constants ##

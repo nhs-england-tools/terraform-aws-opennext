@@ -5,7 +5,7 @@ set -e
 # Pre-commit git hook to scan for secrets hardcoded in the codebase.
 #
 # Usage:
-#   $ ./secret-scan-pre-commit.sh
+#   $ ./scan-secrets.sh
 #
 # Options:
 #   ALL_FILES=true  # Scan whole git history or 'last-commit', default is `false`
@@ -18,7 +18,8 @@ set -e
 
 # ==============================================================================
 
-image_version=v8.16.3@sha256:05b48ff3f4fd7daa9487b42cbf9d576f2dc0dbe2551e3d0a8738e18ba2278091
+# SEE: https://github.com/gitleaks/gitleaks/pkgs/container/gitleaks, use the `linux/amd64` os/arch
+image_version=v8.17.0@sha256:99e40155529614d09d264cc886c1326c9a4593ad851ccbeaaed8dcf03ff3d3d7
 
 # ==============================================================================
 
@@ -34,12 +35,17 @@ function main() {
     # Scan staged files only
     cmd="protect --source=/scan --verbose --staged"
   fi
+  # Include base line file if it exists
+  if [ -f $PWD/scripts/config/.gitleaks-baseline.json ]; then
+    cmd="$cmd --baseline-path /scan/scripts/config/.gitleaks-baseline.json"
+  fi
 
   docker run --rm --platform linux/amd64 \
     --volume=$PWD:/scan \
     --workdir=/scan \
     ghcr.io/gitleaks/gitleaks:$image_version \
-      $cmd
+      $cmd \
+      --config /scan/scripts/config/.gitleaks.toml
 }
 
 function is_arg_true() {

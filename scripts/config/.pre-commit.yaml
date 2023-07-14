@@ -1,0 +1,39 @@
+repos:
+- repo: https://github.com/pre-commit/pre-commit-hooks
+  rev: v3.2.0
+  hooks:
+    - id: trailing-whitespace
+    - id: end-of-file-fixer
+    - id: check-yaml
+- repo: local
+  hooks:
+  - id: scan-secrets
+    name: Scan Secrets
+    entry: ./scripts/githooks/scan-secrets.sh
+    language: script
+    pass_filenames: false
+- repo: local
+  hooks:
+  - id: check-file-format
+    name: Check File Format
+    entry: ./scripts/githooks/check-file-format.sh
+    language: script
+    pass_filenames: false
+- repo: local
+  hooks:
+  - id: check-markdown-format
+    name: Check Markdown Format
+    entry: ./scripts/githooks/check-markdown-format.sh
+    language: script
+    pass_filenames: false
+- repo: local
+  hooks:
+  - id: check-terraform-format
+    name: Check Terraform Format
+    entry: ./scripts/githooks/check-terraform-format.sh
+    language: script
+    pass_filenames: false
+- repo: https://github.com/antonbabenko/pre-commit-terraform
+  rev: v1.81.0
+  hooks:
+    - id: terraform_tflint

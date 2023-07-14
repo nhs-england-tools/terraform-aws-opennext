@@ -1,0 +1,9 @@
+name: Check File Format
+runs:
+  using: "composite"
+  steps:
+    - name: Check File Format
+      shell: bash
+      run: |
+          export BRANCH_NAME=origin/${{ github.event.repository.default_branch }}
+          ./scripts/githooks/check-file-format.sh
