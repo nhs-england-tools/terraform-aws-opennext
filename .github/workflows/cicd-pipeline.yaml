@@ -130,10 +130,10 @@ jobs:
         uses: asdf-vm/actions/install@v2
 
       - name: Install Example Dependencies
-        uses: make example-install
+        run: make example-install
 
       - name: Build Example App
-        uses: make example-build
+        run: make example-build
 
   deploy:
     name: Deploy Example App
