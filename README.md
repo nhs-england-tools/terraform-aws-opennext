@@ -28,13 +28,16 @@ Copy and paste the following into your Terraform configuration, edit the variabl
 ```tf
 module "opennext" {
   source  = "nhs-england-tools/opennext/aws"
-  version = "0.0.1-alpha.5"
+  version = "1.0.0" # Use the latest release from https://github.com/nhs-england-tools/terraform-aws-opennext/releases
 
-  prefix              = "opennext"
-  domain_name         = "your-domain-name.com"
-  acm_certificate_arn = "arn:aws:acm:region:account:certificate/certificate_ID"
-  hosted_zone_id      = "12345"
-  opennext_build_path = ".open-next"
+  prefix              = "opennext"                          # Prefix for all created resources
+  opennext_build_path = "../.open-next"                     # Path to your .open-next folder
+  hosted_zone_id      = data.aws_route53_zone.zone.zone_id  # The Route53 hosted zone ID for your domain name
+
+  cloudfront = {
+    aliases             = [local.domain_name]                                             # Your domain name
+    acm_certificate_arn = aws_acm_certificate_validation.ssl_certificate.certificate_arn  # The ACM (SSL) certificate for your domain
+  }
 }
 ```
 
@@ -42,7 +45,7 @@ module "opennext" {
 
 The following software packages or their equivalents are expected to be installed
 
-- [Terraform](https://developer.hashicorp.com/terraform/downloads) (>=1.3)
+- [Terraform](https://developer.hashicorp.com/terraform/downloads) (>=1.5)
 
 ## Usage
 
