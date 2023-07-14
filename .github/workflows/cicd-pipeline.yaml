@@ -135,6 +135,12 @@ jobs:
       - name: Build Example App
         run: make example-build
 
+      - name: Store Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: example-app-opennext-build
+          path: example/.open-next/
+
   deploy:
     name: Deploy Example App
     runs-on: ubuntu-latest
@@ -145,6 +151,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install asdf & tools
+        uses: asdf-vm/actions/install@v2
+
       - id: aws-credentials
         name: Setup AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
@@ -154,3 +163,36 @@ jobs:
 
       - name: Get Current Identity
         run: aws sts get-caller-identity
+
+      - name: Download Build Artifacts
+        uses: actions/download-artifact
+        with:
+          name: example-app-opennext-build
+
+      - name: Copy Build Artifacts to .open-next folder
+        run: mv example-app-opennext-build example/.open-next
+
+      - name: Run Terraform Init
+        run: terraform -chdir=example/terraform init
+
+      - name: Run Terraform Plan
+        run: terraform -chdir=example/terraform plan -out example-app.tfplan
+
+      - name: Store Terraform Plan Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: example-app-tfplan-output
+          path: example-app.tfplan
+
+      - name: Run Terraform Apply
+        run: terraform -chdir=example/terraform apply example-app.tfplan
+
+      - name: Get CloudFront Distribution ID
+        run: echo "distribution_id=$(terraform -chdir=example/terraform output -raw cloudfront_distribution_id)" >> "$GITHUB_OUTPUT"
+
+      - name: Trigger CloudFront Cache Invalidation
+        id: trigger_invalidation
+        run: echo "invalidation_id=$(aws cloudfront create-invalidation --distribution-id ${{ steps.get_distribution_id.outputs.distribution_id }} --paths '/*' --output text --query Invalidation.Id)" >> "$GITHUB_OUTPUT"
+
+      - name: Wait for Invalidation
+        run: aws cloudfront wait invalidation-completed --distribution-id ${{ steps.get_distribution_id.outputs.distribution_id }} --id ${{ steps.trigger_invalidation.outputs.invalidation_id }}
