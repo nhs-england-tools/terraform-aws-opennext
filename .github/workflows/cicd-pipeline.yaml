@@ -24,11 +24,11 @@ jobs:
 
       - id: metadata
         name: Get Metadata
-        uses: ./.github/actions/get-metadata.yaml
+        uses: ./.github/actions/get-metadata
 
       - id: cloc
         name: Get Lines of Code
-        uses: ./.github/actions/cloc-repository.yaml
+        uses: ./.github/actions/cloc-repository
 
   formatting-checks:
     needs: [get-metadata]
@@ -40,13 +40,13 @@ jobs:
           fetch-depth: 0
 
       - name: Check File Format
-        uses: ./.github/actions/check-file-format.yaml
+        uses: ./.github/actions/check-file-format
 
       - name: Check Markdown Format
-        uses: ./.github/actions/check-markdown-format.yaml
+        uses: ./.github/actions/check-markdown-format
 
       - name: Check Terraform Format
-        uses: ./.github/actions/check-terraform-format.yaml
+        uses: ./.github/actions/check-terraform-format
 
   security-scan:
     needs: [get-metadata]
@@ -58,10 +58,10 @@ jobs:
           fetch-depth: 0
 
       - name: Scan Dependencies
-        uses: ./.github/actions/scan-dependencies.yaml
+        uses: ./.github/actions/scan-dependencies
 
       - name: Scan Secrets
-        uses: ./.github/actions/scan-secrets.yaml
+        uses: ./.github/actions/scan-secrets
 
 
   checkov:
