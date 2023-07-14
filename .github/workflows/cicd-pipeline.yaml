@@ -116,3 +116,23 @@ jobs:
 
       - name: Run TFLint
         run: tflint -f compact
+
+  deploy:
+    name: Deploy Example App
+    runs-on: ubuntu-latest
+    needs: [tflint, checkov]
+    if: success() && github.ref_name == 'main'
+    environment:
+      name: Example Application
+    steps:
+      - uses: actions/checkout@v3
+
+      - id: aws-credentials
+        name: Setup AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: ${{ secrets.DEPLOYMENT_IAM_ROLE }}
+          aws-region: eu-west-2
+
+      - name: Get Current Identity
+        run: aws sts get-caller-identity
