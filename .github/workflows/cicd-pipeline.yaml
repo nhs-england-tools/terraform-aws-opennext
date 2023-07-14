@@ -135,11 +135,14 @@ jobs:
       - name: Build Example App
         run: make example-build
 
+      - name: Zip OpenNext Deployment Assets
+        run: cd example/.open-next && zip -r ../../open-next.zip . -q
+
       - name: Store Build Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: example-app-opennext-build
-          path: example/.open-next/
+          path: open-next.zip
 
   deploy:
     name: Deploy Example App
@@ -148,6 +151,8 @@ jobs:
     if: success() && github.ref_name == 'main'
     environment:
       name: Example Application
+      url: https://terraform-aws-opennext.tools.engineering.england.nhs.uk/
+
     steps:
       - uses: actions/checkout@v3
 
@@ -169,8 +174,8 @@ jobs:
         with:
           name: example-app-opennext-build
 
-      - name: Copy Build Artifacts to .open-next folder
-        run: mv example-app-opennext-build example/.open-next
+      - name: Unzip Build Artifacts to .open-next folder
+        run: unzip -q -d example/.open-next example-app-opennext-build/open-next.zip
 
       - name: Run Terraform Init
         run: terraform -chdir=example/terraform init
