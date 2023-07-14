@@ -165,7 +165,7 @@ jobs:
         run: aws sts get-caller-identity
 
       - name: Download Build Artifacts
-        uses: actions/download-artifact
+        uses: actions/download-artifact@v3
         with:
           name: example-app-opennext-build
 
