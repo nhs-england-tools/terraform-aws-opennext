@@ -1,10 +1,19 @@
 import { NextPage } from "next";
+import Head from "next/head";
 
 const MiddlewareRedirectDestinationPage: NextPage = () => (
-    <article>
+    <>
+      <Head>
+        <title>Middleware - Redirect - Next.js Feature Test App</title>
+        <meta name="description" content="Next.js Test App for terraform-aws-opennext" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <article>
         <h1>Middleware - redirect</h1>
         <p>If you see this page, Middleware with redirect is working.</p>
-    </article>
+      </article>
+    </>
 );
 
 export default MiddlewareRedirectDestinationPage;
