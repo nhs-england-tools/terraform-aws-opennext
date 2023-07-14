@@ -2,6 +2,8 @@ name: CI/CD Pipeline
 permissions:
   contents: read
   security-events: write
+  id-token: write
+  actions: write
 
 on:
   push:
@@ -117,10 +119,26 @@ jobs:
       - name: Run TFLint
         run: tflint -f compact
 
+  build-example-app:
+    name: Build Example App
+    runs-on: ubuntu-latest
+    needs: [tflint, checkov]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install asdf & tools
+        uses: asdf-vm/actions/install@v2
+
+      - name: Install Example Dependencies
+        uses: make example-install
+
+      - name: Build Example App
+        uses: make example-build
+
   deploy:
     name: Deploy Example App
     runs-on: ubuntu-latest
-    needs: [tflint, checkov]
+    needs: [build-example-app]
     if: success() && github.ref_name == 'main'
     environment:
       name: Example Application

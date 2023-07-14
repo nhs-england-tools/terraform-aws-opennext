@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "package": "open-next build && yarn package:functions",
+    "package": "open-next build",
     "start": "next start",
     "lint": "next lint"
   },

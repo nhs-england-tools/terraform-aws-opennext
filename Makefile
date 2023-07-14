@@ -4,6 +4,7 @@ config:
 	make \
 		asdf-install \
 		githooks-install \
+		nodejs-install \
 		terraform-install
 
 .SILENT: \
@@ -70,8 +71,6 @@ example-install: check # Installs the dependencies for the example project
 
 example-build: example-clean # Builds the example Next.js application
 	yarn --cwd example package
-	cp -r example/.open-next/* ${BUILD_FOLDER}
-	for f in ${BUILD_FOLDER}/*; do cd $$f; zip -rq $$f.zip . && cd -; rm -rf $$f; done
 
 tag-release: check-version build-cloudfront-logs-lambda
 	git add .
