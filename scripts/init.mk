@@ -2,11 +2,11 @@
 
 nodejs-install: # Install Node.js
 	make _install-dependency name="nodejs"
-	make _install-dependency name="yarn" version=latest
+	make _install-dependency name="yarn"
 
 python-install: # Install Python
 	make _install-dependency name="python"
-	make _install-dependency name="poetry" version=latest
+	make _install-dependency name="poetry"
 
 terraform-install: # Install Terraform
 	make _install-dependency name="terraform"
