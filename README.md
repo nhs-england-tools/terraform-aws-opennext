@@ -23,7 +23,7 @@ The example app in `example/` is deployed using the latest version of this Terra
 
 ## Installation
 
-Copy and paste the following into your Terraform configuration, edit the variables, and then `terraform init`.
+Copy and paste the following into your Terraform configuration, edit the variables, and then run `terraform init`.
 
 ```tf
 module "opennext" {
