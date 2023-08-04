@@ -30,9 +30,11 @@ locals {
     }, var.cloudfront.hsts)
     waf_logging_configuration = var.cloudfront.waf_logging_configuration
     cache_policy = {
-      default_ttl = coalesce(try(var.cloudfront.cache_policy.default_ttl, null), 0)
-      min_ttl     = coalesce(try(var.cloudfront.cache_policy.min_ttl, null), 0)
-      max_ttl     = coalesce(try(var.cloudfront.cache_policy.max_ttl, null), 31536000)
+      default_ttl                   = coalesce(try(var.cloudfront.cache_policy.default_ttl, null), 0)
+      min_ttl                       = coalesce(try(var.cloudfront.cache_policy.min_ttl, null), 0)
+      max_ttl                       = coalesce(try(var.cloudfront.cache_policy.max_ttl, null), 31536000)
+      enable_accept_encoding_brotli = try(var.cloudfront.cache_policy.enable_accept_encoding_brotli, true)
+      enable_accept_encoding_gzip   = try(var.cloudfront.cache_policy.enable_accept_encoding_gzip, true)
       cookies_config = merge({
         cookie_behavior = "all"
       }, try(var.cloudfront.cache_policy.cookies_config, {}))

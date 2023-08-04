@@ -60,8 +60,10 @@ resource "aws_cloudfront_cache_policy" "cache_policy" {
   min_ttl     = var.cache_policy.min_ttl
   max_ttl     = var.cache_policy.max_ttl
 
-
   parameters_in_cache_key_and_forwarded_to_origin {
+    enable_accept_encoding_brotli = var.cache_policy.enable_accept_encoding_brotli
+    enable_accept_encoding_gzip   = var.cache_policy.enable_accept_encoding_gzip
+
     cookies_config {
       cookie_behavior = var.cache_policy.cookies_config.cookie_behavior
 

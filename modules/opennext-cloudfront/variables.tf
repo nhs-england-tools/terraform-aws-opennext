@@ -135,9 +135,11 @@ variable "origin_request_policy" {
 
 variable "cache_policy" {
   type = object({
-    default_ttl = number
-    min_ttl     = number
-    max_ttl     = number
+    default_ttl                   = number
+    min_ttl                       = number
+    max_ttl                       = number
+    enable_accept_encoding_gzip   = bool
+    enable_accept_encoding_brotli = bool
     cookies_config = object({
       cookie_behavior = string
       items           = optional(list(string))
