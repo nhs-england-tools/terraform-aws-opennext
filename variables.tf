@@ -333,6 +333,7 @@ variable "cloudfront" {
       override                   = bool
       preload                    = bool
     }))
+    custom_waf_acl_arn = optional(string)
     waf_logging_configuration = optional(object({
       log_destination_configs = list(string)
       logging_filter = optional(object({
