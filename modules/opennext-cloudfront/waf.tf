@@ -1,4 +1,5 @@
 resource "aws_wafv2_web_acl" "cloudfront_waf" {
+  count    = var.custom_waf_acl_arn == null ? 1 : 0
   provider = aws.global
   name     = "${var.prefix}-waf"
   scope    = "CLOUDFRONT"
@@ -122,7 +123,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
   count = var.waf_logging_configuration == null ? 0 : 1
 
-  resource_arn            = aws_wafv2_web_acl.cloudfront_waf.arn
+  resource_arn            = aws_wafv2_web_acl.cloudfront_waf[1].arn
   log_destination_configs = var.waf_logging_configuration.log_destination_configs
 
   dynamic "logging_filter" {

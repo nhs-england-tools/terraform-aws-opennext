@@ -28,6 +28,7 @@ locals {
       override                   = true
       preload                    = true
     }, var.cloudfront.hsts)
+    custom_waf_acl_arn        = try(var.cloudfront.custom_waf_acl_arn, null)
     waf_logging_configuration = var.cloudfront.waf_logging_configuration
     cache_policy = {
       default_ttl                   = coalesce(try(var.cloudfront.cache_policy.default_ttl, null), 0)

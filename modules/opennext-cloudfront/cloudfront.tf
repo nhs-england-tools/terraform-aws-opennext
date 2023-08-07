@@ -155,7 +155,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   is_ipv6_enabled = true
   comment         = "${var.prefix} - CloudFront Distribution for Next.js Application"
   aliases         = var.aliases
-  web_acl_id      = aws_wafv2_web_acl.cloudfront_waf.arn
+  web_acl_id      = try(var.custom_waf_acl_arn, aws_wafv2_web_acl.cloudfront_waf[1].arn)
 
   logging_config {
     include_cookies = false

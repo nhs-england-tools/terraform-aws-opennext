@@ -85,6 +85,11 @@ variable "hsts" {
   }
 }
 
+variable "custom_waf_acl_arn" {
+  description = "ARN value for an externally created AWS WAF"
+  type        = string
+}
+
 variable "waf_logging_configuration" {
   description = "Logging Configuration for the WAF attached to CloudFront"
   type = object({

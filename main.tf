@@ -215,6 +215,7 @@ module "cloudfront" {
   geo_restriction           = local.cloudfront.geo_restriction
   cors                      = local.cloudfront.cors
   hsts                      = local.cloudfront.hsts
+  custom_waf_acl_arn        = local.cloudfront.custom_waf_acl_arn
   waf_logging_configuration = local.cloudfront.waf_logging_configuration
   cache_policy              = local.cloudfront.cache_policy
 }
