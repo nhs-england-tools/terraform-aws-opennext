@@ -1,31 +1,51 @@
 terraform {
   required_version = "~> 1.5"
+
   required_providers {
     aws = {
       source  = "hashicorp/aws"
       version = "~> 4.0"
     }
   }
+
+  backend "s3" {
+    bucket         = "nhs-england-tools-terraform-state-store"
+    key            = "terraform-aws-opennext/example.tfstate"
+    region         = "eu-west-2"
+    dynamodb_table = "nhs-england-tools-terraform-state-lock"
+  }
+}
+
+locals {
+  domain_name = "terraform-aws-opennext.tools.engineering.england.nhs.uk"
+  default_tags = {
+    Project     = "terraform-aws-opennext"
+    Environment = "example"
+  }
+}
+
+provider "aws" {
+  region = "eu-west-2"
+
+  default_tags {
+    tags = local.default_tags
+  }
 }
 
 provider "aws" {
   alias  = "global"
   region = "us-east-1"
-}
 
-data "aws_route53_zone" "zone" {
-  name         = local.domain_name
-  private_zone = false
-}
-
-locals {
-  domain_name = "opennext-example.tomjc.dev"
+  default_tags {
+    tags = local.default_tags
+  }
 }
 
 module "opennext" {
   source = "../../"
 
-  prefix              = "opennext-example"
+  prefix              = "terraform-aws-opennext-example"
+  default_tags        = local.default_tags
   opennext_build_path = "../.open-next"
   hosted_zone_id      = data.aws_route53_zone.zone.zone_id
 

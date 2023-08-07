@@ -1,9 +1,0 @@
-name: "Check Formats"
-runs:
-  using: "composite"
-  steps:
-    - name: Scan Secrets
-      shell: bash
-      run: |
-          export ALL_FILES=true
-          ./scripts/githooks/secret-scan-pre-commit.sh

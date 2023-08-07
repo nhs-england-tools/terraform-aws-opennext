@@ -1,0 +1,23 @@
+name: Scan Dependencies
+runs:
+  using: "composite"
+  steps:
+    - name: Generate SBOM File
+      shell: bash
+      run: ./scripts/sbom-generator.sh
+
+    - name: Upload SBOM Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-scan
+        path: ./sbom-spdx.json
+
+    - name: Run CVE Scanner
+      shell: bash
+      run: ./scripts/cve-scanner.sh
+
+    - name: Upload CVE Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-scan
+        path: ./cve-scan.json

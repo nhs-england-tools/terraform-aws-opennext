@@ -10,6 +10,7 @@ resource "aws_kms_key" "revalidation_queue_key" {
   deletion_window_in_days = 10
 
   policy = data.aws_iam_policy_document.revalidation_queue_key_policy[0].json
+  enable_key_rotation = true
 }
 
 data "aws_iam_policy_document" "revalidation_queue_key_policy" {
@@ -29,17 +30,17 @@ data "aws_iam_policy_document" "revalidation_queue_key_policy" {
   statement {
     effect = "Allow"
     actions = [
-      "kms:Encrypt*",
-      "kms:Decrypt*",
+      "kms:Encrypt",
+      "kms:Decrypt",
       "kms:ReEncrypt*",
       "kms:GenerateDataKey*",
-      "kms:Describe*"
+      "kms:DescribeKey"
     ]
     resources = ["*"]
 
     principals {
       type        = "Service"
-      identifiers = ["lambda.amazonaws.com", "sqs.amazonaws.com"]
+      identifiers = ["lambda.amazonaws.com", "edgelambda.amazonaws.com", "sqs.amazonaws.com"]
     }
   }
 }

@@ -6,6 +6,14 @@ variable "prefix" {
   description = "Prefix for created resource IDs"
 }
 
+variable "default_tags" {
+  type        = map(string)
+  description = "Default tags to apply to all created resources"
+  default     = {}
+}
+
+
+
 /**
  * Create Toggles
  **/
@@ -90,6 +98,14 @@ variable "kms_key_arn" {
   type        = string
   description = "The KMS key to use for encrypting the Lambda function"
   default     = null
+}
+
+variable "log_group" {
+  description = "Options passed to the CloudWatch log group for the Lambda function"
+  type = object({
+    retention_in_days = number
+    kms_key_id        = string
+  })
 }
 
 variable "code_signing_config" {

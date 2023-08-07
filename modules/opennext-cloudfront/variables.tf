@@ -3,6 +3,13 @@ variable "prefix" {
   description = "Prefix for created resource IDs"
 }
 
+variable "default_tags" {
+  type        = map(string)
+  description = "Default tags to apply to all created resources"
+  default     = {}
+}
+
+
 variable "acm_certificate_arn" {
   type = string
 }
@@ -128,9 +135,11 @@ variable "origin_request_policy" {
 
 variable "cache_policy" {
   type = object({
-    default_ttl = number
-    min_ttl     = number
-    max_ttl     = number
+    default_ttl                   = number
+    min_ttl                       = number
+    max_ttl                       = number
+    enable_accept_encoding_gzip   = bool
+    enable_accept_encoding_brotli = bool
     cookies_config = object({
       cookie_behavior = string
       items           = optional(list(string))
@@ -143,5 +152,13 @@ variable "cache_policy" {
       query_string_behavior = string
       items                 = optional(list(string))
     })
+  })
+}
+
+variable "geo_restriction" {
+  description = "The georestriction configuration for the CloudFront distribution"
+  type = object({
+    restriction_type = string
+    locations        = list(string)
   })
 }

@@ -8,6 +8,12 @@ variable "prefix" {
   default     = "opennext"
 }
 
+variable "default_tags" {
+  type        = map(string)
+  description = "Default tags to apply to all created resources"
+  default     = {}
+}
+
 /**
  * Route53 (DNS) Variables
  **/
@@ -43,7 +49,6 @@ variable "server_options" {
       source_dir = optional(string)
       output_dir = optional(string)
     }))
-
     function = optional(object({
       function_name                  = optional(string)
       description                    = optional(string)
@@ -94,6 +99,10 @@ variable "server_options" {
         security_groups  = optional(list(string))
         self             = optional(bool)
       })))
+    }))
+    log_group = optional(object({
+      retention_in_days = optional(number)
+      kms_key_id        = optional(string)
     }))
   })
   default = {}
@@ -157,6 +166,10 @@ variable "image_optimization_options" {
         self             = optional(bool)
       })))
     }))
+    log_group = optional(object({
+      retention_in_days = optional(number)
+      kms_key_id        = optional(string)
+    }))
   })
   default = {}
 }
@@ -218,6 +231,10 @@ variable "revalidation_options" {
         security_groups  = optional(list(string))
         self             = optional(bool)
       })))
+    }))
+    log_group = optional(object({
+      retention_in_days = optional(number)
+      kms_key_id        = optional(string)
     }))
   })
   default = {}
@@ -281,6 +298,10 @@ variable "warmer_options" {
         self             = optional(bool)
       })))
     }))
+    log_group = optional(object({
+      retention_in_days = optional(number)
+      kms_key_id        = optional(string)
+    }))
   })
   default = {}
 }
@@ -295,6 +316,10 @@ variable "cloudfront" {
       override = bool
       value    = string
     })))
+    geo_restriction = optional(object({
+      restriction_type = string
+      locations        = list(string)
+    }))
     cors = optional(object({
       allow_credentials = bool,
       allow_headers     = list(string)
@@ -333,9 +358,11 @@ variable "cloudfront" {
       })))
     }))
     cache_policy = optional(object({
-      default_ttl = optional(number)
-      min_ttl     = optional(number)
-      max_ttl     = optional(number)
+      default_ttl                   = optional(number)
+      min_ttl                       = optional(number)
+      max_ttl                       = optional(number)
+      enable_accept_encoding_gzip   = optional(bool)
+      enable_accept_encoding_brotli = optional(bool)
       cookies_config = optional(object({
         cookie_behavior = string
       }))

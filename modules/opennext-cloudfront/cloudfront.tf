@@ -36,8 +36,12 @@ resource "aws_cloudfront_origin_request_policy" "origin_request_policy" {
 
   headers_config {
     header_behavior = var.origin_request_policy.headers_config.header_behavior
+
     headers {
-      items = var.origin_request_policy.headers_config.items
+      items = concat(
+        ["accept", "rsc", "next-router-prefetch", "next-router-state-tree", "x-prerender-revalidate"],
+        coalesce(var.origin_request_policy.headers_config.items, [])
+      )
     }
   }
 
@@ -56,8 +60,10 @@ resource "aws_cloudfront_cache_policy" "cache_policy" {
   min_ttl     = var.cache_policy.min_ttl
   max_ttl     = var.cache_policy.max_ttl
 
-
   parameters_in_cache_key_and_forwarded_to_origin {
+    enable_accept_encoding_brotli = var.cache_policy.enable_accept_encoding_brotli
+    enable_accept_encoding_gzip   = var.cache_policy.enable_accept_encoding_gzip
+
     cookies_config {
       cookie_behavior = var.cache_policy.cookies_config.cookie_behavior
 
@@ -75,7 +81,7 @@ resource "aws_cloudfront_cache_policy" "cache_policy" {
 
       headers {
         items = concat(
-          ["accept", "rsc", "next-router-prefetch", "next-router-state-tree"],
+          ["accept", "rsc", "next-router-prefetch", "next-router-state-tree", "x-prerender-revalidate"],
           coalesce(var.cache_policy.headers_config.items, [])
         )
       }
@@ -166,9 +172,8 @@ resource "aws_cloudfront_distribution" "distribution" {
 
   restrictions {
     geo_restriction {
-      restriction_type = "whitelist"
-      # TODO: Remove US location after implementing GitHub Self-Hosted runners
-      locations = ["GB", "US"]
+      restriction_type = var.geo_restriction.restriction_type
+      locations        = var.geo_restriction.locations
     }
   }
 
