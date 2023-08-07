@@ -358,9 +358,11 @@ variable "cloudfront" {
       })))
     }))
     cache_policy = optional(object({
-      default_ttl = optional(number)
-      min_ttl     = optional(number)
-      max_ttl     = optional(number)
+      default_ttl                   = optional(number)
+      min_ttl                       = optional(number)
+      max_ttl                       = optional(number)
+      enable_accept_encoding_gzip   = optional(bool)
+      enable_accept_encoding_brotli = optional(bool)
       cookies_config = optional(object({
         cookie_behavior = string
       }))
