@@ -146,6 +146,15 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
       }
     }
   }
+  remove_headers_config{
+    items{
+      header = "Server"
+      }
+
+    items{
+      header = "X-Opennext"
+    }
+  }
 }
 
 resource "aws_cloudfront_distribution" "distribution" {
