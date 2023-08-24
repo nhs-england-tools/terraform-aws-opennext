@@ -148,11 +148,11 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
   }
   remove_headers_config{
     items{
-      header = var.response_headers_to_remove.server
+      header = var.response_headers_to_remove.server == true  ? "Server" : ""
       }
 
     items{
-      header = var.response_headers_to_remove.opennext
+      header = var.response_headers_to_remove.opennext == true  ? "X-Opennext" : ""
     }
   }
 }
