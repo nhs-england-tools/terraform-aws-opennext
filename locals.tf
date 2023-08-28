@@ -28,10 +28,9 @@ locals {
       override                   = true
       preload                    = true
     }, var.cloudfront.hsts)
-    response_headers_to_remove = merge({
-      server   = false,
-      opennext = true
-    }, var.cloudfront.response_headers_to_remove)
+    remove_headers_config = merge({
+      items : []
+    }, var.cloudfront.remove_headers_config)
     waf_logging_configuration = var.cloudfront.waf_logging_configuration
     cache_policy = {
       default_ttl                   = coalesce(try(var.cloudfront.cache_policy.default_ttl, null), 0)

@@ -208,14 +208,14 @@ module "cloudfront" {
     image_optimization_function = "${module.image_optimization_function.lambda_function_url.url_id}.lambda-url.${data.aws_region.current.name}.on.aws"
   }
 
-  aliases                    = local.cloudfront.aliases
-  acm_certificate_arn        = local.cloudfront.acm_certificate_arn
-  assets_paths               = local.cloudfront.assets_paths
-  custom_headers             = local.cloudfront.custom_headers
-  geo_restriction            = local.cloudfront.geo_restriction
-  cors                       = local.cloudfront.cors
-  hsts                       = local.cloudfront.hsts
-  waf_logging_configuration  = local.cloudfront.waf_logging_configuration
-  cache_policy               = local.cloudfront.cache_policy
-  response_headers_to_remove = local.cloudfront.response_headers_to_remove
+  aliases                   = local.cloudfront.aliases
+  acm_certificate_arn       = local.cloudfront.acm_certificate_arn
+  assets_paths              = local.cloudfront.assets_paths
+  custom_headers            = local.cloudfront.custom_headers
+  geo_restriction           = local.cloudfront.geo_restriction
+  cors                      = local.cloudfront.cors
+  hsts                      = local.cloudfront.hsts
+  waf_logging_configuration = local.cloudfront.waf_logging_configuration
+  cache_policy              = local.cloudfront.cache_policy
+  remove_headers_config     = local.cloudfront.remove_headers_config
 }

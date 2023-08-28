@@ -166,18 +166,18 @@ data "aws_iam_policy_document" "read_assets_bucket" {
     }
   }
   statement {
-    effect = "Deny"
-    actions = ["s3:*"]
+    effect    = "Deny"
+    actions   = ["s3:*"]
     resources = [aws_s3_bucket.assets.arn, "${aws_s3_bucket.assets.arn}/*"]
 
     condition {
-      test = "Bool"
-      values = ["false"]
+      test     = "Bool"
+      values   = ["false"]
       variable = "aws:SecureTransport"
     }
 
     principals {
-      type = "*"
+      type        = "*"
       identifiers = ["*"]
     }
   }

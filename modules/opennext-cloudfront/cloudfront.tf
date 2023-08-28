@@ -146,13 +146,17 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
       }
     }
   }
-  remove_headers_config{
-    items{
-      header = var.response_headers_to_remove.server == true  ? "Server" : ""
-      }
+  dynamic "remove_headers_config" {
+    for_each = length(var.remove_headers_config.items) > 0 ? [true] : []
 
-    items{
-      header = var.response_headers_to_remove.opennext == true  ? "X-Opennext" : ""
+    content {
+      dynamic "items" {
+        for_each = toset(var.remove_headers_config.items)
+
+        content {
+          header = items.value
+        }
+      }
     }
   }
 }
