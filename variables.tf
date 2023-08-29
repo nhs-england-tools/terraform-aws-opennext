@@ -327,6 +327,9 @@ variable "cloudfront" {
       allow_origins     = list(string)
       origin_override   = bool
     }))
+    remove_headers_config = optional(object({
+      items = list(string)
+    }))
     hsts = optional(object({
       access_control_max_age_sec = number
       include_subdomains         = bool

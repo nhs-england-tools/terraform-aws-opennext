@@ -162,3 +162,11 @@ variable "geo_restriction" {
     locations        = list(string)
   })
 }
+
+variable "remove_headers_config" {
+  description = "Response header removal configuration for the CloudFront distribution"
+  type = object({
+    items = list(string)
+  })
+}
+

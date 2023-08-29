@@ -146,6 +146,19 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
       }
     }
   }
+  dynamic "remove_headers_config" {
+    for_each = length(var.remove_headers_config.items) > 0 ? [true] : []
+
+    content {
+      dynamic "items" {
+        for_each = toset(var.remove_headers_config.items)
+
+        content {
+          header = items.value
+        }
+      }
+    }
+  }
 }
 
 resource "aws_cloudfront_distribution" "distribution" {

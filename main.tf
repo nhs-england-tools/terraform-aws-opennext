@@ -217,4 +217,5 @@ module "cloudfront" {
   hsts                      = local.cloudfront.hsts
   waf_logging_configuration = local.cloudfront.waf_logging_configuration
   cache_policy              = local.cloudfront.cache_policy
+  remove_headers_config     = local.cloudfront.remove_headers_config
 }

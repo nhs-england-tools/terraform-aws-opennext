@@ -9,7 +9,7 @@ resource "aws_kms_key" "revalidation_queue_key" {
   description             = "${var.prefix} Revalidation SQS Queue KMS Key"
   deletion_window_in_days = 10
 
-  policy = data.aws_iam_policy_document.revalidation_queue_key_policy[0].json
+  policy              = data.aws_iam_policy_document.revalidation_queue_key_policy[0].json
   enable_key_rotation = true
 }
 
