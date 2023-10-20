@@ -9,6 +9,10 @@ variable "default_tags" {
   default     = {}
 }
 
+variable "comment" {
+  type        = string
+  description = "Comment to add to the CloudFront distribution"
+}
 
 variable "acm_certificate_arn" {
   type = string
@@ -83,6 +87,13 @@ variable "hsts" {
     override                   = true
     preload                    = true
   }
+}
+
+variable "custom_waf" {
+  description = "ARN value for an externally created AWS WAF"
+  type = object({
+    arn = string
+  })
 }
 
 variable "waf_logging_configuration" {
