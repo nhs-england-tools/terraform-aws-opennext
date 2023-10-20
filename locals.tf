@@ -9,6 +9,7 @@ locals {
   cloudfront = {
     aliases             = var.cloudfront.aliases
     acm_certificate_arn = var.cloudfront.acm_certificate_arn
+    comment             = var.cloudfront.comment
     assets_paths        = coalesce(var.cloudfront.assets_paths, [])
     custom_headers      = coalesce(var.cloudfront.custom_headers, [])
     geo_restriction = coalesce(try(var.cloudfront.geo_restriction, null), {
@@ -28,15 +29,18 @@ locals {
       override                   = true
       preload                    = true
     }, var.cloudfront.hsts)
-    waf_logging_configuration = var.cloudfront.waf_logging_configuration
+    remove_headers_config = merge({
+      items : []
+    }, var.cloudfront.remove_headers_config)
     cache_policy = {
       default_ttl                   = coalesce(try(var.cloudfront.cache_policy.default_ttl, null), 0)
       min_ttl                       = coalesce(try(var.cloudfront.cache_policy.min_ttl, null), 0)
       max_ttl                       = coalesce(try(var.cloudfront.cache_policy.max_ttl, null), 31536000)
-      enable_accept_encoding_brotli = try(var.cloudfront.cache_policy.enable_accept_encoding_brotli, true)
-      enable_accept_encoding_gzip   = try(var.cloudfront.cache_policy.enable_accept_encoding_gzip, true)
+      enable_accept_encoding_brotli = coalesce(try(var.cloudfront.cache_policy.enable_accept_encoding_brotli, null), true)
+      enable_accept_encoding_gzip   = coalesce(try(var.cloudfront.cache_policy.enable_accept_encoding_gzip, null), true)
       cookies_config = merge({
-        cookie_behavior = "all"
+        cookie_behavior = "all",
+        items           = []
       }, try(var.cloudfront.cache_policy.cookies_config, {}))
       headers_config = merge({
         header_behavior = "whitelist",
@@ -48,6 +52,9 @@ locals {
       }, try(var.cloudfront.cache_policy.query_strings_config, {}))
     }
     origin_request_policy = try(var.cloudfront.origin_request_policy, null)
+
+    custom_waf                = var.cloudfront.custom_waf
+    waf_logging_configuration = var.cloudfront.waf_logging_configuration
   }
 
   /**

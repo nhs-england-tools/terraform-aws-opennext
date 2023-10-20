@@ -146,6 +146,19 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
       }
     }
   }
+  dynamic "remove_headers_config" {
+    for_each = length(var.remove_headers_config.items) > 0 ? [true] : []
+
+    content {
+      dynamic "items" {
+        for_each = toset(var.remove_headers_config.items)
+
+        content {
+          header = items.value
+        }
+      }
+    }
+  }
 }
 
 resource "aws_cloudfront_distribution" "distribution" {
@@ -153,9 +166,9 @@ resource "aws_cloudfront_distribution" "distribution" {
   price_class     = "PriceClass_100"
   enabled         = true
   is_ipv6_enabled = true
-  comment         = "${var.prefix} - CloudFront Distribution for Next.js Application"
+  comment         = coalesce(var.comment, "${var.prefix} - CloudFront Distribution for Next.js Application")
   aliases         = var.aliases
-  web_acl_id      = aws_wafv2_web_acl.cloudfront_waf.arn
+  web_acl_id      = try(var.custom_waf.arn, aws_wafv2_web_acl.cloudfront_waf[0].arn, null)
 
   logging_config {
     include_cookies = false
