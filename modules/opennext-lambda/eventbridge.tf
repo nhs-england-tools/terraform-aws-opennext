@@ -1,7 +1,7 @@
 resource "aws_cloudwatch_event_rule" "scheduled_lambda_event_rule" {
   count = var.create_eventbridge_scheduled_rule ? 1 : 0
 
-  name                = "${var.prefix}-scheduled-lambda-event-rule"
+  name                = "${var.prefix}-scheduled-rule"
   schedule_expression = var.schedule_expression
 }
 

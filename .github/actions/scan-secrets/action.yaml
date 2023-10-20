@@ -1,0 +1,9 @@
+name: Scan Secrets
+runs:
+  using: "composite"
+  steps:
+    - name: Count lines of code in this repository
+      shell: bash
+      run: |
+          export ALL_FILES=true
+          ./scripts/githooks/scan-secrets.sh

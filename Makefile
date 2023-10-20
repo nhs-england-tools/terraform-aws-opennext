@@ -1,4 +1,15 @@
-include scripts/makefile/Makefile.init
+include scripts/init.mk
+
+config:
+	make \
+		asdf-install \
+		githooks-install \
+		nodejs-install \
+		terraform-install
+
+.SILENT: \
+	config
+
 
 ###############
 ## Constants ##
@@ -60,8 +71,6 @@ example-install: check # Installs the dependencies for the example project
 
 example-build: example-clean # Builds the example Next.js application
 	yarn --cwd example package
-	cp -r example/.open-next/* ${BUILD_FOLDER}
-	for f in ${BUILD_FOLDER}/*; do cd $$f; zip -rq $$f.zip . && cd -; rm -rf $$f; done
 
 tag-release: check-version build-cloudfront-logs-lambda
 	git add .
@@ -70,3 +79,12 @@ tag-release: check-version build-cloudfront-logs-lambda
 
 	git tag ${version}
 	git push --tags
+
+format-terraform: # Formats all Terraform Files
+	terraform fmt
+	terraform -chdir=modules/cloudfront-logs fmt
+	terraform -chdir=modules/opennext-assets fmt
+	terraform -chdir=modules/opennext-cloudfront fmt
+	terraform -chdir=modules/opennext-lambda fmt
+	terraform -chdir=modules/opennext-revalidation-queue fmt
+	terraform -chdir=example/terraform fmt
