@@ -199,6 +199,7 @@ module "cloudfront" {
   prefix       = "${var.prefix}-cloudfront"
   default_tags = var.default_tags
 
+  comment                       = local.cloudfront.comment
   logging_bucket_domain_name    = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
   assets_origin_access_identity = module.assets.cloudfront_origin_access_identity.cloudfront_access_identity_path
 
@@ -208,14 +209,16 @@ module "cloudfront" {
     image_optimization_function = "${module.image_optimization_function.lambda_function_url.url_id}.lambda-url.${data.aws_region.current.name}.on.aws"
   }
 
-  aliases                   = local.cloudfront.aliases
-  acm_certificate_arn       = local.cloudfront.acm_certificate_arn
-  assets_paths              = local.cloudfront.assets_paths
-  custom_headers            = local.cloudfront.custom_headers
-  geo_restriction           = local.cloudfront.geo_restriction
-  cors                      = local.cloudfront.cors
-  hsts                      = local.cloudfront.hsts
+  aliases               = local.cloudfront.aliases
+  acm_certificate_arn   = local.cloudfront.acm_certificate_arn
+  assets_paths          = local.cloudfront.assets_paths
+  custom_headers        = local.cloudfront.custom_headers
+  geo_restriction       = local.cloudfront.geo_restriction
+  cors                  = local.cloudfront.cors
+  hsts                  = local.cloudfront.hsts
+  cache_policy          = local.cloudfront.cache_policy
+  remove_headers_config = local.cloudfront.remove_headers_config
+
+  custom_waf                = local.cloudfront.custom_waf
   waf_logging_configuration = local.cloudfront.waf_logging_configuration
-  cache_policy              = local.cloudfront.cache_policy
-  remove_headers_config     = local.cloudfront.remove_headers_config
 }
