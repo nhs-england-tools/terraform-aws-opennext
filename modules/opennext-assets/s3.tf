@@ -165,6 +165,22 @@ data "aws_iam_policy_document" "read_assets_bucket" {
       identifiers = [var.server_function_role_arn]
     }
   }
+  statement {
+    effect    = "Deny"
+    actions   = ["s3:*"]
+    resources = [aws_s3_bucket.assets.arn, "${aws_s3_bucket.assets.arn}/*"]
+
+    condition {
+      test     = "Bool"
+      values   = ["false"]
+      variable = "aws:SecureTransport"
+    }
+
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+  }
 }
 
 # Static Assets

@@ -9,6 +9,10 @@ variable "default_tags" {
   default     = {}
 }
 
+variable "comment" {
+  type        = string
+  description = "Comment to add to the CloudFront distribution"
+}
 
 variable "acm_certificate_arn" {
   type = string
@@ -85,6 +89,13 @@ variable "hsts" {
   }
 }
 
+variable "custom_waf" {
+  description = "ARN value for an externally created AWS WAF"
+  type = object({
+    arn = string
+  })
+}
+
 variable "waf_logging_configuration" {
   description = "Logging Configuration for the WAF attached to CloudFront"
   type = object({
@@ -135,9 +146,11 @@ variable "origin_request_policy" {
 
 variable "cache_policy" {
   type = object({
-    default_ttl = number
-    min_ttl     = number
-    max_ttl     = number
+    default_ttl                   = number
+    min_ttl                       = number
+    max_ttl                       = number
+    enable_accept_encoding_gzip   = bool
+    enable_accept_encoding_brotli = bool
     cookies_config = object({
       cookie_behavior = string
       items           = optional(list(string))
@@ -160,3 +173,11 @@ variable "geo_restriction" {
     locations        = list(string)
   })
 }
+
+variable "remove_headers_config" {
+  description = "Response header removal configuration for the CloudFront distribution"
+  type = object({
+    items = list(string)
+  })
+}
+
