@@ -12,11 +12,16 @@ terraform {
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
+locals {
+  aws_region = var.region != null ? var.region : data.aws_region.current.name
+}
+
 /**
  * Assets & Cache S3 Bucket
  **/
 module "assets" {
   source       = "./modules/opennext-assets"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   prefix                   = "${var.prefix}-assets"
@@ -31,6 +36,7 @@ module "assets" {
  **/
 module "server_function" {
   source       = "./modules/opennext-lambda"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   prefix = "${var.prefix}-nextjs-server"
@@ -67,6 +73,7 @@ module "server_function" {
  **/
 module "image_optimization_function" {
   source       = "./modules/opennext-lambda"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   prefix = "${var.prefix}-nextjs-image-optimization"
@@ -101,6 +108,7 @@ module "image_optimization_function" {
  **/
 module "revalidation_function" {
   source       = "./modules/opennext-lambda"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   prefix = "${var.prefix}-nextjs-revalidation"
@@ -136,6 +144,7 @@ module "revalidation_function" {
 module "revalidation_queue" {
   source       = "./modules/opennext-revalidation-queue"
   prefix       = "${var.prefix}-revalidation-queue"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   aws_account_id            = data.aws_caller_identity.current.account_id
@@ -148,6 +157,7 @@ module "revalidation_queue" {
 
 module "warmer_function" {
   source       = "./modules/opennext-lambda"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   prefix                            = "${var.prefix}-nextjs-warmer"
@@ -184,6 +194,7 @@ module "warmer_function" {
  **/
 module "cloudfront_logs" {
   source       = "./modules/cloudfront-logs"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   log_group_name  = "${var.prefix}-cloudfront-logs"
@@ -197,6 +208,7 @@ module "cloudfront_logs" {
 module "cloudfront" {
   source       = "./modules/opennext-cloudfront"
   prefix       = "${var.prefix}-cloudfront"
+  region       = local.aws_region
   default_tags = var.default_tags
 
   comment                       = local.cloudfront.comment
@@ -205,8 +217,8 @@ module "cloudfront" {
 
   origins = {
     assets_bucket               = module.assets.assets_bucket.bucket_regional_domain_name
-    server_function             = "${module.server_function.lambda_function_url.url_id}.lambda-url.${data.aws_region.current.name}.on.aws"
-    image_optimization_function = "${module.image_optimization_function.lambda_function_url.url_id}.lambda-url.${data.aws_region.current.name}.on.aws"
+    server_function             = "${module.server_function.lambda_function_url.url_id}.lambda-url.${local.aws_region}.on.aws"
+    image_optimization_function = "${module.image_optimization_function.lambda_function_url.url_id}.lambda-url.${local.aws_region}.on.aws"
   }
 
   aliases               = local.cloudfront.aliases

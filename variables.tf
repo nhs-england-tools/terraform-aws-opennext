@@ -15,6 +15,16 @@ variable "default_tags" {
 }
 
 /**
+ * AWS Provider Variables
+ **/
+variable "region" {
+  type        = string
+  description = "The deployment region to be used by the AWS provider."
+  default     = null
+}
+
+
+/**
  * Route53 (DNS) Variables
  **/
 variable "create_route53_records" {

@@ -9,6 +9,11 @@ variable "default_tags" {
   default     = {}
 }
 
+variable "region" {
+  type        = string
+  description = "The deployment region to be used by the AWS provider."
+}
+
 variable "comment" {
   type        = string
   description = "Comment to add to the CloudFront distribution"
