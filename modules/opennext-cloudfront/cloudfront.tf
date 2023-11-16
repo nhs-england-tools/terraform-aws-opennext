@@ -163,7 +163,7 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
 
 resource "aws_cloudfront_distribution" "distribution" {
   provider        = aws.global
-  price_class     = "PriceClass_100"
+  price_class     = var.price_class
   enabled         = true
   is_ipv6_enabled = true
   comment         = coalesce(var.comment, "${var.prefix} - CloudFront Distribution for Next.js Application")
