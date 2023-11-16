@@ -27,7 +27,7 @@ variable "price_class" {
   type        = string
   description = "The price class to use for the distribution"
   validation {
-    condition     = contains(["PriceClass_200", "PriceClass_100", "PriceClass_All"])
+    condition     = contains(["PriceClass_200", "PriceClass_100", "PriceClass_All"], var.price_class)
     error_message = "Valid values for price_class are: `PriceClass_200`, `PriceClass_100` and `PriceClass_All`."
   }
   default = "PriceClass_All"
