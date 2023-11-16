@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.5"
+  required_version = ">= 1.5"
 
   required_providers {
     aws = {
@@ -210,6 +210,8 @@ module "cloudfront" {
   prefix       = "${var.prefix}-cloudfront"
   region       = local.aws_region
   default_tags = var.default_tags
+
+  price_class = local.cloudfront.price_class
 
   comment                       = local.cloudfront.comment
   logging_bucket_domain_name    = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name

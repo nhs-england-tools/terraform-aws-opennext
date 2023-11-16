@@ -16,6 +16,7 @@ locals {
       restriction_type = "none"
       locations        = []
     })
+    price_class = coalesce(try(var.cloudfront.price_class, null), "PriceClass_All")
     cors = merge({
       allow_credentials = false,
       allow_headers     = ["*"],

@@ -327,6 +327,7 @@ variable "cloudfront" {
       override = bool
       value    = string
     })))
+    price_class = optional(string)
     geo_restriction = optional(object({
       restriction_type = string
       locations        = list(string)
