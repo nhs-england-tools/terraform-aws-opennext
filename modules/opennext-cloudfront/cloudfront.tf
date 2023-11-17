@@ -174,7 +174,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     include_cookies = false
     # bucket          = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
     bucket = var.logging_bucket_domain_name
-    prefix = one(var.aliases)
+    prefix = length(var.aliases) > 0 ? var.aliases[0] : null
   }
 
   viewer_certificate {
