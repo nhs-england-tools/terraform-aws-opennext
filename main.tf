@@ -44,7 +44,6 @@ module "server_function" {
   timeout                        = local.server_options.function.timeout
   publish                        = local.server_options.function.publish
   dead_letter_config             = local.server_options.function.dead_letter_config
-  reserved_concurrent_executions = local.server_options.function.reserved_concurrent_executions
   code_signing_config            = local.server_options.function.code_signing_config
   log_group                      = local.server_options.log_group
 
@@ -80,7 +79,6 @@ module "image_optimization_function" {
   timeout                        = local.image_optimization_options.function.timeout
   publish                        = local.image_optimization_options.function.publish
   dead_letter_config             = local.image_optimization_options.function.dead_letter_config
-  reserved_concurrent_executions = local.image_optimization_options.function.reserved_concurrent_executions
   code_signing_config            = local.image_optimization_options.function.code_signing_config
   log_group                      = local.image_optimization_options.log_group
 
@@ -114,7 +112,6 @@ module "revalidation_function" {
   timeout                        = local.revalidation_options.function.timeout
   publish                        = local.revalidation_options.function.publish
   dead_letter_config             = local.revalidation_options.function.dead_letter_config
-  reserved_concurrent_executions = local.revalidation_options.function.reserved_concurrent_executions
   code_signing_config            = local.revalidation_options.function.code_signing_config
   log_group                      = local.revalidation_options.log_group
 
@@ -163,7 +160,6 @@ module "warmer_function" {
   timeout                        = local.warmer_options.function.timeout
   publish                        = local.warmer_options.function.publish
   dead_letter_config             = local.warmer_options.function.dead_letter_config
-  reserved_concurrent_executions = local.warmer_options.function.reserved_concurrent_executions
   code_signing_config            = local.warmer_options.function.code_signing_config
   log_group                      = local.warmer_options.log_group
 
