@@ -122,7 +122,7 @@ resource "aws_wafv2_web_acl" "cloudfront_waf" {
 }
 
 resource "aws_wafv2_web_acl_logging_configuration" "waf_logging" {
-  count = var.waf_logging_configuration == null || try(aws_wafv2_web_acl.cloudfront_waf[0], null) == null ? 0 : 1
+  count = var.waf_logging_configuration == null || var.custom_waf != null ? 0 : 1
 
   resource_arn            = aws_wafv2_web_acl.cloudfront_waf[0].arn
   log_destination_configs = var.waf_logging_configuration.log_destination_configs
