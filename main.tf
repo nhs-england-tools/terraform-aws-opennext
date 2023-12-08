@@ -24,10 +24,11 @@ module "assets" {
   region       = local.aws_region
   default_tags = var.default_tags
 
-  prefix                   = "${var.prefix}-assets"
-  assets_path              = "${local.opennext_abs_path}/assets"
-  cache_path               = "${local.opennext_abs_path}/cache"
-  server_function_role_arn = module.server_function.lambda_role.arn
+  prefix                    = "${var.prefix}-assets"
+  assets_path               = "${local.opennext_abs_path}/assets"
+  cache_path                = "${local.opennext_abs_path}/cache"
+  server_function_role_arn  = module.server_function.lambda_role.arn
+  static_asset_cache_config = var.static_asset_cache_config
 }
 
 

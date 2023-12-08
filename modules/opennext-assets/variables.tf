@@ -24,6 +24,11 @@ variable "cache_path" {
   description = "The path of the open-next cache"
 }
 
+variable "static_asset_cache_config" {
+  type        = string
+  description = "Static asset cache config"
+}
+
 variable "server_function_role_arn" {
   type        = string
   description = "The IAM role ARN of the Next.js server lambda function"
