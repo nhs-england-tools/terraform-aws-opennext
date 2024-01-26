@@ -15,6 +15,16 @@ variable "default_tags" {
 }
 
 /**
+ * AWS Provider Variables
+ **/
+variable "region" {
+  type        = string
+  description = "The deployment region to be used by the AWS provider."
+  default     = null
+}
+
+
+/**
  * Route53 (DNS) Variables
  **/
 variable "create_route53_records" {
@@ -317,6 +327,7 @@ variable "cloudfront" {
       override = bool
       value    = string
     })))
+    price_class = optional(string)
     geo_restriction = optional(object({
       restriction_type = string
       locations        = list(string)

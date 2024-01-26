@@ -9,7 +9,10 @@ variable "default_tags" {
   default     = {}
 }
 
-
+variable "region" {
+  type        = string
+  description = "The deployment region to be used by the AWS provider."
+}
 
 variable "assets_path" {
   type        = string

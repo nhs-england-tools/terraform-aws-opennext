@@ -9,6 +9,11 @@ variable "default_tags" {
   default     = {}
 }
 
+variable "region" {
+  type        = string
+  description = "The deployment region to be used by the AWS provider."
+}
+
 variable "comment" {
   type        = string
   description = "Comment to add to the CloudFront distribution"
@@ -16,6 +21,16 @@ variable "comment" {
 
 variable "acm_certificate_arn" {
   type = string
+}
+
+variable "price_class" {
+  type        = string
+  description = "The price class to use for the distribution"
+  validation {
+    condition     = contains(["PriceClass_200", "PriceClass_100", "PriceClass_All"], var.price_class)
+    error_message = "Valid values for price_class are: `PriceClass_200`, `PriceClass_100` and `PriceClass_All`."
+  }
+  default = "PriceClass_All"
 }
 
 variable "origins" {

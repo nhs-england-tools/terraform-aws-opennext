@@ -4,6 +4,11 @@ variable "default_tags" {
   default     = {}
 }
 
+variable "region" {
+  type        = string
+  description = "The deployment region to be used by the AWS provider."
+}
+
 
 variable "log_group_name" {
   type = string
