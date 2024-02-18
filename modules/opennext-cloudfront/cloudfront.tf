@@ -163,7 +163,7 @@ resource "aws_cloudfront_response_headers_policy" "response_headers_policy" {
 
 resource "aws_cloudfront_distribution" "distribution" {
   provider        = aws.global
-  price_class     = "PriceClass_100"
+  price_class     = var.price_class
   enabled         = true
   is_ipv6_enabled = true
   comment         = coalesce(var.comment, "${var.prefix} - CloudFront Distribution for Next.js Application")
@@ -174,7 +174,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     include_cookies = false
     # bucket          = module.cloudfront_logs.logs_s3_bucket.bucket_regional_domain_name
     bucket = var.logging_bucket_domain_name
-    prefix = one(var.aliases)
+    prefix = length(var.aliases) > 0 ? var.aliases[0] : null
   }
 
   viewer_certificate {

@@ -29,6 +29,11 @@ variable "server_function_role_arn" {
   description = "The IAM role ARN of the Next.js server lambda function"
 }
 
+variable "static_asset_cache_config" {
+  type        = string
+  description = "Static asset cache config"
+}
+
 variable "logging_config" {
   type = object({
     target_bucket = string
