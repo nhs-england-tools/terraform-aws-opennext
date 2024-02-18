@@ -191,7 +191,7 @@ resource "aws_s3_object" "assets" {
   key           = "assets/${each.value}"
   source        = "${var.assets_path}/${each.value}"
   source_hash   = filemd5("${var.assets_path}/${each.value}")
-  cache_control = length(regexall(".*(_next).*$", each.value)) > 0 ? "public,max-age=31536000,immutable" : "public,max-age=0,s-maxage=31536000,must-revalidate"
+  cache_control = length(regexall(".*(_next).*$", each.value)) > 0 ? "public,max-age=31536000,immutable" : var.static_asset_cache_config
   content_type  = lookup(local.content_type_lookup, split(".", each.value)[length(split(".", each.value)) - 1], "text/plain")
 }
 
