@@ -60,6 +60,17 @@ resource "aws_lambda_function" "function" {
       target_arn = var.dead_letter_config.target_arn
     }
   }
+
+  dynamic "logging_config" {
+    for_each = var.logging_config != null ? [true] : []
+
+    content {
+      log_format            = var.logging_config.log_format
+      log_group             = try(var.logging_config.log_group, null)
+      application_log_level = try(var.logging_config.application_log_level, null)
+      system_log_level      = try(var.logging_config.system_log_level, null)
+    }
+  }
 }
 
 resource "aws_lambda_function_url" "function_url" {
