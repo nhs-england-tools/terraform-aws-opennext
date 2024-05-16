@@ -54,6 +54,7 @@ module "server_function" {
   reserved_concurrent_executions = local.server_options.function.reserved_concurrent_executions
   code_signing_config            = local.server_options.function.code_signing_config
   log_group                      = local.server_options.log_group
+  logging_config                 = local.server_options.logging_config
 
 
   source_dir = local.server_options.package.source_dir
@@ -91,6 +92,7 @@ module "image_optimization_function" {
   reserved_concurrent_executions = local.image_optimization_options.function.reserved_concurrent_executions
   code_signing_config            = local.image_optimization_options.function.code_signing_config
   log_group                      = local.image_optimization_options.log_group
+  logging_config                 = local.image_optimization_options.logging_config
 
   source_dir = local.image_optimization_options.package.source_dir
   output_dir = local.image_optimization_options.package.output_dir
@@ -126,6 +128,7 @@ module "revalidation_function" {
   reserved_concurrent_executions = local.revalidation_options.function.reserved_concurrent_executions
   code_signing_config            = local.revalidation_options.function.code_signing_config
   log_group                      = local.revalidation_options.log_group
+  logging_config                 = local.revalidation_options.logging_config
 
   source_dir = local.revalidation_options.package.source_dir
   output_dir = local.revalidation_options.package.output_dir
@@ -177,6 +180,7 @@ module "warmer_function" {
   reserved_concurrent_executions = local.warmer_options.function.reserved_concurrent_executions
   code_signing_config            = local.warmer_options.function.code_signing_config
   log_group                      = local.warmer_options.log_group
+  logging_config                 = local.warmer_options.logging_config
 
   source_dir = local.warmer_options.package.source_dir
   output_dir = local.warmer_options.package.output_dir

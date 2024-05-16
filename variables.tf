@@ -86,6 +86,12 @@ variable "server_options" {
         signing_profile_version_arns    = list(string)
         untrusted_artfact_on_deployment = optional(string)
       }))
+      logging_config = optional(object({
+        log_format            = string
+        log_group             = optional(string)
+        application_log_level = optional(string)
+        system_log_level      = optional(string)
+      }))
     }))
     environment_variables = optional(map(string))
     iam_policy = optional(list(object({
@@ -151,6 +157,12 @@ variable "image_optimization_options" {
         description                     = optional(string)
         signing_profile_version_arns    = list(string)
         untrusted_artfact_on_deployment = optional(string)
+      }))
+      logging_config = optional(object({
+        log_format            = string
+        log_group             = optional(string)
+        application_log_level = optional(string)
+        system_log_level      = optional(string)
       }))
     }))
     environment_variables = optional(map(string))
@@ -218,6 +230,12 @@ variable "revalidation_options" {
         signing_profile_version_arns    = list(string)
         untrusted_artfact_on_deployment = optional(string)
       }))
+      logging_config = optional(object({
+        log_format            = string
+        log_group             = optional(string)
+        application_log_level = optional(string)
+        system_log_level      = optional(string)
+      }))
     }))
     environment_variables = optional(map(string))
     iam_policy = optional(list(object({
@@ -283,6 +301,12 @@ variable "warmer_options" {
         description                     = optional(string)
         signing_profile_version_arns    = list(string)
         untrusted_artfact_on_deployment = optional(string)
+      }))
+      logging_config = optional(object({
+        log_format            = string
+        log_group             = optional(string)
+        application_log_level = optional(string)
+        system_log_level      = optional(string)
       }))
     }))
     environment_variables = optional(map(string))

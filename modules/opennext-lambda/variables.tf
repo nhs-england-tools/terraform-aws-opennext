@@ -135,6 +135,16 @@ variable "reserved_concurrent_executions" {
   default     = 10
 }
 
+variable "logging_config" {
+  description = "Advanced Logging Configuration for the Lambda Function"
+  default     = null
+  type = object({
+    log_format            = string
+    log_group             = optional(string)
+    application_log_level = optional(string)
+    system_log_level      = optional(string)
+  })
+}
 
 /**
  * Lambda Networking
