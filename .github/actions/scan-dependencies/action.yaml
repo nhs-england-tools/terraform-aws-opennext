@@ -7,7 +7,7 @@ runs:
       run: ./scripts/sbom-generator.sh
 
     - name: Upload SBOM Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dependency-scan
         path: ./sbom-spdx.json
@@ -17,7 +17,7 @@ runs:
       run: ./scripts/cve-scanner.sh
 
     - name: Upload CVE Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dependency-scan
         path: ./cve-scan.json
