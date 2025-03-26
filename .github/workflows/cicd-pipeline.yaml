@@ -139,7 +139,7 @@ jobs:
         run: cd example/.open-next && zip -r ../../open-next.zip . -q
 
       - name: Store Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: example-app-opennext-build
           path: open-next.zip
@@ -185,7 +185,7 @@ jobs:
         run: terraform -chdir=example/terraform plan -out example-app.tfplan
 
       - name: Store Terraform Plan Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: example-app-tfplan-output
           path: example/terraform/example-app.tfplan
