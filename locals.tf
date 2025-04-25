@@ -104,7 +104,7 @@ locals {
     iam_policy_statements = concat([
       {
         effect    = "Allow"
-        actions   = ["s3:GetObject", "s3:PutObject", "s3:ListObjects"]
+        actions   = ["s3:GetObject", "s3:PutObject", "s3:ListObjects", "s3:DeleteObjects"]
         resources = [module.assets.assets_bucket.arn, "${module.assets.assets_bucket.arn}/*"]
       },
       {
