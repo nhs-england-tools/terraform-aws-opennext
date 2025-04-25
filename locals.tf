@@ -99,7 +99,11 @@ locals {
       CACHE_BUCKET_REGION       = data.aws_region.current.name
       REVALIDATION_QUEUE_URL    = module.revalidation_queue.queue.url
       REVALIDATION_QUEUE_REGION = data.aws_region.current.name
-    }, coalesce(try(var.server_options.environment_variables, null), {}))
+      },
+      var.use_tagcache == true ? {
+        CACHE_DYNAMO_TABLE = try(aws_dynamodb_table.tag_cache[0].id, "")
+      } : {},
+    coalesce(try(var.server_options.environment_variables, null), {}))
 
     iam_policy_statements = concat([
       {
@@ -116,8 +120,16 @@ locals {
         effect    = "Allow"
         actions   = ["kms:GenerateDataKey", "kms:Decrypt"]
         resources = [module.revalidation_queue.queue_kms_key.arn]
-      }
-    ], coalesce(try(var.server_options.iam_policy, null), []))
+      },
+      ],
+      var.use_tagcache == true ? [
+        {
+          effect    = "Allow"
+          actions   = ["dynamodb:PutItem", "dynamodb:Scan", "dynamodb:Query", "dynamodb:TagResource", "dynamodb:UntagResource"]
+          resources = [aws_dynamodb_table.tag_cache[0].arn, "${aws_dynamodb_table.tag_cache[0].arn}/*"]
+        }
+      ] : [],
+    coalesce(try(var.server_options.iam_policy, null), []))
   }
 
   /**
