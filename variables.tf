@@ -35,6 +35,7 @@ variable "create_route53_records" {
 
 variable "hosted_zone_id" {
   type        = string
+  default = ""
   description = "The Route 53 hosted zone ID of the domain name"
 }
 
@@ -327,8 +328,8 @@ variable "warmer_options" {
 
 variable "cloudfront" {
   type = object({
-    aliases             = list(string)
-    acm_certificate_arn = string
+    aliases             = optional(list(string), [])
+    acm_certificate_arn = optional(string)
     comment             = optional(string)
     assets_paths        = optional(list(string))
     custom_headers = optional(list(object({
@@ -375,6 +376,7 @@ variable "cloudfront" {
         query_string_behavior = string
       }))
     }))
+    no_cache_paths = optional(list(string), [])
     origin_request_policy = optional(object({
       cookies_config = object({
         cookie_behavior = string
@@ -417,4 +419,6 @@ variable "cloudfront" {
       })))
     }))
   })
+
+  default = {}
 }

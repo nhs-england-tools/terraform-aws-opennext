@@ -232,6 +232,7 @@ module "cloudfront" {
   cors                  = local.cloudfront.cors
   hsts                  = local.cloudfront.hsts
   cache_policy          = local.cloudfront.cache_policy
+  no_cache_paths        = local.cloudfront.no_cache_paths
   remove_headers_config = local.cloudfront.remove_headers_config
 
   custom_waf                = local.cloudfront.custom_waf

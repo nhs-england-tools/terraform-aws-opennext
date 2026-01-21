@@ -4,6 +4,10 @@ locals {
   image_optimization_origin_id = "${var.prefix}-image-optimization-origin"
 }
 
+data "aws_cloudfront_cache_policy" "no_cache" {
+  name = "Managed-CachingDisabled"
+}
+
 resource "aws_cloudfront_function" "host_header_function" {
   name    = "${var.prefix}-preserve-host"
   runtime = "cloudfront-js-1.0"
@@ -177,10 +181,21 @@ resource "aws_cloudfront_distribution" "distribution" {
     prefix = length(var.aliases) > 0 ? var.aliases[0] : null
   }
 
-  viewer_certificate {
-    acm_certificate_arn      = var.acm_certificate_arn
-    minimum_protocol_version = "TLSv1.2_2021"
-    ssl_support_method       = "sni-only"
+  dynamic "viewer_certificate" {
+    for_each = var.acm_certificate_arn != null && var.acm_certificate_arn != "" ? [1] : []
+    content {
+      acm_certificate_arn      = var.acm_certificate_arn
+      ssl_support_method       = "sni-only"
+      minimum_protocol_version = "TLSv1.2_2021"
+    }
+  }
+
+  dynamic "viewer_certificate" {
+    for_each = var.acm_certificate_arn == null || var.acm_certificate_arn == "" ? [1] : []
+    content {
+      cloudfront_default_certificate = true
+      minimum_protocol_version       = "TLSv1.2_2021"
+    }
   }
 
   restrictions {
@@ -237,11 +252,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = local.assets_origin_id
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-    cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
-    origin_request_policy_id = try(
-      data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
-      aws_cloudfront_origin_request_policy.origin_request_policy[0].id
-    )
+    cache_policy_id            = contains(var.no_cache_paths, "/_next/static/*") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
 
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
@@ -254,11 +265,20 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = local.image_optimization_origin_id
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-    cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
-    origin_request_policy_id = try(
-      data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
-      aws_cloudfront_origin_request_policy.origin_request_policy[0].id
-    )
+    cache_policy_id            = contains(var.no_cache_paths, "/_next/image") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+  }
+
+  ordered_cache_behavior {
+    path_pattern     = "/scripts/*"
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = local.assets_origin_id
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
+    cache_policy_id            = contains(var.no_cache_paths, "/scripts/*") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
 
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
@@ -271,7 +291,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = local.server_origin_id
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-    cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
+    cache_policy_id            = contains(var.no_cache_paths, "/_next/data/*") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
     origin_request_policy_id = try(
       data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
       aws_cloudfront_origin_request_policy.origin_request_policy[0].id
@@ -293,7 +313,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = local.server_origin_id
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-    cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
+    cache_policy_id            = contains(var.no_cache_paths, "/api/*") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
     origin_request_policy_id = try(
       data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
       aws_cloudfront_origin_request_policy.origin_request_policy[0].id
@@ -315,11 +335,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = local.assets_origin_id
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-    cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
-    origin_request_policy_id = try(
-      data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
-      aws_cloudfront_origin_request_policy.origin_request_policy[0].id
-    )
+    cache_policy_id            = contains(var.no_cache_paths, "/favicon.ico") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
 
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
@@ -335,7 +351,7 @@ resource "aws_cloudfront_distribution" "distribution" {
       target_origin_id = local.assets_origin_id
 
       response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-      cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
+      cache_policy_id            = contains(var.no_cache_paths, ordered_cache_behavior.value) ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
       origin_request_policy_id = try(
         data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
         aws_cloudfront_origin_request_policy.origin_request_policy[0].id
@@ -352,7 +368,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     target_origin_id = local.server_origin_id
 
     response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
-    cache_policy_id            = aws_cloudfront_cache_policy.cache_policy.id
+    cache_policy_id            = contains(var.no_cache_paths, "*") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
     origin_request_policy_id = try(
       data.aws_cloudfront_origin_request_policy.origin_request_policy[0].id,
       aws_cloudfront_origin_request_policy.origin_request_policy[0].id
