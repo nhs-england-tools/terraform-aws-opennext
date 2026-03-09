@@ -22,6 +22,26 @@ function handler(event) {
 EOF
 }
 
+resource "aws_cloudfront_function" "storybook_rewrite_function" {
+  name    = "${var.prefix}-storybook-rewrite"
+  runtime = "cloudfront-js-1.0"
+  comment = "Rewrite /storybook to /storybook/index.html"
+  publish = true
+  code    = <<EOF
+function handler(event) {
+  var request = event.request;
+  var uri = request.uri;
+  
+  // Rewrite /storybook to /storybook/index.html
+  if (uri === '/storybook' || uri === '/storybook/') {
+    request.uri = '/storybook/index.html';
+  }
+  
+  return request;
+}
+EOF
+}
+
 data "aws_cloudfront_origin_request_policy" "origin_request_policy" {
   count = var.origin_request_policy == null ? 1 : 0
   name  = "Managed-AllViewerExceptHostHeader"
@@ -282,6 +302,44 @@ resource "aws_cloudfront_distribution" "distribution" {
 
     compress               = true
     viewer_protocol_policy = "redirect-to-https"
+  }
+
+  # Exact match for /storybook - rewrite to /storybook/index.html
+  ordered_cache_behavior {
+    path_pattern     = "/storybook"
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = local.assets_origin_id
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
+    cache_policy_id            = contains(var.no_cache_paths, "/storybook") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.storybook_rewrite_function.arn
+    }
+  }
+
+  # Storybook assets (CSS, JS, images, etc.)
+  ordered_cache_behavior {
+    path_pattern     = "/storybook/*"
+    allowed_methods  = ["GET", "HEAD"]
+    cached_methods   = ["GET", "HEAD"]
+    target_origin_id = local.assets_origin_id
+
+    response_headers_policy_id = aws_cloudfront_response_headers_policy.response_headers_policy.id
+    cache_policy_id            = contains(var.no_cache_paths, "/storybook/*") ? data.aws_cloudfront_cache_policy.no_cache.id : aws_cloudfront_cache_policy.cache_policy.id
+
+    compress               = true
+    viewer_protocol_policy = "redirect-to-https"
+
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.storybook_rewrite_function.arn
+    }
   }
 
   ordered_cache_behavior {
