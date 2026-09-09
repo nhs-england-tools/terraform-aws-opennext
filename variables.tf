@@ -54,6 +54,15 @@ variable "static_asset_cache_config" {
 }
 
 /**
+ * CloudFront Standard Logging Variables
+ **/
+variable "cloudfront_log_bucket_kms_key_arn" {
+  type        = string
+  default     = null
+  description = "KMS key ARN used to encrypt the CloudFront standard logs S3 bucket"
+}
+
+/**
  * OpenNext Variables
  **/
 variable "opennext_build_path" {
