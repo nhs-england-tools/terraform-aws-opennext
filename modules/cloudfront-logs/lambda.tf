@@ -97,6 +97,15 @@ data "aws_iam_policy_document" "cloudfront_logs_policy" {
       "${aws_cloudwatch_log_group.target_log_group.arn}:*"
     ]
   }
+
+  dynamic "statement" {
+    for_each = local.cloudfront_log_bucket_uses_customer_managed_key ? [true] : []
+
+    content {
+      actions   = ["kms:Decrypt"]
+      resources = [var.log_bucket_kms_key_arn]
+    }
+  }
 }
 
 resource "aws_iam_role_policy" "cloudfront_logs_role_policy" {

@@ -29,3 +29,7 @@ provider "aws" {
     tags = var.default_tags
   }
 }
+
+locals {
+  cloudfront_log_bucket_uses_customer_managed_key = var.log_bucket_kms_key_arn != "aws/s3"
+}
