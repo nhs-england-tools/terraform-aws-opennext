@@ -22,7 +22,7 @@ jobs:
       build_epoch: ${{ steps.metadata.outputs.build_epoch }}
       terraform_version: ${{ steps.metadata.outputs.terraform_version }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - id: metadata
         name: Get Metadata
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Formatting Checks
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -55,7 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     name: Security Scanning
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -72,9 +72,9 @@ jobs:
     needs: [formatting-checks, security-scan]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-python@v4
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.11'
 
@@ -87,7 +87,7 @@ jobs:
         run: checkov --directory . -o sarif -s --quiet
 
       - name: Upload SARIF File
-        uses: github/codeql-action/upload-sarif@v2
+        uses: github/codeql-action/upload-sarif@1c5b675653bb5c22dbe9b12b556ec555138e09fd # v4.38.1
         if: always() && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
         with:
           sarif_file: results.sarif
@@ -98,16 +98,16 @@ jobs:
     needs: [formatting-checks, security-scan]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup TFLint Cache
-        uses: actions/cache@v3
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.tflint.d/plugins
           key: tflint-${{ hashFiles('.tflint.hcl') }}
 
       - name: Setup TFLint
-        uses: terraform-linters/setup-tflint@v3
+        uses: terraform-linters/setup-tflint@1cf010d3c7aef302051ccdb68c14c5dc2efa34ef # v6.3.1
         with:
           tflint_version: v0.47.0
 
@@ -124,10 +124,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [tflint, checkov]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install asdf & tools
-        uses: asdf-vm/actions/install@b5825c707574d0814f4eb4fb5c9d1f7ef1bb8d7b  # v4.01
+        uses: asdf-vm/actions/install@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
 
       - name: Install Example Dependencies
         run: make example-install
@@ -139,7 +139,7 @@ jobs:
         run: cd example/.open-next && zip -r ../../open-next.zip . -q
 
       - name: Store Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: example-app-opennext-build
           path: open-next.zip
@@ -155,14 +155,14 @@ jobs:
       url: https://terraform-aws-opennext.tools.engineering.england.nhs.uk/
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Install asdf & tools
-        uses: asdf-vm/actions/install@b5825c707574d0814f4eb4fb5c9d1f7ef1bb8d7b  # v4.01
+        uses: asdf-vm/actions/install@b7bcd026f18772e44fe1026d729e1611cc435d47 # v4.0.1
 
       - id: aws-credentials
         name: Setup AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
         with:
           role-to-assume: ${{ secrets.DEPLOYMENT_IAM_ROLE }}
           aws-region: eu-west-2
@@ -171,7 +171,7 @@ jobs:
         run: aws sts get-caller-identity
 
       - name: Download Build Artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: example-app-opennext-build
 
@@ -185,7 +185,7 @@ jobs:
         run: terraform -chdir=example/terraform plan -out example-app.tfplan
 
       - name: Store Terraform Plan Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: example-app-tfplan-output
           path: example/terraform/example-app.tfplan
