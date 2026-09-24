@@ -57,6 +57,7 @@ variable "assets_paths" {
 
 variable "aliases" {
   type        = list(string)
+  default     = []
   description = "The aliases (domain names) to be used for the Next.js application"
 }
 
@@ -179,6 +180,12 @@ variable "cache_policy" {
       items                 = optional(list(string))
     })
   })
+}
+
+variable "no_cache_paths" {
+  type        = list(string)
+  default     = []
+  description = "List of path patterns that should have caching disabled"
 }
 
 variable "geo_restriction" {

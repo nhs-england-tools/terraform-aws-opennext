@@ -5,6 +5,8 @@ resource "aws_kms_key" "cloudwatch_logs_key" {
   deletion_window_in_days = 10
   policy                  = data.aws_iam_policy_document.cloudwatch_logs_key_policy[0].json
   enable_key_rotation     = true
+
+  tags = var.default_tags
 }
 
 data "aws_iam_policy_document" "cloudwatch_logs_key_policy" {

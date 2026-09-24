@@ -64,7 +64,7 @@ variable "handler" {
 variable "runtime" {
   type        = string
   description = "The Lambda runtime to use"
-  default     = "nodejs18.x"
+  default     = "nodejs22.x"
 }
 
 variable "architectures" {
