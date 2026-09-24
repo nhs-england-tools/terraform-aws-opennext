@@ -26,6 +26,7 @@ variable "log_bucket_name" {
 variable "log_bucket_kms_key_arn" {
   type    = string
   default = "aws/s3"
+  nullable = false
 }
 
 variable "log_bucket_logging_config" {
