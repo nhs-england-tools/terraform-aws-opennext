@@ -53,6 +53,7 @@ module "server_function" {
   dead_letter_config             = local.server_options.function.dead_letter_config
   reserved_concurrent_executions = local.server_options.function.reserved_concurrent_executions
   code_signing_config            = local.server_options.function.code_signing_config
+  layers                         = local.server_options.function.layers
   log_group                      = local.server_options.log_group
 
 
@@ -90,6 +91,7 @@ module "image_optimization_function" {
   dead_letter_config             = local.image_optimization_options.function.dead_letter_config
   reserved_concurrent_executions = local.image_optimization_options.function.reserved_concurrent_executions
   code_signing_config            = local.image_optimization_options.function.code_signing_config
+  layers                         = local.image_optimization_options.function.layers
   log_group                      = local.image_optimization_options.log_group
 
   source_dir = local.image_optimization_options.package.source_dir
@@ -125,6 +127,7 @@ module "revalidation_function" {
   dead_letter_config             = local.revalidation_options.function.dead_letter_config
   reserved_concurrent_executions = local.revalidation_options.function.reserved_concurrent_executions
   code_signing_config            = local.revalidation_options.function.code_signing_config
+  layers                         = local.revalidation_options.function.layers
   log_group                      = local.revalidation_options.log_group
 
   source_dir = local.revalidation_options.package.source_dir
@@ -176,6 +179,7 @@ module "warmer_function" {
   dead_letter_config             = local.warmer_options.function.dead_letter_config
   reserved_concurrent_executions = local.warmer_options.function.reserved_concurrent_executions
   code_signing_config            = local.warmer_options.function.code_signing_config
+  layers                         = local.warmer_options.function.layers
   log_group                      = local.warmer_options.log_group
 
   source_dir = local.warmer_options.package.source_dir
@@ -232,6 +236,7 @@ module "cloudfront" {
   cors                  = local.cloudfront.cors
   hsts                  = local.cloudfront.hsts
   cache_policy          = local.cloudfront.cache_policy
+  no_cache_paths        = local.cloudfront.no_cache_paths
   remove_headers_config = local.cloudfront.remove_headers_config
 
   custom_waf                = local.cloudfront.custom_waf

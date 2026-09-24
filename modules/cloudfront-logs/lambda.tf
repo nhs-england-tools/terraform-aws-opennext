@@ -28,6 +28,7 @@ resource "aws_lambda_function" "cloudfront_logs_function" {
   filename                = data.archive_file.cloudfront_logs_zip.output_path
   source_code_hash        = data.archive_file.cloudfront_logs_zip.output_base64sha256
   role                    = aws_iam_role.cloudfront_logs_role.arn
+  layers                  = var.layers
   kms_key_arn             = var.kms_key_arn
   code_signing_config_arn = try(aws_lambda_code_signing_config.signing_config[0].arn, null)
 
