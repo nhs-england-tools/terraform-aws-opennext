@@ -1,4 +1,4 @@
-import { MuseoModerno } from "@next/font/google";
+import { MuseoModerno } from "next/font/google";
 import { NextPage } from "next";
 import Head from "next/head";
 

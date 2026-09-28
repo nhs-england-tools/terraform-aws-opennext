@@ -1,5 +1,11 @@
 import { NextMiddleware, NextResponse } from "next/server";
 
+type Geolocation = {
+    country?: string;
+    city?: string;
+    region?: string;
+};
+
 export const middleware: NextMiddleware = async (request) => {
     switch (request.nextUrl.pathname) {
         case "/middleware-rewrite": {
@@ -22,7 +28,8 @@ export const middleware: NextMiddleware = async (request) => {
         }
 
         case "/middleware-geolocation": {
-            const { nextUrl: url, geo } = request
+            const { nextUrl: url } = request
+            const { geo } = request as typeof request & { geo?: Geolocation }
             const country = geo?.country || "UK"
             const city = geo?.city || "Leeds"
             const region = geo?.region || "West Yorkshire"
