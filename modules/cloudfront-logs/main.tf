@@ -29,3 +29,7 @@ provider "aws" {
     tags = var.default_tags
   }
 }
+
+locals {
+  log_bucket_kms_key_arn = try(aws_kms_key.logs_bucket_key[0].arn, var.log_bucket_kms_key_arn)
+}

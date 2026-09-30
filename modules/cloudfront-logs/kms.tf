@@ -38,3 +38,38 @@ data "aws_iam_policy_document" "cloudwatch_logs_key_policy" {
     }
   }
 }
+
+resource "aws_kms_key" "logs_bucket_key" {
+  count = var.log_bucket_kms_key_arn == null ? 1 : 0
+
+  description             = "KMS Key for ${var.log_bucket_name} log bucket"
+  deletion_window_in_days = 10
+  policy                  = data.aws_iam_policy_document.logs_bucket_key_policy[0].json
+  enable_key_rotation     = true
+}
+
+data "aws_iam_policy_document" "logs_bucket_key_policy" {
+  count = var.log_bucket_kms_key_arn == null ? 1 : 0
+
+  statement {
+    effect    = "Allow"
+    actions   = ["kms:*"]
+    resources = ["*"]
+
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+  }
+
+  statement {
+    effect    = "Allow"
+    actions   = ["kms:GenerateDataKey*", "kms:Decrypt"]
+    resources = ["*"]
+
+    principals {
+      type        = "Service"
+      identifiers = ["delivery.logs.amazonaws.com"]
+    }
+  }
+}
