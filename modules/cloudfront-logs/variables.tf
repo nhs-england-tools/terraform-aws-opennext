@@ -24,8 +24,9 @@ variable "log_bucket_name" {
 }
 
 variable "log_bucket_kms_key_arn" {
-  type    = string
-  default = "aws/s3"
+  description = "KMS key ARN to encrypt the log bucket with. If a value is not provided, a dedicated CMK is created for the purpose"
+  type        = string
+  default     = null
 }
 
 variable "log_bucket_logging_config" {
