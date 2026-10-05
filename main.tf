@@ -198,9 +198,10 @@ module "cloudfront_logs" {
   region       = local.aws_region
   default_tags = var.default_tags
 
-  log_group_name  = "${var.prefix}-cloudfront-logs"
-  log_bucket_name = "${var.prefix}-cloudfront-logs"
-  retention       = 365
+  log_group_name         = "${var.prefix}-cloudfront-logs"
+  log_bucket_name        = "${var.prefix}-cloudfront-logs"
+  log_bucket_kms_key_arn = var.cloudfront_log_bucket_kms_key_arn
+  retention              = 365
 }
 
 /**
