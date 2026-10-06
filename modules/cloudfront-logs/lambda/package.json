@@ -25,6 +25,9 @@
     "eslint-plugin-promise": "^6.0.0",
     "typescript": "*"
   },
+  "resolutions": {
+    "fast-xml-parser": "4.5.4"
+  },
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=index.js --target=es2020"
   }
