@@ -26,7 +26,8 @@
     "typescript": "*"
   },
   "resolutions": {
-    "fast-xml-parser": "4.5.7"
+    "fast-xml-parser": "4.5.7",
+    "braces": "3.0.3"
   },
   "scripts": {
     "build": "esbuild src/index.ts --bundle --platform=node --outfile=index.js --target=es2020"
