@@ -59,7 +59,7 @@ variable "log_bucket_replication_configuration" {
 
 variable "lambda_runtime" {
   type    = string
-  default = "nodejs18.x"
+  default = "nodejs22.x"
 }
 
 variable "lambda_log_retention_period" {
@@ -103,4 +103,10 @@ variable "dead_letter_config" {
   type = object({
     target_arn = string
   })
+}
+
+variable "layers" {
+  description = "List of Lambda Layer Version ARNs (max 5) to attach to the function"
+  type        = list(string)
+  default     = []
 }

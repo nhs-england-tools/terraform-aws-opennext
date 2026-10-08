@@ -185,6 +185,7 @@ data "aws_iam_policy_document" "read_assets_bucket" {
 
 # Static Assets
 resource "aws_s3_object" "assets" {
+  provider = aws.no_default_tags
   for_each = fileset(var.assets_path, "**")
 
   bucket        = aws_s3_bucket.assets.bucket
@@ -197,6 +198,7 @@ resource "aws_s3_object" "assets" {
 
 # Cached Files
 resource "aws_s3_object" "cache" {
+  provider = aws.no_default_tags
   for_each = fileset(var.cache_path, "**")
 
   bucket       = aws_s3_bucket.assets.bucket

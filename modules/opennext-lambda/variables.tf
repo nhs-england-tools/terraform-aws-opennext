@@ -64,7 +64,7 @@ variable "handler" {
 variable "runtime" {
   type        = string
   description = "The Lambda runtime to use"
-  default     = "nodejs18.x"
+  default     = "nodejs22.x"
 }
 
 variable "architectures" {
@@ -133,6 +133,12 @@ variable "reserved_concurrent_executions" {
   description = "Concurrency limit for the lambda function"
   type        = number
   default     = 10
+}
+
+variable "layers" {
+  description = "List of Lambda Layer Version ARNs (max 5) to attach to the function"
+  type        = list(string)
+  default     = []
 }
 
 
