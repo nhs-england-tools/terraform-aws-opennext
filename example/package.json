@@ -29,9 +29,12 @@
     "esbuild": "^0.28.1"
   },
   "resolutions": {
-    "fast-xml-parser": "4.5.7",
+    "**/@eslint/plugin-kit": "0.3.4",
+    "open-next/esbuild": "0.25.0",
+    "fast-xml-parser": "5.7.0",
     "postcss": "^8.5.23",
     "braces": "3.0.3",
-    "**/micromatch/picomatch": "2.3.2"
+    "**/micromatch/picomatch": "2.3.2",
+    "**/uuid": "11.1.1"
   }
 }
