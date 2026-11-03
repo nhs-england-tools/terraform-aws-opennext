@@ -40,7 +40,7 @@ locals {
       enable_accept_encoding_brotli = coalesce(try(var.cloudfront.cache_policy.enable_accept_encoding_brotli, null), true)
       enable_accept_encoding_gzip   = coalesce(try(var.cloudfront.cache_policy.enable_accept_encoding_gzip, null), true)
       cookies_config = merge({
-        cookie_behavior = "all",
+        cookie_behavior = "none",
         items           = []
       }, try(var.cloudfront.cache_policy.cookies_config, {}))
       headers_config = merge({
@@ -52,6 +52,7 @@ locals {
         items                 = []
       }, try(var.cloudfront.cache_policy.query_strings_config, {}))
     }
+    no_cache_paths = var.cloudfront.no_cache_paths
     origin_request_policy = try(var.cloudfront.origin_request_policy, null)
 
     custom_waf                = var.cloudfront.custom_waf
@@ -71,7 +72,7 @@ locals {
       function_name                  = try(var.server_options.function.function_name, null)
       description                    = coalesce(try(var.server_options.function.description, null), "Next.js Server")
       handler                        = coalesce(try(var.server_options.function.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.server_options.function.runtime, null), "nodejs18.x")
+      runtime                        = coalesce(try(var.server_options.function.runtime, null), "nodejs22.x")
       architectures                  = coalesce(try(var.server_options.function.architectures, null), ["arm64"])
       memory_size                    = coalesce(try(var.server_options.function.memory_size, null), 512)
       timeout                        = coalesce(try(var.server_options.function.timeout, null), 30)
@@ -133,7 +134,7 @@ locals {
       function_name                  = try(var.image_optimization_options.function.function_name, null)
       description                    = coalesce(try(var.image_optimization_options.function.description, null), "Next.js Image Optimization")
       handler                        = coalesce(try(var.image_optimization_options.function.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.image_optimization_options.function.runtime, null), "nodejs18.x")
+      runtime                        = coalesce(try(var.image_optimization_options.function.runtime, null), "nodejs22.x")
       architectures                  = coalesce(try(var.image_optimization_options.function.architectures, null), ["arm64"])
       memory_size                    = coalesce(try(var.image_optimization_options.function.memory_size, null), 512)
       timeout                        = coalesce(try(var.image_optimization_options.function.timeout, null), 30)
@@ -183,7 +184,7 @@ locals {
       function_name                  = try(var.revalidation_options.function.function_name, null)
       description                    = coalesce(try(var.revalidation_options.function.description, null), "Next.js ISR Revalidation Function")
       handler                        = coalesce(try(var.revalidation_options.function.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.revalidation_options.function.runtime, null), "nodejs18.x")
+      runtime                        = coalesce(try(var.revalidation_options.function.runtime, null), "nodejs22.x")
       architectures                  = coalesce(try(var.revalidation_options.function.architectures, null), ["arm64"])
       memory_size                    = coalesce(try(var.revalidation_options.function.memory_size, null), 128)
       timeout                        = coalesce(try(var.revalidation_options.function.timeout, null), 30)
@@ -234,7 +235,7 @@ locals {
       function_name                  = try(var.warmer_options.function.function_name, null)
       description                    = coalesce(try(var.warmer_options.function.description, null), "Next.js Warmer Function")
       handler                        = coalesce(try(var.warmer_options.function.handler, null), "index.handler")
-      runtime                        = coalesce(try(var.warmer_options.function.runtime, null), "nodejs18.x")
+      runtime                        = coalesce(try(var.warmer_options.function.runtime, null), "nodejs22.x")
       architectures                  = coalesce(try(var.warmer_options.function.architectures, null), ["arm64"])
       memory_size                    = coalesce(try(var.warmer_options.function.memory_size, null), 128)
       timeout                        = coalesce(try(var.warmer_options.function.timeout, null), 30)

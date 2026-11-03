@@ -60,6 +60,8 @@ resource "aws_lambda_function" "function" {
       target_arn = var.dead_letter_config.target_arn
     }
   }
+
+  depends_on = [aws_cloudwatch_log_group.function_log_group]
 }
 
 resource "aws_lambda_function_url" "function_url" {
@@ -137,8 +139,8 @@ resource "aws_lambda_permission" "allow_execution_from_eventbridge" {
 }
 
 resource "aws_cloudwatch_log_group" "function_log_group" {
-  name              = "/aws/lambda/${aws_lambda_function.function.function_name}"
-  skip_destroy      = true
+  name              = "/aws/lambda/${var.function_name != null ? var.function_name : var.prefix}"
+  skip_destroy      = false
   retention_in_days = var.log_group.retention_in_days
   kms_key_id        = var.log_group.kms_key_id
 }

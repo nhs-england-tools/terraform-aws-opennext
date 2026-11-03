@@ -11,6 +11,8 @@ resource "aws_kms_key" "revalidation_queue_key" {
 
   policy              = data.aws_iam_policy_document.revalidation_queue_key_policy[0].json
   enable_key_rotation = true
+
+  tags = var.default_tags
 }
 
 data "aws_iam_policy_document" "revalidation_queue_key_policy" {
