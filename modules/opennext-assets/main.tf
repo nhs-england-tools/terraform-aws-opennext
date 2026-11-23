@@ -15,3 +15,8 @@ provider "aws" {
     tags = var.default_tags
   }
 }
+
+provider "aws" {
+  alias  = "no_default_tags"
+  region = var.region
+}
