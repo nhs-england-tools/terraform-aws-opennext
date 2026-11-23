@@ -427,3 +427,8 @@ variable "cloudfront" {
     }))
   })
 }
+
+variable "use_tagcache" {
+  type    = bool
+  default = false
+}
