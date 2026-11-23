@@ -10,7 +10,7 @@ locals {
     aliases             = var.cloudfront.aliases
     acm_certificate_arn = var.cloudfront.acm_certificate_arn
     comment             = var.cloudfront.comment
-    assets_paths        = coalesce(var.cloudfront.assets_paths, [])
+    assets_paths        = coalesce(var.cloudfront.assets_paths, ["/images/*"])
     custom_headers      = coalesce(var.cloudfront.custom_headers, [])
     geo_restriction = coalesce(try(var.cloudfront.geo_restriction, null), {
       restriction_type = "none"
@@ -63,7 +63,7 @@ locals {
    **/
   server_options = {
     package = {
-      source_dir = coalesce(try(var.server_options.package.source_dir, null), "${local.opennext_abs_path}/server-function/")
+      source_dir = coalesce(try(var.server_options.package.source_dir, null), "${local.opennext_abs_path}/server-functions/")
       output_dir = coalesce(try(var.server_options.package.output_dir, null), "${local.opennext_abs_path}/.build/")
     }
 
